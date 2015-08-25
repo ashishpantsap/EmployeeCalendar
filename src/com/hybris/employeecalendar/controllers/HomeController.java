@@ -12,12 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  */
 @Controller
-@RequestMapping("employeecalendar")
 public class HomeController
 {
-	@RequestMapping(value = "/viewcalendar")
+	@RequestMapping(value = "/viewcalendarpage")
 	public String viewcalendar()
 	{
 		return "calendar";
+	}
+
+	@RequestMapping(value = "/home")
+	public String home()
+	{
+		return "home";
 	}
 }

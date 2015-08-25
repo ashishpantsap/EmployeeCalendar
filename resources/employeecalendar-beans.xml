@@ -17,12 +17,19 @@
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
 
-	
-	
-	<bean class="com.hybris.employeecalendar.data.Event">
+	<bean class="com.hybris.employeecalendar.data.SAPEmployeeDto">
+		<property name="PK" type="String" />
 		<property name="inumber" type="String"/>
-		<property name="date" type="java.util.Date"/>
+		<property name="name" type="String"/>
+		<property name="surname" type="String"/>
 	</bean>
 	
-
+	<bean class="com.hybris.employeecalendar.data.EventDto">
+		<property name="employee" type="com.hybris.employeecalendar.data.SAPEmployeeDto"/>
+		<property name="date" type="java.util.Date"/>
+		<property name="description" type="String"/>
+		<property name="type" type="String"/>
+	</bean>
+	
+	
 </beans>

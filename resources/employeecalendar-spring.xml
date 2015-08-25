@@ -80,6 +80,13 @@
 	       <aop:pointcut id="profiledMethods" expression="execution(* *(..))" />	
 	  -->
 	
-			
+	
+	<bean id="defaultCalendarEventDao" class="com.hybris.employeecalendar.dao.impl.DefaultCalendarEventDao"></bean>
+	
+	<bean id="defaultSAPEmployeeDao" class="com.hybris.employeecalendar.dao.impl.DefaultSAPEmployeeDao"></bean>
+	
+	<bean id="defaultCalendarEventService" class="com.hybris.employeecalendar.services.impl.DefaultCalendarEventService"></bean>
+	
+	<bean id="defaultSapEmployeeService" class="com.hybris.employeecalendar.services.impl.DefaultSAPEmployeeService"></bean>		
 			
 </beans>

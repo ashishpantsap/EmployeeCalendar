@@ -1,0 +1,26 @@
+gensrc
+classes
+.metadata
+platformhome.properties
+extensioninfo.xsd
+resources/beans.xsd
+resources/items.xsd
+
+# Filename patterns to ignore
+*.class
+build.xml
+Generated*.java
+*testclasses.xml
+extensioninfo.xsd
+*hmc.jar
+hmc.xsd
+items.xsd
+beans.xsd
+ruleset.xml
+*.log
+/eclipsebin/
+web/webroot/cockpit/
+target/**/*
+rootcauseanalysis.fpr
+*/org.eclipse.*
+CCDBTemplate.xml

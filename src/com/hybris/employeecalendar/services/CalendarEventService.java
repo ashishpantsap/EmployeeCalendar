@@ -29,6 +29,8 @@ public interface CalendarEventService
 
 	public List<Date> getMonthlyEventByInumber(String iNumber);
 
-	public List<EventDto> getMonthlySchedule(String month);
+	public List<EventDto> getMonthlySchedule(Date today);
+
+	public List<EventDto> getMonthlyScheduleFromDateToDate(Date from, Date to);
 
 }

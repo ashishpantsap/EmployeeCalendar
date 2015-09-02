@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hybris.employeecalendar.data.EventDto;
+import com.hybris.employeecalendar.data.FeedCalendarDto;
 import com.hybris.employeecalendar.data.MessageDto;
 import com.hybris.employeecalendar.data.SAPEmployeeDto;
 import com.hybris.employeecalendar.data.enums.Alerts;
@@ -60,12 +63,6 @@ public class EventController
 	{
 		this.sapEmployeeService = sapEmployeeService;
 	}
-
-
-
-
-
-
 
 
 	@RequestMapping(value = "/submiteventpage", method = RequestMethod.GET)
@@ -154,6 +151,55 @@ public class EventController
 		model.addAttribute("message", msave);
 
 		return msave;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/feedCalendar", method = RequestMethod.GET, headers = "Accept=application/json")
+	public List<FeedCalendarDto> feedCalendarAll(final Model model, @RequestParam(value = "month") final String month,
+			@RequestParam(value = "from") final String from, @RequestParam(value = "to") final String to)
+	{
+		//I have to send the month
+		final Calendar now = Calendar.getInstance();
+		final String datef = now.get(Calendar.YEAR) + "-" + month + "-" + 1;
+		final String datet = now.get(Calendar.YEAR) + "-" + month + "-" + 31;
+		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		Date dateFrom = null;
+		Date dateTo = null;
+		try
+		{
+			dateFrom = format.parse(datef);
+			dateTo = format.parse(datet);
+		}
+		catch (final ParseException e)
+		{
+			e.printStackTrace();
+		}
+		final List<EventDto> eventsDto = calendarEventService.getMonthlyScheduleFromDateToDate(dateFrom, dateTo);
+		if (eventsDto.size() == 0)
+		{
+			return Collections.EMPTY_LIST;
+		}
+
+		final List<FeedCalendarDto> events = new ArrayList<FeedCalendarDto>();
+		int i = 0;
+		String test = "test";
+		for (final EventDto event : eventsDto)
+		{
+			test = test + "" + i++;
+			final FeedCalendarDto feedCalendar = new FeedCalendarDto();
+			feedCalendar.setClassevent("event-success");
+			feedCalendar.setTitle(event.getEmployee().getInumber() + " | " + event.getEmployee().getName() + "  " + event.getType()
+					+ " " + event.getDescription());
+			feedCalendar.setUrl("#");
+			feedCalendar.setStart(String.valueOf(event.getDate().getTime()));
+			feedCalendar.setEnd(String.valueOf(event.getDate().getTime()));
+			feedCalendar.setId(test);
+
+			events.add(feedCalendar);
+		}
+
+		return events;
+
 	}
 
 	private MessageDto createMessage(final String description, final Alerts alert)

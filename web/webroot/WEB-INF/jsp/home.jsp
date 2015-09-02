@@ -6,7 +6,7 @@
 <link rel="stylesheet" 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet"	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 <spring:url value="/resources/css/home.css" var="homecss" />
-<spring:url value="/resources/css/calendar.min.css"	var="calendarcss" />
+<spring:url value="/resources/css/mycalendar.css"	var="calendarcss" />
 <link rel="stylesheet" href="${home}" type="text/css">
 <link rel="stylesheet" href="${calendarcss}" type="text/css">
 
@@ -26,7 +26,6 @@
 			</ul>
 		</div>
 		<div class="container-fluid">
-			<div class="jumbotron">
 				<div class="pull-right form-inline">
 					<div class="btn-group">
 						<button class="btn btn-warning" data-calendar-view="week">Week</button>
@@ -35,7 +34,6 @@
 				</div>
 				<br /><br /><br />
 				<div id="calendar"></div>
-			</div>
 		</div>
 		
 		
@@ -49,13 +47,12 @@
 	        (function($) {
 
 	        	"use strict";
-
+				
 	        	var options = {
-	        		events_source: function () { return []; },
+	        		events_source: "feedCalendar",//function () { return []; },
 	        		view: 'month',
 	        		tmpl_path: "${tmpls}",
 	        		tmpl_cache: false,
-	        		/*
 	        		onAfterEventsLoad: function(events) {
 	        			if(!events) {
 	        				return;
@@ -69,7 +66,6 @@
 	        					.appendTo(list);
 	        			});
 	        		},
-	        		*/
 	        		onAfterViewLoad: function(view) {
 	        			//$('.page-header h3').text(this.getTitle());
 	        			$('.btn-group button').removeClass('active');

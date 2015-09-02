@@ -3,6 +3,8 @@
  */
 package com.hybris.employeecalendar.services.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.employeecalendar.dao.CalendarEventDao;
 import com.hybris.employeecalendar.data.EventDto;
+import com.hybris.employeecalendar.data.SAPEmployeeDto;
 import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
 import com.hybris.employeecalendar.model.SapEventModel;
@@ -84,11 +87,11 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.employeecalendar.services.CalendarEventService#getMonthlySchedule(java.lang.String)
 	 */
 	@Override
-	public List<EventDto> getMonthlySchedule(final String month)
+	public List<EventDto> getMonthlySchedule(final Date today)
 	{
 
 		return null;
@@ -97,7 +100,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.hybris.employeecalendar.services.CalendarEventService#saveEventOnCalendar(com.hybris.employeecalendar.data
 	 * .EventDto, com.hybris.employeecalendar.model.SapEmployeeModel)
@@ -117,6 +120,45 @@ public class DefaultCalendarEventService implements CalendarEventService
 		sapEvent.setType(event.getType() != null ? EventType.valueOf(event.getType()) : EventType.MORNING_SHIFT);
 
 		calendarEventDao.saveEventOnCalendar(sapEvent);
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.hybris.employeecalendar.services.CalendarEventService#getMonthlyScheduleFromDateToDate(java.util.Date,
+	 * java.util.Date)
+	 */
+	@Override
+	public List<EventDto> getMonthlyScheduleFromDateToDate(final Date from, final Date to)
+	{
+		final List<SapEventModel> eventsModel = calendarEventDao.getMonthlyScheduleFromDateToDate(from, to);
+
+		if (eventsModel == null || eventsModel.size() == 0)
+		{
+			return Collections.EMPTY_LIST;
+		}
+
+		final ArrayList<EventDto> events = new ArrayList<EventDto>();
+		for (final SapEventModel model : eventsModel)
+		{
+			final EventDto event = new EventDto();
+			event.setDate(model.getDate());
+			event.setDescription(model.getDescription());
+			event.setType(model.getType().getCode());
+
+			final SapEmployeeModel employee = model.getEmployee();
+			final SAPEmployeeDto employeeDto = new SAPEmployeeDto();
+			employeeDto.setInumber(employee.getInumber());
+			employeeDto.setName(employee.getName());
+			employeeDto.setSurname(employee.getSurname());
+
+			// employeeDto should set the PK as id dto shuould be modified
+			event.setEmployee(employeeDto);
+
+			events.add(event);
+		}
+		return events;
 	}
 
 

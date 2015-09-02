@@ -109,4 +109,27 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#getMonthlyScheduleFromDateToDate(java.util.Date,
+	 * java.util.Date)
+	 */
+	@Override
+	public List<SapEventModel> getMonthlyScheduleFromDateToDate(final Date from, final Date to)
+	{
+
+		final String queryString = //
+		"SELECT {e:PK }" //
+				+ "FROM { SapEmployee AS p JOIN SapEvent AS e " + "ON {p:PK} = {e:employee} } "//
+				+ "WHERE {e:DATE} >= ?from "//
+				+ "AND {e:DATE} <= ?to";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("from", from);
+		query.addQueryParameter("to", to);
+		final List<SapEventModel> result = flexibleSearchService.<SapEventModel> search(query).getResult();
+
+		return result;
+	}
+
 }

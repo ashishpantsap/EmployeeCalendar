@@ -60,4 +60,5 @@
 		<property name="start" type="String" /><!-- start date to milliseconds -->
 		<property name="end" type="String" /><!-- end date to milliseconds -->
 	</bean>
+	
 </beans>

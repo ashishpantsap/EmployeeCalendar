@@ -1,7 +1,7 @@
 /*
  * ----------------------------------------------------------------
  * --- WARNING: THIS FILE IS GENERATED AND WILL BE OVERWRITTEN! ---
- * --- Generated at 21-Aug-2015 15:07:36                        ---
+ * --- Generated at 02-Sep-2015 13:42:45                        ---
  * ----------------------------------------------------------------
  */
 package com.hybris.employeecalendar.jalo;
@@ -13,6 +13,7 @@ import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.Item.AttributeMode;
 import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.SessionContext;
+import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.type.CollectionType;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.util.BidirectionalOneToManyHandler;
@@ -27,8 +28,6 @@ import java.util.Map;
 @SuppressWarnings({"deprecation","unused","cast","PMD"})
 public abstract class GeneratedSapEvent extends GenericItem
 {
-	/** Qualifier of the <code>SapEvent.inumber</code> attribute **/
-	public static final String INUMBER = "inumber";
 	/** Qualifier of the <code>SapEvent.type</code> attribute **/
 	public static final String TYPE = "type";
 	/** Qualifier of the <code>SapEvent.description</code> attribute **/
@@ -53,7 +52,6 @@ public abstract class GeneratedSapEvent extends GenericItem
 	static
 	{
 		final Map<String, AttributeMode> tmp = new HashMap<String, AttributeMode>();
-		tmp.put(INUMBER, AttributeMode.INITIAL);
 		tmp.put(TYPE, AttributeMode.INITIAL);
 		tmp.put(DESCRIPTION, AttributeMode.INITIAL);
 		tmp.put(DATE, AttributeMode.INITIAL);
@@ -182,55 +180,19 @@ public abstract class GeneratedSapEvent extends GenericItem
 	}
 	
 	/**
-	 * <i>Generated method</i> - Getter of the <code>SapEvent.inumber</code> attribute.
-	 * @return the inumber
+	 * <i>Generated method</i> - Getter of the <code>SapEvent.type</code> attribute.
+	 * @return the type - type event
 	 */
-	public String getInumber(final SessionContext ctx)
+	public EnumerationValue getType(final SessionContext ctx)
 	{
-		return (String)getProperty( ctx, INUMBER);
-	}
-	
-	/**
-	 * <i>Generated method</i> - Getter of the <code>SapEvent.inumber</code> attribute.
-	 * @return the inumber
-	 */
-	public String getInumber()
-	{
-		return getInumber( getSession().getSessionContext() );
-	}
-	
-	/**
-	 * <i>Generated method</i> - Setter of the <code>SapEvent.inumber</code> attribute. 
-	 * @param value the inumber
-	 */
-	public void setInumber(final SessionContext ctx, final String value)
-	{
-		setProperty(ctx, INUMBER,value);
-	}
-	
-	/**
-	 * <i>Generated method</i> - Setter of the <code>SapEvent.inumber</code> attribute. 
-	 * @param value the inumber
-	 */
-	public void setInumber(final String value)
-	{
-		setInumber( getSession().getSessionContext(), value );
+		return (EnumerationValue)getProperty( ctx, TYPE);
 	}
 	
 	/**
 	 * <i>Generated method</i> - Getter of the <code>SapEvent.type</code> attribute.
 	 * @return the type - type event
 	 */
-	public String getType(final SessionContext ctx)
-	{
-		return (String)getProperty( ctx, TYPE);
-	}
-	
-	/**
-	 * <i>Generated method</i> - Getter of the <code>SapEvent.type</code> attribute.
-	 * @return the type - type event
-	 */
-	public String getType()
+	public EnumerationValue getType()
 	{
 		return getType( getSession().getSessionContext() );
 	}
@@ -239,7 +201,7 @@ public abstract class GeneratedSapEvent extends GenericItem
 	 * <i>Generated method</i> - Setter of the <code>SapEvent.type</code> attribute. 
 	 * @param value the type - type event
 	 */
-	public void setType(final SessionContext ctx, final String value)
+	public void setType(final SessionContext ctx, final EnumerationValue value)
 	{
 		setProperty(ctx, TYPE,value);
 	}
@@ -248,7 +210,7 @@ public abstract class GeneratedSapEvent extends GenericItem
 	 * <i>Generated method</i> - Setter of the <code>SapEvent.type</code> attribute. 
 	 * @param value the type - type event
 	 */
-	public void setType(final String value)
+	public void setType(final EnumerationValue value)
 	{
 		setType( getSession().getSessionContext(), value );
 	}

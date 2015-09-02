@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.employeecalendar.dao.CalendarEventDao;
 import com.hybris.employeecalendar.data.EventDto;
+import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
 import com.hybris.employeecalendar.model.SapEventModel;
 import com.hybris.employeecalendar.services.CalendarEventService;
@@ -83,7 +84,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.employeecalendar.services.CalendarEventService#getMonthlySchedule(java.lang.String)
 	 */
 	@Override
@@ -96,7 +97,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.hybris.employeecalendar.services.CalendarEventService#saveEventOnCalendar(com.hybris.employeecalendar.data
 	 * .EventDto, com.hybris.employeecalendar.model.SapEmployeeModel)
@@ -112,6 +113,8 @@ public class DefaultCalendarEventService implements CalendarEventService
 		final SapEventModel sapEvent = new SapEventModel();
 		sapEvent.setEmployee(employee);
 		sapEvent.setDate(event.getDate());
+		sapEvent.setDescription(event.getDescription());
+		sapEvent.setType(event.getType() != null ? EventType.valueOf(event.getType()) : EventType.MORNING_SHIFT);
 
 		calendarEventDao.saveEventOnCalendar(sapEvent);
 	}

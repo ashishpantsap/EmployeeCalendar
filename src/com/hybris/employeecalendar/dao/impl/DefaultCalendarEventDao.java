@@ -4,6 +4,7 @@
 package com.hybris.employeecalendar.dao.impl;
 
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.Date;
@@ -90,5 +91,22 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 		return null;
 	}
 
+	@Override
+	public List<SapEventModel> getSapEventByInumberAndDate(final String iNumber, final Date date)
+	{
+		final String queryString = //
+		"SELECT {e:PK }" //
+				+ "FROM { SapEmployee AS p JOIN SapEvent AS e " + "ON {p:PK} = {e:employee} } "//
+				+ "WHERE {p:INUMBER}=?inumber "//
+				+ "AND {e:DATE}=?date";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("inumber", iNumber);
+		query.addQueryParameter("date", date);
+		final List<SapEventModel> result = flexibleSearchService.<SapEventModel> search(query).getResult();
+
+		return result;
+
+	}
 
 }

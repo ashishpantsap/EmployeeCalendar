@@ -15,7 +15,6 @@ import com.hybris.employeecalendar.model.SapEventModel;
  */
 public interface CalendarEventDao
 {
-
 	public void saveEventOnCalendar(SapEventModel event);
 
 	public void saveEventsOnCalendar(List<SapEventModel> events);
@@ -24,4 +23,5 @@ public interface CalendarEventDao
 
 	public List<Date> getMonthlyEventByInumber(String iNumber);
 
+	public List<SapEventModel> getSapEventByInumberAndDate(final String iNumber, final Date date);
 }

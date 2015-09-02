@@ -1,35 +1,63 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
- [y] hybris Platform
+<!-- [y] hybris Platform Copyright (c) 2000-2013 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
 
- Copyright (c) 2000-2013 hybris AG
- All rights reserved.
+<!-- ATTENTION: This is just an example file. You have to edit it according 
+	to your needs. -->
 
- This software is the confidential and proprietary information of hybris
- ("Confidential Information"). You shall not disclose such Confidential
- Information and shall use it only in accordance with the terms of the
- license agreement you entered into with hybris.
--->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="beans.xsd">
 
-<!--
-	ATTENTION: This is just an example file. You have to edit it according to your needs.
--->
+	<enum class="com.hybris.employeecalendar.data.enums.Alerts">
+		<description>Alerts type (compatible with bootstrap alert)</description>
+		<value>success</value>
+		<value>info</value>
+		<value>warning</value>
+		<value>danger</value>
+	</enum>
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
-
+<!-- 
+	<enum class="com.hybris.employeecalendar.data.enums.EventsClass">
+		<description>Events color type according to bootstrap-calendar</description>
+		<value>event-success</value>
+		<value>event-info</value>
+		<value>event-warning</value>
+		<value>event-inverse</value>
+		<value>event-special</value>
+		<value>event-important</value>
+	</enum>
+	 -->
+	
 	<bean class="com.hybris.employeecalendar.data.SAPEmployeeDto">
 		<property name="PK" type="String" />
-		<property name="inumber" type="String"/>
-		<property name="name" type="String"/>
-		<property name="surname" type="String"/>
+		<property name="inumber" type="String" />
+		<property name="name" type="String" />
+		<property name="surname" type="String" />
 	</bean>
-	
+
 	<bean class="com.hybris.employeecalendar.data.EventDto">
-		<property name="employee" type="com.hybris.employeecalendar.data.SAPEmployeeDto"/>
-		<property name="date" type="java.util.Date"/>
-		<property name="description" type="String"/>
-		<property name="type" type="String"/>
+		<property name="employee"
+			type="com.hybris.employeecalendar.data.SAPEmployeeDto" />
+		<property name="date" type="java.util.Date" />
+		<property name="description" type="String" />
+		<property name="type" type="String" />
+	</bean>
+
+	<bean class="com.hybris.employeecalendar.data.MessageDto">
+		<property name="alert" type="com.hybris.employeecalendar.data.enums.Alerts" />
+		<property name="description" type="String" />
 	</bean>
 	
-	
+	<!-- According with events for bootstrap calendar -->
+	<bean class="com.hybris.employeecalendar.data.FeedCalendarDto">
+		<property name="id" type="String" />
+		<property name="title" type="String" />
+		<property name="url" type="String" /><!-- not defined -->
+		<property name="classevent" type="String" /> <!-- Needs to be converted in class to client side -->
+		<property name="start" type="String" /><!-- start date to milliseconds -->
+		<property name="end" type="String" /><!-- end date to milliseconds -->
+	</bean>
 </beans>

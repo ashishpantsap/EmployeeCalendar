@@ -1,7 +1,7 @@
 /*
  * ----------------------------------------------------------------
  * --- WARNING: THIS FILE IS GENERATED AND WILL BE OVERWRITTEN! ---
- * --- Generated at 21-Aug-2015 15:07:36                        ---
+ * --- Generated at 02-Sep-2015 13:42:45                        ---
  * ----------------------------------------------------------------
  */
 package com.hybris.employeecalendar.jalo;

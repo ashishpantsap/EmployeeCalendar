@@ -72,6 +72,11 @@ public class GeneratedTypeInitializer extends AbstractTypeInitializer
 			true
 		);
 	
+		createEnumerationType(
+			"EventType",
+			null
+		);
+	
 	}
 
 	/**
@@ -90,8 +95,6 @@ public class GeneratedTypeInitializer extends AbstractTypeInitializer
 				single_createattr_SapEmployee_name();
 			
 				single_createattr_SapEmployee_surname();
-			
-				single_createattr_SapEvent_inumber();
 			
 				single_createattr_SapEvent_type();
 			
@@ -174,23 +177,6 @@ public class GeneratedTypeInitializer extends AbstractTypeInitializer
 			
 	}
 	
-	public void single_createattr_SapEvent_inumber() throws JaloBusinessException
-	{
-		
-						Map sqlColumnDefinitions = null;
-					
-				createPropertyAttribute(
-					"SapEvent", 
-					"inumber",  
-					null,
-					"java.lang.String",
-					de.hybris.platform.jalo.type.AttributeDescriptor.READ_FLAG|de.hybris.platform.jalo.type.AttributeDescriptor.WRITE_FLAG|de.hybris.platform.jalo.type.AttributeDescriptor.REMOVE_FLAG|de.hybris.platform.jalo.type.AttributeDescriptor.SEARCH_FLAG,
-					null,
-					sqlColumnDefinitions
-				);
-			
-	}
-	
 	public void single_createattr_SapEvent_type() throws JaloBusinessException
 	{
 		
@@ -200,7 +186,7 @@ public class GeneratedTypeInitializer extends AbstractTypeInitializer
 					"SapEvent", 
 					"type",  
 					null,
-					"java.lang.String",
+					"EventType",
 					de.hybris.platform.jalo.type.AttributeDescriptor.READ_FLAG|de.hybris.platform.jalo.type.AttributeDescriptor.WRITE_FLAG|de.hybris.platform.jalo.type.AttributeDescriptor.OPTIONAL_FLAG|de.hybris.platform.jalo.type.AttributeDescriptor.REMOVE_FLAG|de.hybris.platform.jalo.type.AttributeDescriptor.SEARCH_FLAG,
 					null,
 					sqlColumnDefinitions
@@ -253,6 +239,21 @@ public class GeneratedTypeInitializer extends AbstractTypeInitializer
 		// performCreateObjects
 	
 	
+		createEnumerationValues(
+			"EventType",
+			false,
+			Arrays.asList( new String[] {
+			
+				"ON_CALL",
+				"AFTERNOON_SHIFT",
+				"MORNING_SHIFT",
+				"OUT_OF_THE_OFFICE",
+				"WORKING_FROM_HOME",
+				"QUEUE_MANAGER",
+				"WORKING_BANK_HOLIDAY"
+			} )
+		);
+	
 		single_setRelAttributeProperties_SapEmployeeEventRelation_source();
 	
 		single_setRelAttributeProperties_SapEmployeeEventRelation_target();
@@ -304,14 +305,19 @@ public class GeneratedTypeInitializer extends AbstractTypeInitializer
 				);
 				}
 			
-			single_setAttributeProperties_SapEvent_inumber();
-		
 			single_setAttributeProperties_SapEvent_type();
 		
 			single_setAttributeProperties_SapEvent_description();
 		
 			single_setAttributeProperties_SapEvent_date();
 		
+				setDefaultProperties(
+					"EventType",
+					true,
+					true,
+					null
+				);
+			
 	}
 
 
@@ -382,28 +388,6 @@ public class GeneratedTypeInitializer extends AbstractTypeInitializer
 							);
 						}
 					
-						public void single_setAttributeProperties_SapEvent_inumber() throws JaloBusinessException
-						{
-							
-							
-							
-							Map customPropsMap = new HashMap();
-							
-							setAttributeProperties(
-								"SapEvent", 
-								"inumber",
-								false, 
-								null,
-								null,
-								null,
-								true,
-								true,
-								null,
-								customPropsMap,
-								null
-							);
-						}
-					
 						public void single_setAttributeProperties_SapEvent_type() throws JaloBusinessException
 						{
 							
@@ -415,8 +399,8 @@ public class GeneratedTypeInitializer extends AbstractTypeInitializer
 								"SapEvent", 
 								"type",
 								false, 
-								null,
-								null,
+								em().getEnumerationValue("EventType", "MORNING_SHIFT"),
+								"em().getEnumerationValue(\"EventType\", \"MORNING_SHIFT\")",
 								null,
 								true,
 								true,

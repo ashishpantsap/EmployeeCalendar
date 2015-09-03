@@ -206,7 +206,7 @@
 .cal-week-box {
   position: relative;
 }
-.cal-week-box [data-event-classevent] {
+.cal-week-box [data-event-class] {
   white-space: nowrap;
   height: 30px;
   margin: 1px 1px;

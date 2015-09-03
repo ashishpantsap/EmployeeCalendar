@@ -108,7 +108,7 @@
 	<script type="text/javascript">
 		$(document).ready(function () {
 	        $("#singledate").datetimepicker({
-	        	format : 'YYYY-MM-DD'	
+	        	format : 'YYYY-MM-DD HH:MM:SS'	
 	        });
 	    });
 	</script>

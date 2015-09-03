@@ -1,0 +1,12 @@
+INSERT_UPDATE SapEmployee; inumber[unique=true];name;surname;
+;i310531; Niko; Flores;
+;i310388; Sergio; Zullo;
+;i310533; Ben; Galvin;
+;i306697; Juan Carlos; Perez Ramirez;
+;i306560; Hongxian; Tian;
+;i040538; Le; Li;
+;i306992; Ignacio; Inigo;
+;i310470; Luke; Potter;
+;i310084; Nitin; Garg;
+;i313211; Devys; Zardini;
+;i317496; Jayahar; Rajkumar;

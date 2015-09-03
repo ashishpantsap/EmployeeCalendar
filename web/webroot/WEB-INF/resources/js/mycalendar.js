@@ -1219,6 +1219,7 @@ if(!String.prototype.formatNum) {
 			});
 			self._update_modal();
 		}, 400);
+	
 	}
 
 	function getEasterDate(year, offsetDays) {

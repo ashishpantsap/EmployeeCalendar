@@ -19,6 +19,7 @@
 	        <value code="WORKING_FROM_HOME"/>
 	        <value code="QUEUE_MANAGER"/>                
 	        <value code="WORKING_BANK_HOLIDAY"/>
+	        <value code="TRAINING"/>
 	    </enumtype>
 	</enumtypes>
 	
@@ -78,6 +79,6 @@
 				</index>
 			</indexes>
 		</itemtype>
-
+		
 	</itemtypes>
 </items>

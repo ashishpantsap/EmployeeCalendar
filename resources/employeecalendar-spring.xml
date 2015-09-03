@@ -14,10 +14,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/aop
-           http://www.springframework.org/schema/aop/spring-aop.xsd">
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/util 
+           http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<bean id="defaultCalendarEventDao" class="com.hybris.employeecalendar.dao.impl.DefaultCalendarEventDao"></bean>
 	
@@ -35,5 +38,17 @@
 	    <property name="interceptor" ref="checkEventTypeConsistency"/>
 	    <property name="typeCode" value="SapEvent"/>
  	</bean>
-			
+ 	
+ 	
+	<util:map id="eventTypeMapping">
+		<entry key="OUT_OF_THE_OFFICE" value="event-important" />
+		<entry key="WORKING_FROM_HOME" value="event-warning" />
+		<entry key="QUEUE_MANAGER" value="event-info" />
+		<entry key="AFTERNOON_SHIFT" value="event-inverse" />
+		<entry key="MORNING_SHIFT" value="event-success" />
+		<entry key="ON_CALL" value="event-special" />
+		<entry key="TRAINING" value="event-special" />
+		<entry key="WORKING_BANK_HOLIDAY" value="event-special" />
+	</util:map>
+ 			
 </beans>

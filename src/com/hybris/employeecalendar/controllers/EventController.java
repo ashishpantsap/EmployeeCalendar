@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +46,18 @@ public class EventController
 	private CalendarEventService calendarEventService;
 
 	private SAPEmployeeService sapEmployeeService;
+
+	private Map<String, String> eventTypeMapping;
+
+	/**
+	 * @param eventTypeMapping
+	 *           the eventTypeMapping to set
+	 */
+	@Resource(name = "eventTypeMapping")
+	public void setEventTypeMapping(final Map<String, String> eventTypeMapping)
+	{
+		this.eventTypeMapping = eventTypeMapping;
+	}
 
 	/**
 	 * @param calendarEventService
@@ -155,25 +170,25 @@ public class EventController
 
 	@ResponseBody
 	@RequestMapping(value = "/feedCalendar", method = RequestMethod.GET, headers = "Accept=application/json")
-	public List<FeedCalendarDto> feedCalendarAll(final Model model, @RequestParam(value = "month") final String month,
+	public List<FeedCalendarDto> feedCalendarAll(@RequestParam(value = "month") final String month,
 			@RequestParam(value = "from") final String from, @RequestParam(value = "to") final String to)
 	{
-		//I have to send the month
-		final Calendar now = Calendar.getInstance();
-		final String datef = now.get(Calendar.YEAR) + "-" + month + "-" + 1;
-		final String datet = now.get(Calendar.YEAR) + "-" + month + "-" + 31;
-		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		final long millisecondsfrom = Long.parseLong(from);
+		final long millisecondsto = Long.parseLong(to);
+
 		Date dateFrom = null;
 		Date dateTo = null;
 		try
 		{
-			dateFrom = format.parse(datef);
-			dateTo = format.parse(datet);
+			dateFrom = convertLongMillisecondsToDate(millisecondsfrom);
+			dateTo = convertLongMillisecondsToDate(millisecondsto);
 		}
 		catch (final ParseException e)
 		{
 			e.printStackTrace();
+			return Collections.EMPTY_LIST;
 		}
+
 		final List<EventDto> eventsDto = calendarEventService.getMonthlyScheduleFromDateToDate(dateFrom, dateTo);
 		if (eventsDto.size() == 0)
 		{
@@ -187,9 +202,10 @@ public class EventController
 		{
 			test = test + "" + i++;
 			final FeedCalendarDto feedCalendar = new FeedCalendarDto();
-			feedCalendar.setClassevent("event-success");
-			feedCalendar.setTitle(event.getEmployee().getInumber() + " | " + event.getEmployee().getName() + "  " + event.getType()
-					+ " " + event.getDescription());
+			feedCalendar.setClassevent(eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType())
+					: "event-success");
+			feedCalendar.setTitle(event.getType() + " " + event.getEmployee().getInumber() + " | " + event.getEmployee().getName()
+					+ "  " + event.getDescription());
 			feedCalendar.setUrl("#");
 			feedCalendar.setStart(String.valueOf(event.getDate().getTime()));
 			feedCalendar.setEnd(String.valueOf(event.getDate().getTime()));
@@ -202,6 +218,8 @@ public class EventController
 
 	}
 
+
+
 	private MessageDto createMessage(final String description, final Alerts alert)
 	{
 		final MessageDto messageDto = new MessageDto();
@@ -209,5 +227,15 @@ public class EventController
 		messageDto.setDescription(description);
 		return messageDto;
 	}
+
+	private Date convertLongMillisecondsToDate(final long milliseconds) throws ParseException
+	{
+		final Calendar calendar = Calendar.getInstance();
+		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+		calendar.setTimeInMillis(milliseconds);
+		final String dateInFormat = format.format(calendar.getTime());
+		return format.parse(dateInFormat);
+	}
+
 
 }

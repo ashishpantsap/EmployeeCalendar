@@ -11,8 +11,7 @@
 <link rel="stylesheet" href="${calendarcss}" type="text/css">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <title>Home</title>
 </head>
 <body>
@@ -26,7 +25,13 @@
 			</ul>
 		</div>
 		<div class="container-fluid">
+				<h3 class="text-center" id="MonthYear"></h3>
 				<div class="pull-right form-inline">
+					<div class="btn-group">
+						<button class="btn btn-primary" data-calendar-nav="prev"><< Prev</button>
+						<button class="btn" data-calendar-nav="today">Today</button>
+						<button class="btn btn-primary" data-calendar-nav="next">Next >></button>
+					</div>
 					<div class="btn-group">
 						<button class="btn btn-warning" data-calendar-view="week">Week</button>
 						<button class="btn btn-warning active" data-calendar-view="month">Month</button>
@@ -35,9 +40,6 @@
 				<br /><br /><br />
 				<div id="calendar"></div>
 		</div>
-		
-		
-		
 		<spring:url value="/resources/js/underscore-min.js"	var="underscorejs" />
 		<spring:url value="/resources/js/mycalendar.js"	var="calendarjs" />
 		<spring:url value="/resources/tmpls/"	var="tmpls" />
@@ -53,21 +55,8 @@
 	        		view: 'month',
 	        		tmpl_path: "${tmpls}",
 	        		tmpl_cache: false,
-	        		onAfterEventsLoad: function(events) {
-	        			if(!events) {
-	        				return;
-	        			}
-	        			var list = $('#eventlist');
-	        			list.html('');
-
-	        			$.each(events, function(key, val) {
-	        				$(document.createElement('li'))
-	        					.html('<a href="' + val.url + '">' + val.title + '</a>')
-	        					.appendTo(list);
-	        			});
-	        		},
 	        		onAfterViewLoad: function(view) {
-	        			//$('.page-header h3').text(this.getTitle());
+	        			$('#MonthYear').text(this.getTitle());
 	        			$('.btn-group button').removeClass('active');
 	        			$('button[data-calendar-view="' + view + '"]').addClass('active');
 	        		},

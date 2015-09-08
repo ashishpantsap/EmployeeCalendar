@@ -1,4 +1,2 @@
-<%
-    String redirectURL = "http://localhost:9001/employeecalendar/home";
-    response.sendRedirect(redirectURL);
-%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:redirect url="/home"/>

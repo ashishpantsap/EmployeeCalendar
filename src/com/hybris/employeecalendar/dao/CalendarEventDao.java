@@ -3,9 +3,11 @@
  */
 package com.hybris.employeecalendar.dao;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.model.SapEventModel;
 
 
@@ -23,7 +25,11 @@ public interface CalendarEventDao
 
 	public List<Date> getMonthlyEventByInumber(String iNumber);
 
-	public List<SapEventModel> getSapEventByInumberAndDate(final String iNumber, final Date date);
+	public List<SapEventModel> getSapEventByInumberAndDate(final String iNumber, final Date date) throws ParseException;
 
 	public List<SapEventModel> getMonthlyScheduleFromDateToDate(Date from, Date to);
+
+	public SapEventModel getTypeEventFromDate(Date date, EventType eventType) throws ParseException;
+
+	public List<SapEventModel> getReport(final Date date, final EventType event, final String PK) throws ParseException;
 }

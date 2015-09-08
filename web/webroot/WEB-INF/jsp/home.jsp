@@ -3,49 +3,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet"	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 <spring:url value="/resources/css/home.css" var="homecss" />
-<spring:url value="/resources/css/mycalendar.css"	var="calendarcss" />
-<link rel="stylesheet" href="${home}" type="text/css">
+<spring:url value="/resources/css/mycalendar.css" var="calendarcss" />
+<link rel="stylesheet" href="${homecss}" type="text/css">
 <link rel="stylesheet" href="${calendarcss}" type="text/css">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <title>Home</title>
 </head>
 <body>
 <body>
-		<div class="container-fluid">
-			<h2>employeecalendar</h2>
-			<ul>
-				<li><a href="viewcalendarpage">View calendar</a></li>
-				<li><a href="submiteventpage">Submit event</a></li>
-				<li><a href="deleteeventpage">Delete event</a></li>
-			</ul>
+	<c:import url="header.jsp" />
+	<div class="container-fluid">
+		<h3 class="text-center" id="MonthYear"></h3>
+		<div class="pull-right form-inline">
+			<div class="btn-group">
+				<button class="btn btn-primary" data-calendar-nav="prev"><<
+					Prev</button>
+				<button class="btn" data-calendar-nav="today">Today</button>
+				<button class="btn btn-primary" data-calendar-nav="next">Next
+					>></button>
+			</div>
+			<div class="btn-group">
+				<button class="btn btn-warning" data-calendar-view="week">Week</button>
+				<button class="btn btn-warning active" data-calendar-view="month">Month</button>
+			</div>
 		</div>
-		<div class="container-fluid">
-				<h3 class="text-center" id="MonthYear"></h3>
-				<div class="pull-right form-inline">
-					<div class="btn-group">
-						<button class="btn btn-primary" data-calendar-nav="prev"><< Prev</button>
-						<button class="btn" data-calendar-nav="today">Today</button>
-						<button class="btn btn-primary" data-calendar-nav="next">Next >></button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-warning" data-calendar-view="week">Week</button>
-						<button class="btn btn-warning active" data-calendar-view="month">Month</button>
-					</div>
-				</div>
-				<br /><br /><br />
-				<div id="calendar"></div>
-		</div>
-		<spring:url value="/resources/js/underscore-min.js"	var="underscorejs" />
-		<spring:url value="/resources/js/mycalendar.js"	var="calendarjs" />
-		<spring:url value="/resources/tmpls/"	var="tmpls" />
-		<script type="text/javascript" src="${underscorejs}"></script>
-	    <script type="text/javascript" src="${calendarjs}"></script>
-	    <script type="text/javascript">
+		<br />
+		<br />
+		<br />
+		<div id="calendar"></div>
+	</div>
+	<spring:url value="/resources/js/underscore-min.js" var="underscorejs" />
+	<spring:url value="/resources/js/mycalendar.js" var="calendarjs" />
+	<spring:url value="/resources/tmpls/" var="tmpls" />
+	<script type="text/javascript" src="${underscorejs}"></script>
+	<script type="text/javascript" src="${calendarjs}"></script>
+	<script type="text/javascript">
 	        (function($) {
 
 	        	"use strict";
@@ -111,6 +112,6 @@
 	        }(jQuery));
 	        
 	    </script>
-	</body>
+</body>
 </body>
 </html>

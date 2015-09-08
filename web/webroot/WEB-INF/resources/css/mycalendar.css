@@ -482,17 +482,18 @@ span[data-cal-date]:hover {
   border-top: 0px solid #8c8c8c;
 }
 #cal-slide-content {
-  padding: 20px;
-  color: #ffffff;
-  background-image: url("../img/dark_wood.png");
-  -webkit-box-shadow: inset 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
-  box-shadow: inset 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+  /*padding: 20px;*/
+  /*color: #ffffff;*/
+  /*background-color : #D2D3D4 ;*/
+  /*background-image: url("../img/dark_wood.png");*/
+  /*-webkit-box-shadow: inset 0px 0px 15px 0px rgba(0, 0, 0, 0.5);*/
+  /*-box-shadow: inset 0px 0px 15px 0px rgba(0, 0, 0, 0.5);*/
 }
 #cal-slide-tick {
   background-image: url("../img/tick.png?2");
 }
 #cal-slide-content:hover {
-  background-color: transparent;
+  /*background-color: transparent;*/
 }
 #cal-slide-content a.event-item {
   color: #ffffff;

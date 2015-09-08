@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +34,7 @@ import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
 import com.hybris.employeecalendar.services.CalendarEventService;
 import com.hybris.employeecalendar.services.SAPEmployeeService;
+import com.hybris.employeecalendar.util.HelperUtil;
 
 
 /**
@@ -42,6 +44,8 @@ import com.hybris.employeecalendar.services.SAPEmployeeService;
 @Controller
 public class EventController
 {
+
+	private static final Logger LOG = Logger.getLogger(EventController.class.getName());
 
 	private CalendarEventService calendarEventService;
 
@@ -97,44 +101,56 @@ public class EventController
 	}
 
 
-
-
 	@RequestMapping(value = "/deleteeventpage")
 	public String deleteEvent()
 	{
-		return "deleteevent";
+		return "deleteeventpage";
 	}
-
 
 
 	@ResponseBody
 	@RequestMapping(value = "/sendevent", method = RequestMethod.POST, headers = "Accept=application/json")
-	public MessageDto sendEvent(final Model model, @RequestParam(value = "inumber") final String pk,
-			@RequestParam(value = "date") final String date, @RequestParam(value = "description") final String description,
+	public MessageDto sendEvent(final Model model,//
+			@RequestParam(value = "pk") final String pk,//
+			@RequestParam(value = "fromDate") final String fromDate, //
+			@RequestParam(value = "fromhour") final String fromHour,//
+			@RequestParam(value = "tohour") final String toHour,//
+			@RequestParam(value = "description") final String description,//
 			@RequestParam(value = "typeevent") final String typeevent)
 	{
-
-		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-		Date dat = null;
+		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+		Date datef = null;
+		Date datet = null;
 		try
 		{
-			dat = format.parse(date);
+			datef = format.parse(fromDate + " " + fromHour);
+			datet = format.parse(fromDate + " " + toHour);
 		}
 		catch (final ParseException e)
 		{
-			e.printStackTrace();
+			LOG.debug("error parsing date");
 		}
-		if (dat == null)
+
+
+		if (datef == null)
 		{
-			final MessageDto messageDto = createMessage("Error with the date submitted", Alerts.WARNING);
+			final MessageDto messageDto = HelperUtil.createMessage("Error with the date submitted", Alerts.WARNING);
 			model.addAttribute("message", messageDto);
 			return messageDto;
+		}
+
+		if (datet == null)
+		{
+			final Calendar cal = Calendar.getInstance();
+			cal.setTime(datef);
+			cal.add(Calendar.HOUR_OF_DAY, 1);
+			datet = cal.getTime();
 		}
 
 
 		if (pk == null || pk.equals(""))
 		{
-			final MessageDto messageDto = createMessage("No inumber submitted", Alerts.DANGER);
+			final MessageDto messageDto = HelperUtil.createMessage("No inumber submitted", Alerts.DANGER);
 			model.addAttribute("message", messageDto);
 			return messageDto;
 		}
@@ -143,7 +159,8 @@ public class EventController
 
 		final EventDto event = new EventDto();
 
-		event.setDate(dat);
+		event.setFromDate(datef);
+		event.setToDate(datet);
 		event.setDescription(description);
 		event.setType(typeevent);
 
@@ -154,13 +171,13 @@ public class EventController
 		}
 		catch (final Exception mse)
 		{
-			msave = createMessage(mse.getMessage(), Alerts.DANGER);
+			msave = HelperUtil.createMessage(mse.getMessage(), Alerts.DANGER);
 		}
 
 
 		if (msave == null)
 		{
-			msave = createMessage("Event saved successfully", Alerts.SUCCESS);
+			msave = HelperUtil.createMessage("Event saved successfully", Alerts.SUCCESS);
 		}
 
 		model.addAttribute("message", msave);
@@ -180,8 +197,8 @@ public class EventController
 		Date dateTo = null;
 		try
 		{
-			dateFrom = convertLongMillisecondsToDate(millisecondsfrom);
-			dateTo = convertLongMillisecondsToDate(millisecondsto);
+			dateFrom = HelperUtil.convertLongMillisecondsToDate(millisecondsfrom);
+			dateTo = HelperUtil.convertLongMillisecondsToDate(millisecondsto);
 		}
 		catch (final ParseException e)
 		{
@@ -204,11 +221,10 @@ public class EventController
 			final FeedCalendarDto feedCalendar = new FeedCalendarDto();
 			feedCalendar.setClassevent(eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType())
 					: "event-success");
-			feedCalendar.setTitle(event.getType() + " " + event.getEmployee().getInumber() + " | " + event.getEmployee().getName()
-					+ "  " + event.getDescription());
-			feedCalendar.setUrl("#");
-			feedCalendar.setStart(String.valueOf(event.getDate().getTime()));
-			feedCalendar.setEnd(String.valueOf(event.getDate().getTime()));
+			feedCalendar.setTitle(event.getType() + " - " + event.getEmployee().getName() + "  " + event.getDescription());
+			feedCalendar.setUrl(event.getType());
+			feedCalendar.setStart(String.valueOf(event.getFromDate().getTime()));
+			feedCalendar.setEnd(String.valueOf(event.getToDate().getTime()));
 			feedCalendar.setId(test);
 
 			events.add(feedCalendar);
@@ -217,25 +233,4 @@ public class EventController
 		return events;
 
 	}
-
-
-
-	private MessageDto createMessage(final String description, final Alerts alert)
-	{
-		final MessageDto messageDto = new MessageDto();
-		messageDto.setAlert(alert);
-		messageDto.setDescription(description);
-		return messageDto;
-	}
-
-	private Date convertLongMillisecondsToDate(final long milliseconds) throws ParseException
-	{
-		final Calendar calendar = Calendar.getInstance();
-		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-		calendar.setTimeInMillis(milliseconds);
-		final String dateInFormat = format.format(calendar.getTime());
-		return format.parse(dateInFormat);
-	}
-
-
 }

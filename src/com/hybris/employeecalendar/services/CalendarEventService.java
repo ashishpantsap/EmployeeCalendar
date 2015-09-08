@@ -3,10 +3,12 @@
  */
 package com.hybris.employeecalendar.services;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 import com.hybris.employeecalendar.data.EventDto;
+import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
 
 
@@ -32,5 +34,7 @@ public interface CalendarEventService
 	public List<EventDto> getMonthlySchedule(Date today);
 
 	public List<EventDto> getMonthlyScheduleFromDateToDate(Date from, Date to);
+
+	public List<EventDto> getReport(Date date, EventType event, String PK) throws ParseException;
 
 }

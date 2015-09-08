@@ -20,19 +20,16 @@
 <link rel="stylesheet" href="${submiteventpage}" type="text/css">
 <link rel="stylesheet" href="${datetimepickercss}" type="text/css">
 <script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="${moment}"></script>
 
 <script src="/employeecalendar/resources/js/collapse.js"></script>
 <script src="/employeecalendar/resources/js/transition.js"></script>
-
-
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="${datetimepicker}"></script>
 </head>
 <body>
+	<c:import url="header.jsp" />
 	<div id="alertmessage" role="alert">
 	  <strong id="strongalert"></strong>
 	  <p id="contentalert"></p>
@@ -45,29 +42,39 @@
 	<div class="tab-content">
 		<div id="sendsingleevent" class="tab-pane fade in active">
 			<div class="jumbotron">
-				<div class="container-fluid" style="position: relative;">
+				<div class="container">
 					<h3 class="text-center">Single Event</h3> <br /> 
-					<form action="sendevent" method="post" id="sendeventform">
-						<label for="inumber">Select Inumber</label> <select name="inumber" id="inumber"
+					<form action="sendevent" method="post" id="sendeventform" style="position: relative;">
+						<label for="inumber">Select Employee</label> <select name="pk" id="inumber"
 							class="form-control">
 							<c:forEach var="employee" items="${employees}">
-								<option value="${employee.PK}">${employee.inumber}
-									&nbsp;&nbsp;-- &nbsp;&nbsp; ${employee.name} &nbsp;
+								<option value="${employee.PK}"> ${employee.name} &nbsp;
 									${employee.surname}</option>
 							</c:forEach>
 						</select> 
 						<br /> 
-						<label for="singledate">Date</label> 
-						<input id="singledate" type="text"
-							name="date" class="form-control" required="required"
-							pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"
-							placeholder="dd-MM-yyyy" /> <br /> 
 						<label for="typeevents">Event</label> 
 						<select class="form-control" id="typeevents" name="typeevent">
 							<c:forEach var="event" items="${events}">
 								<option value="${event}">${event}</option>
 							</c:forEach>
 						</select> <br />
+						<label for="fromdate">From Date</label> 
+						<input id="fromdate" type="text"
+							name="fromDate" class="form-control" required="required" /> <br />
+						<div class="row">
+						  <div class="col-md-2">
+						  	<label for="fromdate">From Hour</label> 
+								<input id="fromhour" type="text"
+									name="fromhour" class="form-control" required="required" /> <br />
+						  </div>
+						  <div class="col-md-2">
+						  	<label for="tohour">To Hour</label> 
+							<input id="tohour" type="text" name="tohour" class="form-control" required="required" /> 
+						  </div>
+						  <div class="col-md-8"></div>
+						</div>	 
+						<br /> 
 						<label for="description">Description</label> 
 						<input type="text" class="form-control" name="description" id="description" /> <br />
 						<button id="submitbutton" type="button" class="btn btn-default btn-info">Submit</button>
@@ -106,11 +113,93 @@
 		});
 	</script>
 	<script type="text/javascript">
-		$(document).ready(function () {
-	        $("#singledate").datetimepicker({
-	        	format : 'YYYY-MM-DD HH:MM:SS'	
+		
+		function enableOnlyWeekend(){
+			/*
+			$("#fromdate").datetimepicker({
+	        	format : 'YYYY-MM-DD',
+	        	daysOfWeekDisabled : [ "1" , "2", "3", "4", "5"]
 	        });
+	        */
+	        dayOff();
+		}
+		
+		function workingMorning(){
+			$("#fromhour").prop('disabled', true);
+	        $("#fromhour").val('10:00');
+	        $("#tohour").prop('disabled', true);
+	        $("#tohour").val('18:00');
+		}
+		
+		function workingAfternoon(){
+			$("#fromhour").prop('disabled', true);
+	        $("#fromhour").val('12:00');
+	        $("#tohour").prop('disabled', true);
+	        $("#tohour").val('20:00');
+		}
+		
+		function dayOff(){
+			$("#fromhour").prop('disabled', true);
+	        $("#fromhour").val('00:00');
+	        $("#tohour").prop('disabled', true);
+	        $("#tohour").val('00:00');
+		}
+		
+		function queueManager(){
+			$("#fromhour").prop('disabled', true);
+	        $("#fromhour").val('12:00');
+	        $("#tohour").prop('disabled', true);
+	        $("#tohour").val('18:00');			
+		}
+	
+		function checkConditions(optionSelected){
+			if (optionSelected == "ON_CALL"){
+				enableOnlyWeekend();
+			}
+			else if (optionSelected == "MORNING_SHIFT"){
+				workingMorning();
+			}
+			else if (optionSelected == "AFTERNOON_SHIFT"){
+				workingAfternoon();
+			}
+			else if (optionSelected == "SICK_LEAVE" || optionSelected == "OUT_OF_THE_OFFICE" 
+					|| optionSelected == "WORKING_FROM_HOME"){
+				dayOff();
+			}
+			else if (optionSelected == "QUEUE_MANAGER"){
+				queueManager();
+			}
+		}
+		
+		$(document).ready(function () {
+			
+			var optionSelected = $("#typeevents").find(":selected").text();
+			
+			checkConditions(optionSelected);
+			
+	        $("#fromdate").datetimepicker({
+	        	format : 'YYYY-MM-DD'	
+	        });
+	        $("#fromhour").datetimepicker({
+	        	format : 'HH:00'
+	        });
+	        $("#tohour").datetimepicker({
+	        	format : 'HH:00'
+	        });
+	        	        
 	    });
+		
+		function enableTime(){
+			$("#fromhour").prop('disabled', false);
+	        $("#tohour").prop('disabled', false);
+	        
+		}
+		
+		$("#typeevents").on("change", function(){
+			var optionSelected = $("#typeevents").find(":selected").text();
+			enableTime();
+			checkConditions(optionSelected);
+		});
 	</script>
 	<script type="text/javascript">
 		function createAlert(data){
@@ -124,6 +213,7 @@
 		$(document).ready(function () {
 			$("#submitbutton").click(function() {
 	            var url = $('#sendeventform').attr('action');
+	            enableTime();
 				var request = $.ajax({
 					url:url,
 					type:'POST',
@@ -134,6 +224,8 @@
 				});
 				request.done(function(data){
 					createAlert(data);
+					optionSelected = $("#typeevents").find(":selected").text();
+					checkConditions(optionSelected);
 				});
 				request.fail(function(data){
 					alert("fail");

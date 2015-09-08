@@ -19,18 +19,6 @@
 		<value>danger</value>
 	</enum>
 
-<!-- 
-	<enum class="com.hybris.employeecalendar.data.enums.EventsClass">
-		<description>Events color type according to bootstrap-calendar</description>
-		<value>event-success</value>
-		<value>event-info</value>
-		<value>event-warning</value>
-		<value>event-inverse</value>
-		<value>event-special</value>
-		<value>event-important</value>
-	</enum>
-	 -->
-	
 	<bean class="com.hybris.employeecalendar.data.SAPEmployeeDto">
 		<property name="PK" type="String" />
 		<property name="inumber" type="String" />
@@ -41,7 +29,8 @@
 	<bean class="com.hybris.employeecalendar.data.EventDto">
 		<property name="employee"
 			type="com.hybris.employeecalendar.data.SAPEmployeeDto" />
-		<property name="date" type="java.util.Date" />
+		<property name="fromDate" type="java.util.Date" />
+		<property name="toDate" type="java.util.Date" />
 		<property name="description" type="String" />
 		<property name="type" type="String" />
 	</bean>
@@ -59,6 +48,11 @@
 		<property name="classevent" type="String" /> <!-- Needs to be converted in class to client side -->
 		<property name="start" type="String" /><!-- start date to milliseconds -->
 		<property name="end" type="String" /><!-- end date to milliseconds -->
+	</bean>
+	
+	<bean class="com.hybris.employeecalendar.data.DateRangeDto">
+		<property name="fromDate" type="java.util.Date" />
+		<property name="toDate" type="java.util.Date" />
 	</bean>
 	
 </beans>

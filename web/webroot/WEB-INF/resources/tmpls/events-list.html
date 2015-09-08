@@ -1,13 +1,71 @@
 <span id="cal-slide-tick" style="display: none"></span>
 <div id="cal-slide-content" class="cal-event-list">
-	<ul class="unstyled list-unstyled">
-		<% _.each(events, function(event) { %>
-			<li>
-				<span class="pull-left event <%= event['classevent'] %>"></span>&nbsp;
-				<a href="<%= event.url ? event.url : 'javascript:void(0)' %>" data-event-id="<%= event.id %>"
-					data-event-class="<%= event['classevent'] %>" class="event-item">
-					<b><%= event.title %></a></b>
-			</li>
-		<% }) %>
-	</ul>
+
+	<table class="table">
+		<thead>
+			<th>Morning shift</th>
+		</thead>
+		<tbody>
+				 <% _.each(events, function(event) { 
+		if(event.url != null && event.url == 'MORNING_SHIFT' ){
+%>
+<tr>
+				<td class="success">
+					<span data-event-id="<%= event.id %>" data-event-class="<%= event['classevent'] %>" class="event-item">
+					<b><%= event.title %></b>
+					</span>
+				</td>
+				</tr>
+				<% 
+		}
+}) %>
+			
+		</tbody>
+	</table>
+	<table class="table">
+		<thead>
+			<th>Afternoon shift</th>
+		</thead>
+		<tbody>
+			
+			<% _.each(events, function(event) { 
+		if(event.url != null && event.url == 'AFTERNOON_SHIFT' ){
+%>
+<tr>
+				<td class="warning">
+					<span data-event-id="<%= event.id %>" data-event-class="<%= event['classevent'] %>" class="event-item">
+						<b><%= event.title %></b>
+					</span>
+				</td>
+				</tr>
+				<% 
+		}
+}) %>
+			
+		</tbody>
+	</table>
+<table class="table">
+		<thead>
+			<th>Others</th>
+		</thead>
+		<tbody>
+			
+			<% _.each(events, function(event) { 
+	  if(event.url != null) {
+			if ( event.url !== "AFTERNOON_SHIFT" && event.url !== 'MORNING_SHIFT' ) {
+%>
+<tr>
+				<td class="info">
+					<span data-event-id="<%= event.id %>" data-event-class="<%= event['classevent'] %>" class="event-item">
+						<b><%= event.title %></b>
+					</span>
+				</td>
+					</tr>
+				<% 
+			}
+		}
+}) %>
+		
+		</tbody>
+	</table>
 </div>

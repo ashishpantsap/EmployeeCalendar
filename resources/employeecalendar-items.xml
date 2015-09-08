@@ -20,6 +20,7 @@
 	        <value code="QUEUE_MANAGER"/>                
 	        <value code="WORKING_BANK_HOLIDAY"/>
 	        <value code="TRAINING"/>
+	        <value code="SICK_LEAVE"/>
 	    </enumtype>
 	</enumtypes>
 	
@@ -66,14 +67,18 @@
 					<description>description</description>
 					<persistence type="property" />
 				</attribute>
-				<attribute qualifier="date" type="java.util.Date">
-					<description>date</description>
+				<attribute qualifier="fromDate" type="java.util.Date">
+					<description>from date</description>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="toDate" type="java.util.Date">
+					<description>to date</description>
 					<persistence type="property" />
 				</attribute>
 			</attributes>
 			<indexes>
 				<index name="uniqueDateAndEmployee" unique="true">
-					<key attribute="date" />
+					<key attribute="fromDate" />
 					<key attribute="employee" />
 					<key attribute="type" />
 				</index>

@@ -14,11 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HomeController
 {
-	@RequestMapping(value = "/viewcalendarpage")
-	public String viewcalendar()
-	{
-		return "calendar";
-	}
 
 	@RequestMapping(value = "/home")
 	public String home()

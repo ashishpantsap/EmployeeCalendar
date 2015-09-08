@@ -7,6 +7,8 @@ resources/beans.xsd
 resources/items.xsd
 
 # Filename patterns to ignore
+/gensrc/
+/classes/
 *.class
 build.xml
 Generated*.java

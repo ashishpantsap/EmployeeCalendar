@@ -40,7 +40,7 @@ public class HelperUtil
 		return format.parse(dateInFormat);
 	}
 
-	public static DateRangeDto getDateRange(final Date date) throws ParseException
+	public static DateRangeDto getDateRangeOfTheDay(final Date date) throws ParseException
 	{
 		if (date == null)
 		{
@@ -53,7 +53,7 @@ public class HelperUtil
 		final String from = dateToString + " 00:00:00";
 		final String to = dateToString + " 23:59:59";
 
-		final DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+		final DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 		dateRangeDto.setFromDate(format2.parse(from));
 		dateRangeDto.setToDate(format2.parse(to));
 
@@ -69,7 +69,7 @@ public class HelperUtil
 		final DateRangeDto dateRangeDto = new DateRangeDto();
 
 		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-		final DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+		final DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 		final String dateToString = format.format(date);
 		final String from = dateToString + " 00:00:00";
 		final String to = dateToString + " 23:59:59";

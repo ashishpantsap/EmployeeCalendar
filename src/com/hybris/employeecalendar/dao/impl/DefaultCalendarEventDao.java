@@ -83,7 +83,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("inumber", iNumber);
-		final DateRangeDto dateRange = HelperUtil.getDateRange(fromDate);
+		final DateRangeDto dateRange = HelperUtil.getDateRangeOfTheDay(fromDate);
 
 		query.addQueryParameter("fromDate", dateRange.getFromDate());
 		query.addQueryParameter("toDate", dateRange.getToDate());
@@ -111,7 +111,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#getQMfromDate(java.util.Date)
 	 */
 	@Override
@@ -122,7 +122,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 			return null;
 		}
 
-		final DateRangeDto dateRange = HelperUtil.getDateRange(date);
+		final DateRangeDto dateRange = HelperUtil.getDateRangeOfTheDay(date);
 
 		final String queryString = //
 		"SELECT {e:PK } " //
@@ -147,7 +147,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#getReport(java.util.Date,
 	 * com.hybris.employeecalendar.enums.EventType, java.lang.String)
 	 */
@@ -202,4 +202,40 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#deleteEventsInTheDay(java.util.Date, java.lang.String)
+	 */
+	@Override
+	public void deleteEventsInTheDay(final Date date, final String PK) throws ParseException
+	{
+		if (date == null || PK == null)
+		{
+			return;
+		}
+
+		final DateRangeDto dateRange = HelperUtil.getDateRangeOfTheDay(date);
+
+		final String queryString = //
+		"SELECT {e:PK } " //
+				+ "FROM { SapEvent AS e JOIN SapEmployee AS em ON {e:employee} = {em:PK}} "//
+				+ "WHERE {e:FROMDATE} >= ?from "//
+				+ "AND {e:TODATE} <= ?to "//
+				+ "AND {em:PK}=?pk";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("from", dateRange.getFromDate());
+		query.addQueryParameter("to", dateRange.getToDate());
+		query.addQueryParameter("pk", PK);
+		final List<SapEventModel> result = flexibleSearchService.<SapEventModel> search(query).getResult();
+
+		if (result == null || result.size() == 0)
+		{
+			return;
+		}
+
+		modelService.removeAll(result);
+
+	}
 }

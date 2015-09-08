@@ -169,4 +169,17 @@ public class DefaultCalendarEventService implements CalendarEventService
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.hybris.employeecalendar.services.CalendarEventService#deleteEventsInTheDay(java.util.Date,
+	 * java.lang.String)
+	 */
+	@Override
+	public void deleteEventsInTheDay(final Date date, final String PK) throws ParseException
+	{
+		calendarEventDao.deleteEventsInTheDay(date, PK);
+	}
+
+
 }

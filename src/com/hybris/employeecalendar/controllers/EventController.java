@@ -53,30 +53,21 @@ public class EventController
 
 	private Map<String, String> eventTypeMapping;
 
-	/**
-	 * @param eventTypeMapping
-	 *           the eventTypeMapping to set
-	 */
+
 	@Resource(name = "eventTypeMapping")
 	public void setEventTypeMapping(final Map<String, String> eventTypeMapping)
 	{
 		this.eventTypeMapping = eventTypeMapping;
 	}
 
-	/**
-	 * @param calendarEventService
-	 *           the calendarEventService to set
-	 */
+
 	@Autowired
 	public void setCalendarEventService(final CalendarEventService calendarEventService)
 	{
 		this.calendarEventService = calendarEventService;
 	}
 
-	/**
-	 * @param sAPEmployeeService
-	 *           the sAPEmployeeService to set
-	 */
+
 	@Autowired
 	public void setSapEmployeeService(final SAPEmployeeService sapEmployeeService)
 	{
@@ -98,13 +89,6 @@ public class EventController
 
 		model.addAttribute("events", events);
 		return "submiteventpage";
-	}
-
-
-	@RequestMapping(value = "/deleteeventpage")
-	public String deleteEvent()
-	{
-		return "deleteeventpage";
 	}
 
 
@@ -202,7 +186,7 @@ public class EventController
 		}
 		catch (final ParseException e)
 		{
-			e.printStackTrace();
+			LOG.error(e.getMessage());
 			return Collections.EMPTY_LIST;
 		}
 

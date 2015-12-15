@@ -140,9 +140,9 @@
 		
 		function dayOff(){
 			$("#fromhour").prop('disabled', true);
-	        $("#fromhour").val('00:00');
+	        $("#fromhour").val('08:00');
 	        $("#tohour").prop('disabled', true);
-	        $("#tohour").val('00:00');
+	        $("#tohour").val('20:00');
 		}
 		
 		function queueManager(){

@@ -26,3 +26,4 @@ target/**/*
 rootcauseanalysis.fpr
 */org.eclipse.*
 CCDBTemplate.xml
+.class

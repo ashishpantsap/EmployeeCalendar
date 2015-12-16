@@ -54,6 +54,7 @@
 	        	var options = {
 	        		events_source: "feedCalendar",//function () { return []; },
 	        		view: 'month',
+	        		first_day: 1,
 	        		tmpl_path: "${tmpls}",
 	        		tmpl_cache: false,
 	        		onAfterViewLoad: function(view) {

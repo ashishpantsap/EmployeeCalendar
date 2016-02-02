@@ -382,7 +382,7 @@
   font-weight: bolder;
   text-align: center;
   border: 0px solid;
-  padding: 5px 0;
+  padding: 5px 0;/*  5px 0 */
 }
 .cal-row-head [class*="cal-cell"] small {
   font-weight: normal;
@@ -392,7 +392,7 @@
   background-color: #fafafa;
 }
 .cal-month-day {
-  height: 100px;
+  height: 120px;
 }
 [class*="cal-cell"]:hover {
   background-color: #ededed;
@@ -439,8 +439,8 @@ span[data-cal-date] {
   -moz-transition: all 0.1s ease-in-out;
   -ms-transition: all 0.1s ease-in-out;
   -o-transition: all 0.1s ease-in-out;
-  margin-top: 15px;
-  margin-right: 15px;
+  margin-top: 5px;
+  margin-right: 2px;
 }
 span[data-cal-date]:hover {
   opacity: 1;
@@ -513,4 +513,8 @@ a.cal-event-week {
 }
 .badge-important {
   background-color: #b94a48;
+}
+
+.my-pull-left{
+	float: left !important;
 }

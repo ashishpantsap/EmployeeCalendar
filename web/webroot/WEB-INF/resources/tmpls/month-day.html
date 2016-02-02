@@ -1,12 +1,33 @@
 <div class="cal-month-day <%= cls %>">
-	<span class="pull-right" data-cal-date="<%= data_day %>" data-cal-view="day" data-toggle="tooltip" title="<%= tooltip %>"><%= day %></span>
-	<% if (events.length > 0) { %>
-		<div class="events-list" data-cal-start="<%= start %>" data-cal-end="<%= end %>">
-			<% _.each(events, function(event) { %>
-				<a href="#" data-event-id="<%= event.id %>" data-event-class="<%= event['classevent'] %>"
-					class="pull-left event <%= event['classevent'] %>" data-toggle="tooltip"
-					title="<%= event.title %>"></a>
-			<% }); %>
+	<div class="col-md-12">
+		<div class="col-md-1">
+			<span class="my-pull-right" data-cal-date="<%= data_day %>" 
+				data-cal-view="day" data-toggle="tooltip" title="<%= tooltip %>">
+				<%= day %></span> <!--class="pull-left"-->
 		</div>
+		<div class="col-md-8">
+			<span class="label label-success">LE LI - QUEUE MANAGER</span> 
+			<span class="label label-primary">NIKO - QUEUE MANAGER</span>
+			
+			
+		</div>
+		<div class="col-md-2 pull-right">
+			<button type="button" class="btn btn-default" data-addevent='<%= data_day  %>' data-toggle="modal" data-target="#myModal">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			</button>
+		</div>
+
+	</div>
+
+
+	<% if (events.length > 0) { %>
+	<div class="events-list" data-cal-start="<%= start %>"
+		data-cal-end="<%= end %>">
+		<% _.each(events, function(event) { %> <a href="#"
+			data-event-id="<%= event.id %>"
+			data-event-class="<%= event['classevent'] %>"
+			class="pull-left event <%= event['classevent'] %>"
+			data-toggle="tooltip" title="<%= event.title %>"></a> <% }); %>
+	</div>
 	<% } %>
 </div>

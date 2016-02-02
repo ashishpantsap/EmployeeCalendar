@@ -40,6 +40,58 @@
 		<br />
 		<br />
 		<div id="calendar"></div>
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel"></h4>
+		      </div>
+		      <div class="modal-body">
+		        <form action="sendevent" method="post" id="sendeventform" style="position: relative;">
+						<label for="inumber">Select Employee</label> <select name="pk" id="inumber"
+							class="form-control">
+							<c:forEach var="employee" items="${employees}">
+								<option value="${employee.PK}"> ${employee.name} &nbsp;
+									${employee.surname}</option>
+							</c:forEach>
+						</select> 
+						<br /> 
+						<label for="typeevents">Event</label> 
+						<select class="form-control" id="typeevents" name="typeevent">
+							<c:forEach var="event" items="${events}">
+								<option value="${event}">${event}</option>
+							</c:forEach>
+						</select> <br />
+						<label for="fromdate">From Date</label> 
+						<input id="fromdate" type="text" name="fromDate" class="form-control" required="required" /> <br />
+						<div class="row">
+						  <div class="col-md-2">
+						  	<label for="fromdate">From Hour</label> 
+								<input id="fromhour" type="text"
+									name="fromhour" class="form-control" required="required" /> <br />
+						  </div>
+						  <div class="col-md-2">
+						  	<label for="tohour">To Hour</label> 
+							<input id="tohour" type="text" name="tohour" class="form-control" required="required" /> 
+						  </div>
+						  <div class="col-md-8"></div>
+						</div>	 
+						<br /> 
+						<label for="description">Description</label> 
+						<input type="text" class="form-control" name="description" id="description" /> <br />
+						<button id="submitbutton" type="button" class="btn btn-default btn-info">Submit</button>
+					</form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Save changes</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
 	</div>
 	<spring:url value="/resources/js/underscore-min.js" var="underscorejs" />
 	<spring:url value="/resources/js/mycalendar.js" var="calendarjs" />
@@ -67,33 +119,7 @@
 	        			}
 	        		}
 	        	};
-	        	/*
-	        	day: '2013-03-12',
-        		onAfterEventsLoad: function(events) {
-        			if(!events) {
-        				return;
-        			}
-        			var list = $('#eventlist');
-        			list.html('');
-
-        			$.each(events, function(key, val) {
-        				$(document.createElement('li'))
-        					.html('<a href="' + val.url + '">' + val.title + '</a>')
-        					.appendTo(list);
-        			});
-        		},
-        		onAfterViewLoad: function(view) {
-        			$('.page-header h3').text(this.getTitle());
-        			$('.btn-group button').removeClass('active');
-        			$('button[data-calendar-view="' + view + '"]').addClass('active');
-        		},
-        		classes: {
-        			months: {
-        				general: 'label'
-        			}
-        		}
-	        	*/
-
+	       
 	        	var calendar = $('#calendar').calendar(options);
 
 	        	$('.btn-group button[data-calendar-nav]').each(function() {
@@ -108,7 +134,15 @@
 	        		$this.click(function() {
 	        			calendar.view($this.data('calendar-view'));
 	        		});
-	        	});	        	
+	        	});	    
+	        	
+	        	$('#myModal').on('show.bs.modal', function (event) {
+	        		  //var button = $(event.relatedTarget) 
+	        		  var modal = $(this)
+//	        		  modal.find('#fromdate').text($(event.relatedTarget).data("addevent"));
+	        		  $("#fromdate").val($(event.relatedTarget).data("addevent"));
+	        	});
+	        		
 	        }(jQuery));
 	        
 	    </script>

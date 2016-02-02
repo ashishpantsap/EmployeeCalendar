@@ -60,8 +60,7 @@
 							</c:forEach>
 						</select> <br />
 						<label for="fromdate">From Date</label> 
-						<input id="fromdate" type="text"
-							name="fromDate" class="form-control" required="required" /> <br />
+						<input id="fromdate" type="text" name="fromDate" class="form-control" required="required" /> <br />
 						<div class="row">
 						  <div class="col-md-2">
 						  	<label for="fromdate">From Hour</label> 

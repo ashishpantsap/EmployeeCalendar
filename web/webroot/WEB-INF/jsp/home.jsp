@@ -50,37 +50,31 @@
 		      </div>
 		      <div class="modal-body">
 		        <form action="sendevent" method="post" id="sendeventform" style="position: relative;">
-						<label for="inumber">Select Employee</label> <select name="pk" id="inumber"
-							class="form-control">
-							<c:forEach var="employee" items="${employees}">
-								<option value="${employee.PK}"> ${employee.name} &nbsp;
-									${employee.surname}</option>
-							</c:forEach>
-						</select> 
+						<label for="inumber">Select Employee</label>
+						<select name="pk" id="inumber" class="form-control"></select> 
 						<br /> 
 						<label for="typeevents">Event</label> 
-						<select class="form-control" id="typeevents" name="typeevent">
-							<c:forEach var="event" items="${events}">
-								<option value="${event}">${event}</option>
-							</c:forEach>
-						</select> <br />
+						<select class="form-control" id="typeevents" name="typeevent"></select> 
+						<br />
 						<label for="fromdate">From Date</label> 
-						<input id="fromdate" type="text" name="fromDate" class="form-control" required="required" /> <br />
+						<input id="fromdate" type="date" name="fromDate" class="form-control" required="required" /> <br />
 						<div class="row">
-						  <div class="col-md-2">
+						  <div class="col-md-4">
 						  	<label for="fromdate">From Hour</label> 
-								<input id="fromhour" type="text"
+								<input id="fromhour" type="time"
 									name="fromhour" class="form-control" required="required" /> <br />
 						  </div>
-						  <div class="col-md-2">
+						  <div class="col-md-4">
 						  	<label for="tohour">To Hour</label> 
-							<input id="tohour" type="text" name="tohour" class="form-control" required="required" /> 
+							<input id="tohour" type="time" name="number" class="form-control" required="required" /> 
 						  </div>
-						  <div class="col-md-8"></div>
+						  <div class="col-md-6"></div>
 						</div>	 
 						<br /> 
+						<div id="hidedescription">
 						<label for="description">Description</label> 
 						<input type="text" class="form-control" name="description" id="description" /> <br />
+						</div>
 						<button id="submitbutton" type="button" class="btn btn-default btn-info">Submit</button>
 					</form>
 		      </div>
@@ -102,9 +96,9 @@
 	        (function($) {
 
 	        	"use strict";
-				
+	        	
 	        	var options = {
-	        		events_source: "feedCalendar",//function () { return []; },
+	        		events_source: "feedCalendar",
 	        		view: 'month',
 	        		tmpl_path: "${tmpls}",
 	        		tmpl_cache: false,
@@ -137,12 +131,50 @@
 	        	});	    
 	        	
 	        	$('#myModal').on('show.bs.modal', function (event) {
-	        		  //var button = $(event.relatedTarget) 
-	        		  var modal = $(this)
-//	        		  modal.find('#fromdate').text($(event.relatedTarget).data("addevent"));
-	        		  $("#fromdate").val($(event.relatedTarget).data("addevent"));
-	        	});
-	        		
+	        		  $('#hidedescription').hide();
+	        		  var modal = $(this);
+	        		  var emps;
+	        		  $.when($.ajax({
+	        			  url:'sapemployees',
+	        			  method:'GET',	        			  
+	        			  error: function(err){
+	        				  console.log(err);
+	        			  }
+	        			  
+	        		  })).then(function(data){
+	        			  var names = _.sortBy(data, 'name');
+        				  _.each(names, function(key, value){
+        					  $('#inumber').append($('<option>',{text: key.name + ' ' + key.surname}));
+        				  });
+	        		  });
+	        		  
+	        		  $.when($.ajax({
+	        			  url:'sapevents',
+	        			  method:'GET',	        			  
+	        			  error: function(err){
+	        				  console.log(err);
+	        			  }
+	        			  
+	        		  })).then(function(data){
+	        			  var names = _.sortBy(data);
+	        			  console.log(data);
+        				  _.each(names, function(key, value){
+        					  $('#typeevents').append($('<option>',{text: key}));
+        				  });
+	        		  });
+	        		  
+	        		  $('#typeevents').change(function(){
+	        			  var training = $('#typeevents :selected').text()==='TRAINING';
+	        			  if(training){
+	        				  $('#hidedescription').show();
+	        				  }
+	        			  else{
+	        				  $('#hidedescription').hide();
+	        			  }
+	        			 
+	        		  });	        		  
+	        		  $("#fromdate").val(($(event.relatedTarget).data("addevent")));
+	        	});	        		
 	        }(jQuery));
 	        
 	    </script>

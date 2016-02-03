@@ -214,7 +214,29 @@ public class EventController
 			events.add(feedCalendar);
 		}
 
+
 		return events;
 
+	}
+
+	@RequestMapping(value = "/sapemployees", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SAPEmployeeDto> sapEmployees()
+	{
+		final List<SAPEmployeeDto> sapEmployees = sapEmployeeService.getSapEmployees();
+
+		return sapEmployees;
+	}
+
+	@RequestMapping(value = "/sapevents", method = RequestMethod.GET)
+	@ResponseBody
+	public List<String> sapEvents()
+	{
+		final List<String> events = new ArrayList<String>();
+		for (final EventType event : EventType.values())
+		{
+			events.add(event.getCode());
+		}
+		return events;
 	}
 }

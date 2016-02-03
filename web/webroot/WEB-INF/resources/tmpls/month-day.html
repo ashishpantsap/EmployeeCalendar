@@ -1,5 +1,6 @@
 <div class="cal-month-day <%= cls %>">
-	<div class="col-md-12">
+	
+	 <div class="col-md-12"> 
 		<div class="col-md-1">
 			<span class="my-pull-right" data-cal-date="<%= data_day %>" 
 				data-cal-view="day" data-toggle="tooltip" title="<%= tooltip %>">
@@ -11,13 +12,18 @@
 			
 			
 		</div>
-		<div class="col-md-2 pull-right">
-			<button type="button" class="btn btn-default" data-addevent='<%= data_day  %>' data-toggle="modal" data-target="#myModal">
+		
+		<div class="col-md-1">
+			<button type="button" class="btn btn-default btn-xs" data-addevent='<%= data_day  %>' data-toggle="modal" data-target="#myModal">
 				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 			</button>
 		</div>
-
-	</div>
+		<div class="col-md-1">
+			<button type="button" class="btn btn-default btn-xs" data-addevent='<%= data_day  %>' data-toggle="modal" data-target="#myModal">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			</button>
+		</div>
+ 	</div> 
 
 
 	<% if (events.length > 0) { %>

@@ -51,31 +51,26 @@
 						<h4 class="modal-title" id="myModalLabel"></h4>
 					</div>
 					<div class="modal-body">
-						<form  id="sendeventform" style="position: relative;">
+						<form id="sendeventform" style="position: relative;">
 							<label for="inumber">Select Employee</label> 
-							<select id="inumber" class="form-control"></select> 
-							<input id="inumberpk" type="hidden" name="pk" value=""/> 
+							<select id="inumber" class="form-control" name="pk"></select> 
+							
 							<br /> 
 							<label for="typeevents">Event</label> 
 							<select class="form-control"  id="typeevents" name="typeevent"></select> 
 							<br /> 
 							<label for="fromdate">From Date</label> 
 							<input id="fromdate" type="date" name="fromDate" class="form-control" required="required" /> <br />
-							<div class="row">
-								<div class="col-md-4">
-									<label for="fromdate">From Hour</label> 
-									<input id="fromhour" type="time" name="fromhour" class="form-control" required="required" /> <br />
-								</div>
-								<div class="col-md-4">
-									<label for="tohour">To Hour</label> 
-									<input id="tohour" type="time" name="tohour" class="form-control" required="required" />
-								</div>
-								<div class="col-md-6"></div>
-							</div>
+							<label for="todate">To Date</label> 
+							<input id="todate" type="date" name="toDate" class="form-control" required="required" /> <br />
 							<br />
 							<div id="hidedescription">
 								<label for="description">Description</label> 
-								<input type="text"	class="form-control" name="description" id="description" /> <br />
+								<select class="form-control"  id="description" name="description">
+									<option>MORNING</option>
+									<option>AFTERNOON</option>
+									<option>ALL_DAY</option>
+								</select><br />
 							</div>
 							<button id="submitbutton" type="submit"	class="btn btn-default btn-info">Submit</button>
 						</form>
@@ -162,7 +157,7 @@
 				var hidedesc=$('#hidedescription');
 				var typeevents=$('#typeevents');
 				var inum=$('#inumber');
-				var inumpk=$('#inumberpk');
+// 				var inumpk=$('#inumberpk');
 				
 				inum.find('option').remove();
 				typeevents.find('option').remove();
@@ -182,7 +177,7 @@
 							value: key.pk
 						}));
 						selectedInum=$('#inumber :selected')[0].value;						
-						inumpk.val(selectedInum);						
+// 						inumpk.val(selectedInum);						
 					});
 				});
 				
@@ -203,6 +198,7 @@
 				
 				inum.change(function() {
 					var inum=$('#inumber :selected')[0].value;
+					inumpk.val(selectedInum)
 				});
 				
 				typeevents.change(function() {
@@ -210,12 +206,14 @@
 							.text() === 'TRAINING';
 					if (training) {
 						hidedesc.show();
+						var description = $('#description :selected');
 					} else {
 						hidedesc.hide();
 					}
 				});
 				
 				$("#fromdate").val($(event.relatedTarget).data("addevent"));				
+				$("#todate").val($(event.relatedTarget).data("addevent"));				
 			});			
 
 			$('#displayModel').on('show.bs.modal', function(event) {

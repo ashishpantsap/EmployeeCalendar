@@ -7,7 +7,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -97,39 +96,37 @@ public class EventController
 	public MessageDto sendEvent(final Model model,//
 			@RequestParam(value = "pk") final String pk,//
 			@RequestParam(value = "fromDate") final String fromDate, //
-			@RequestParam(value = "fromhour") final String fromHour,//
-			@RequestParam(value = "tohour") final String toHour,//
-			@RequestParam(value = "description") final String description,//
+			@RequestParam(value = "toDate", required = false) final String toDate, //
+			@RequestParam(value = "description", required = false) final String description,//
 			@RequestParam(value = "typeevent") final String typeevent)
 	{
-		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 		Date datef = null;
 		Date datet = null;
 		try
 		{
-			datef = format.parse(fromDate + " " + fromHour);
-			datet = format.parse(fromDate + " " + toHour);
+			datef = format.parse(fromDate);
+			datet = format.parse(toDate);
 		}
 		catch (final ParseException e)
 		{
 			LOG.debug("error parsing date");
 		}
 
-
-		if (datef == null)
+		if (datef == null || datef.after(datet))
 		{
 			final MessageDto messageDto = HelperUtil.createMessage("Error with the date submitted", Alerts.WARNING);
 			model.addAttribute("message", messageDto);
 			return messageDto;
 		}
 
-		if (datet == null)
-		{
-			final Calendar cal = Calendar.getInstance();
-			cal.setTime(datef);
-			cal.add(Calendar.HOUR_OF_DAY, 1);
-			datet = cal.getTime();
-		}
+		//		if (datet == null)
+		//		{
+		//			final Calendar cal = Calendar.getInstance();
+		//			cal.setTime(datef);
+		//			cal.add(Calendar.HOUR_OF_DAY, 1);
+		//			datet = cal.getTime();
+		//		}
 
 
 		if (pk == null || pk.equals(""))
@@ -145,7 +142,10 @@ public class EventController
 
 		event.setFromDate(datef);
 		event.setToDate(datet);
-		event.setDescription(description);
+		if (typeevent.equals("TRAINING"))
+		{
+			event.setDescription(description);
+		}
 		event.setType(typeevent);
 
 		MessageDto msave = null;

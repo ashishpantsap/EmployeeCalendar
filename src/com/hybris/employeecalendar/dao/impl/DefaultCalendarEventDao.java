@@ -147,7 +147,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#getReport(java.util.Date,
 	 * com.hybris.employeecalendar.enums.EventType, java.lang.String)
 	 */
@@ -204,7 +204,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#deleteEventsInTheDay(java.util.Date, java.lang.String)
 	 */
 	@Override
@@ -236,6 +236,34 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 		}
 
 		modelService.removeAll(result);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#getMonthlyScheduleOnCallAndQM(java.util.Date,
+	 * java.util.Date)
+	 */
+	@Override
+	public List<SapEventModel> getMonthlyScheduleOnCallAndQM(final Date from, final Date to)
+	{
+		final String queryString = //
+		"SELECT {e:PK }" //
+				+ "FROM { SapEmployee AS p JOIN SapEvent AS e " + "ON {p:PK} = {e:employee} } "//
+				+ "WHERE {e:FROMDATE} >= ?from "//
+				+ "AND {e:TODATE} <= ?to "//
+				+ "AND {e:type} = ?type1 "//
+				+ "OR {e:type} = ?type2 "//
+				+ "ORDER BY {e:FROMDATE} ASC";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("from", from);
+		query.addQueryParameter("to", to);
+		query.addQueryParameter("type1", EventType.ON_CALL);
+		query.addQueryParameter("type2", EventType.QUEUE_MANAGER);
+		final List<SapEventModel> result = flexibleSearchService.<SapEventModel> search(query).getResult();
+
+		return result;
 
 	}
 }

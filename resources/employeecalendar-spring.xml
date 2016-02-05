@@ -39,16 +39,17 @@
 	    <property name="typeCode" value="SapEvent"/>
  	</bean>
  	
+ 	<util:map id="eventTypeShortName">
+ 		<entry key="QUEUE_MANAGER" value="QM" />
+ 		<entry key="OUT_OF_THE_OFFICE" value="OOO" />
+ 	</util:map>
  	
 	<util:map id="eventTypeMapping">
 		<entry key="OUT_OF_THE_OFFICE" value="event-important" />
-		<entry key="WORKING_FROM_HOME" value="event-inverse" />
 		<entry key="QUEUE_MANAGER" value="event-info" />
 		<entry key="AFTERNOON_SHIFT" value="event-warning" />
-		<entry key="MORNING_SHIFT" value="event-success" />
 		<entry key="ON_CALL" value="event-special" />
 		<entry key="TRAINING" value="event-special" />
-		<entry key="WORKING_BANK_HOLIDAY" value="event-special" />
 	</util:map>
  			
 </beans>

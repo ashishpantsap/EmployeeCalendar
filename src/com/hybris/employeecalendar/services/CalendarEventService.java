@@ -35,6 +35,8 @@ public interface CalendarEventService
 
 	public List<EventDto> getMonthlyScheduleFromDateToDate(Date from, Date to);
 
+	public List<EventDto> getMonthlyScheduleOnCallAndQM(Date from, Date to);
+
 	public List<EventDto> getReport(Date date, EventType event, String PK) throws ParseException;
 
 	public void deleteEventsInTheDay(Date date, String PK) throws ParseException;

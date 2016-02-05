@@ -195,7 +195,7 @@
   left: 92.85714285714285%;
 }
 .events-list {
-  position: absolute;
+  position: relative;
   bottom: 0;
   left: 0;
   overflow: hidden;

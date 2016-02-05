@@ -29,6 +29,8 @@ public interface CalendarEventDao
 
 	public List<SapEventModel> getMonthlyScheduleFromDateToDate(Date from, Date to);
 
+	public List<SapEventModel> getMonthlyScheduleOnCallAndQM(Date from, Date to);
+
 	public SapEventModel getTypeEventFromDate(Date date, EventType eventType) throws ParseException;
 
 	public List<SapEventModel> getReport(final Date date, final EventType event, final String PK) throws ParseException;

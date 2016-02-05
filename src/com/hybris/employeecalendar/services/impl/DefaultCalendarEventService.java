@@ -107,7 +107,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 		sapEvent.setFromDate(event.getFromDate());
 		sapEvent.setToDate(event.getToDate());
 		sapEvent.setDescription(event.getDescription());
-		sapEvent.setType(event.getType() != null ? EventType.valueOf(event.getType()) : EventType.MORNING_SHIFT);
+		sapEvent.setType(event.getType() != null ? EventType.valueOf(event.getType()) : EventType.OUT_OF_THE_OFFICE);
 
 		calendarEventDao.saveEventOnCalendar(sapEvent);
 	}
@@ -125,7 +125,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.employeecalendar.services.CalendarEventService#getReport(java.util.Date,
 	 * com.hybris.employeecalendar.enums.EventType, java.lang.String)
 	 */
@@ -181,5 +181,10 @@ public class DefaultCalendarEventService implements CalendarEventService
 		calendarEventDao.deleteEventsInTheDay(date, PK);
 	}
 
-
+	@Override
+	public List<EventDto> getMonthlyScheduleOnCallAndQM(final Date from, final Date to)
+	{
+		final List<SapEventModel> monthlyScheduleOnCallAndQM = calendarEventDao.getMonthlyScheduleOnCallAndQM(from, to);
+		return populateDtos(monthlyScheduleOnCallAndQM);
+	}
 }

@@ -14,13 +14,15 @@
 	    <enumtype code="EventType" autocreate="true" generate="true">
 	        <value code="ON_CALL"/>
 	        <value code="AFTERNOON_SHIFT"/>
-	        <value code="MORNING_SHIFT"/>
 	        <value code="OUT_OF_THE_OFFICE"/>
-	        <value code="WORKING_FROM_HOME"/>
 	        <value code="QUEUE_MANAGER"/>                
-	        <value code="WORKING_BANK_HOLIDAY"/>
 	        <value code="TRAINING"/>
-	        <value code="SICK_LEAVE"/>
+	    </enumtype>
+	    
+	    <enumtype code="TrainingType" autocreate="true" generate="true">
+	        <value code="MORNING"/>
+	        <value code="AFTERNOON"/>
+	        <value code="ALL_DAY"/>
 	    </enumtype>
 	</enumtypes>
 	
@@ -61,7 +63,7 @@
 				<attribute qualifier="type" type="EventType">
 					<description>type event</description>
 					<persistence type="property" />
-					<defaultvalue>em().getEnumerationValue("EventType", "MORNING_SHIFT")</defaultvalue>
+					<defaultvalue>em().getEnumerationValue("EventType", "OUT_OF_THE_OFFICE")</defaultvalue>
 				</attribute>
 				<attribute qualifier="description" type="java.lang.String">
 					<description>description</description>

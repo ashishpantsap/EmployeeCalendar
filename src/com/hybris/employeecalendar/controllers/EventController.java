@@ -36,10 +36,6 @@ import com.hybris.employeecalendar.services.SAPEmployeeService;
 import com.hybris.employeecalendar.util.HelperUtil;
 
 
-/**
- * @author I310388
- *
- */
 @Controller
 public class EventController
 {
@@ -52,11 +48,18 @@ public class EventController
 
 	private Map<String, String> eventTypeMapping;
 
+	private Map<String, String> eventTypeShortName;
 
 	@Resource(name = "eventTypeMapping")
 	public void setEventTypeMapping(final Map<String, String> eventTypeMapping)
 	{
 		this.eventTypeMapping = eventTypeMapping;
+	}
+
+	@Resource(name = "eventTypeShortName")
+	public void setEventTypeShortName(final Map<String, String> eventTypeShortName)
+	{
+		this.eventTypeShortName = eventTypeShortName;
 	}
 
 
@@ -93,11 +96,11 @@ public class EventController
 
 	@ResponseBody
 	@RequestMapping(value = "/sendevent", method = RequestMethod.POST, headers = "Accept=application/json")
-	public MessageDto sendEvent(final Model model,//
-			@RequestParam(value = "pk") final String pk,//
+	public MessageDto sendEvent(final Model model, //
+			@RequestParam(value = "pk") final String pk, //
 			@RequestParam(value = "fromDate") final String fromDate, //
 			@RequestParam(value = "toDate", required = false) final String toDate, //
-			@RequestParam(value = "description", required = false) final String description,//
+			@RequestParam(value = "description", required = false) final String description, //
 			@RequestParam(value = "typeevent") final String typeevent)
 	{
 		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -142,12 +145,8 @@ public class EventController
 
 		event.setFromDate(datef);
 		event.setToDate(datet);
-		if (typeevent.equals("TRAINING"))
-		{
-			event.setDescription(description);
-		}
+		event.setDescription(description == null ? "" : description);
 		event.setType(typeevent);
-
 		MessageDto msave = null;
 		try
 		{
@@ -169,10 +168,13 @@ public class EventController
 		return msave;
 	}
 
+
 	@ResponseBody
 	@RequestMapping(value = "/feedCalendar", method = RequestMethod.GET, headers = "Accept=application/json")
-	public List<FeedCalendarDto> feedCalendarAll(@RequestParam(value = "month") final String month,
-			@RequestParam(value = "from") final String from, @RequestParam(value = "to") final String to)
+	public List<FeedCalendarDto> feedCalendarAll( //
+			@RequestParam(value = "month") final String month, //
+			@RequestParam(value = "from") final String from, //
+			@RequestParam(value = "to") final String to)
 	{
 		final long millisecondsfrom = Long.parseLong(from);
 		final long millisecondsto = Long.parseLong(to);
@@ -189,8 +191,8 @@ public class EventController
 			LOG.error(e.getMessage());
 			return Collections.EMPTY_LIST;
 		}
-
-		final List<EventDto> eventsDto = calendarEventService.getMonthlyScheduleFromDateToDate(dateFrom, dateTo);
+		//FIXME
+		final List<EventDto> eventsDto = calendarEventService.getMonthlyScheduleOnCallAndQM(dateFrom, dateTo);
 		if (eventsDto.size() == 0)
 		{
 			return Collections.EMPTY_LIST;
@@ -203,9 +205,10 @@ public class EventController
 		{
 			test = test + "" + i++;
 			final FeedCalendarDto feedCalendar = new FeedCalendarDto();
-			feedCalendar.setClassevent(eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType())
-					: "event-success");
-			feedCalendar.setTitle(event.getType() + " - " + event.getEmployee().getName() + "  " + event.getDescription());
+			feedCalendar.setClassevent(
+					eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType()) : "event-success");
+			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null ? eventTypeShortName.get(event.getType())
+					: event.getType() + "  " + event.getEmployee().getName() + event.getEmployee().getSurname());
 			feedCalendar.setUrl(event.getType());
 			feedCalendar.setStart(String.valueOf(event.getFromDate().getTime()));
 			feedCalendar.setEnd(String.valueOf(event.getToDate().getTime()));

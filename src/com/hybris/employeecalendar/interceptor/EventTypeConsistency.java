@@ -87,71 +87,35 @@ public class EventTypeConsistency implements ValidateInterceptor<SapEventModel>
 		}
 		else if (eventOnDb.getType().equals(EventType.AFTERNOON_SHIFT))
 		{
-			if (model.getType().equals(EventType.ON_CALL) || model.getType().equals(EventType.MORNING_SHIFT)
-					|| model.getType().equals(EventType.OUT_OF_THE_OFFICE) || model.getType().equals(EventType.SICK_LEAVE)
+			if (model.getType().equals(EventType.ON_CALL) || model.getType().equals(EventType.OUT_OF_THE_OFFICE)
 					|| model.getType().equals(EventType.AFTERNOON_SHIFT))
 			{
 				throw new InterceptorException(
 						"No events can be added in this day. AFTERNOON_SHIFT event already saved it is not possible to add MORNING_SHIFT |  OUT_OF_THE_OFFICE | ON_CALL | SICK_LEAVE | AFTERNOON_SHIFT");
 			}
 		}
-		else if (eventOnDb.getType().equals(EventType.MORNING_SHIFT))
-		{
-			if (model.getType().equals(EventType.ON_CALL) || model.getType().equals(EventType.AFTERNOON_SHIFT)
-					|| model.getType().equals(EventType.OUT_OF_THE_OFFICE) || model.getType().equals(EventType.SICK_LEAVE)
-					|| model.getType().equals(EventType.MORNING_SHIFT))
-			{
-				throw new InterceptorException(
-						"No events can be added in this day. MORNING_SHIFT event already saved it is not possible to add AFTERNOON_SHIFT |  OUT_OF_THE_OFFICE | ON_CALL | SICK_LEAVE | MORNING_SHIFT");
-			}
-		}
 		else if (eventOnDb.getType().equals(EventType.OUT_OF_THE_OFFICE))
 		{
-			throw new InterceptorException("No events can be added in this day. OUT_OF_THE_OFFICE event already saved for this date");
-		}
-		else if (eventOnDb.getType().equals(EventType.WORKING_FROM_HOME))
-		{
-			if (model.getType().equals(EventType.ON_CALL) || model.getType().equals(EventType.OUT_OF_THE_OFFICE)
-					|| model.getType().equals(EventType.SICK_LEAVE) || model.getType().equals(EventType.WORKING_FROM_HOME))
-			{
-				throw new InterceptorException(
-						"No events can be added in this day. WORKING_FROM_HOME event already saved it is not possible to add ON_CALL |  OUT_OF_THE_OFFICE | SICK_LEAVE | WORKING_FROM_HOME");
-			}
+			throw new InterceptorException(
+					"No events can be added in this day. OUT_OF_THE_OFFICE event already saved for this date");
 		}
 		else if (eventOnDb.getType().equals(EventType.QUEUE_MANAGER))
 		{
 			if (model.getType().equals(EventType.ON_CALL) || model.getType().equals(EventType.OUT_OF_THE_OFFICE)
-					|| model.getType().equals(EventType.SICK_LEAVE) || model.getType().equals(EventType.QUEUE_MANAGER))
+					|| model.getType().equals(EventType.QUEUE_MANAGER))
 			{
 				throw new InterceptorException(
 						"No events can be added in this day. QUEUE_MANAGER event already saved it is not possible to add ON_CALL |  OUT_OF_THE_OFFICE | SICK_LEAVE | QUEUE_MANAGER");
 			}
 		}
-		else if (eventOnDb.getType().equals(EventType.WORKING_BANK_HOLIDAY))
-		{
-			if (model.getType().equals(EventType.ON_CALL) || model.getType().equals(EventType.OUT_OF_THE_OFFICE)
-					|| model.getType().equals(EventType.SICK_LEAVE) || model.getType().equals(EventType.WORKING_BANK_HOLIDAY))
-			{
-				throw new InterceptorException(
-						"No events can be added in this day. WORKING_BANK_HOLIDAY event already saved it is not possible to add ON_CALL |  OUT_OF_THE_OFFICE  | SICK_LEAVE | WORKING_BANK_HOLIDAY");
-			}
-		}
 		else if (eventOnDb.getType().equals(EventType.TRAINING))
 		{
 			if (model.getType().equals(EventType.ON_CALL) || model.getType().equals(EventType.OUT_OF_THE_OFFICE)
-					|| model.getType().equals(EventType.QUEUE_MANAGER) || model.getType().equals(EventType.WORKING_BANK_HOLIDAY)
-					|| model.getType().equals(EventType.SICK_LEAVE) || model.getType().equals(EventType.TRAINING))
+					|| model.getType().equals(EventType.QUEUE_MANAGER) || model.getType().equals(EventType.TRAINING))
 			{
 				throw new InterceptorException(
 						"No events can be added in this day. TRAINING event already saved it is not possible to add ON_CALL |  OUT_OF_THE_OFFICE | QUEUE_MANAGER | WORK_BANK_HOLIDAY | SICK_LEAVE | TRAINING");
 			}
 		}
-		else if (eventOnDb.getType().equals(EventType.SICK_LEAVE))
-		{
-			throw new InterceptorException(
-					"No events can be added in this day. SICK_LEAVE event already saved it is not possible to add other events");
-		}
-
-
 	}
 }

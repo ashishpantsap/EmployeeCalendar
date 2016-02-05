@@ -101,6 +101,7 @@ public class EventController
 			@RequestParam(value = "fromDate") final String fromDate, //
 			@RequestParam(value = "toDate", required = false) final String toDate, //
 			@RequestParam(value = "description", required = false) final String description, //
+			@RequestParam(value = "training-time", required = false) final String trainingTime, //
 			@RequestParam(value = "typeevent") final String typeevent)
 	{
 		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -122,16 +123,6 @@ public class EventController
 			model.addAttribute("message", messageDto);
 			return messageDto;
 		}
-
-		//		if (datet == null)
-		//		{
-		//			final Calendar cal = Calendar.getInstance();
-		//			cal.setTime(datef);
-		//			cal.add(Calendar.HOUR_OF_DAY, 1);
-		//			datet = cal.getTime();
-		//		}
-
-
 		if (pk == null || pk.equals(""))
 		{
 			final MessageDto messageDto = HelperUtil.createMessage("No inumber submitted", Alerts.DANGER);
@@ -141,15 +132,17 @@ public class EventController
 
 		final SapEmployeeModel employee = sapEmployeeService.getSapEmployeeByPK(pk);
 
-		final EventDto event = new EventDto();
+		EventDto event = new EventDto();
 
 		event.setFromDate(datef);
 		event.setToDate(datet);
 		event.setDescription(description == null ? "" : description);
 		event.setType(typeevent);
+		event.setTrainingTime(trainingTime);
 		MessageDto msave = null;
 		try
 		{
+			event = HelperUtil.getDateRangeFromEventType(event);
 			calendarEventService.saveEventOnCalendar(event, employee);
 		}
 		catch (final Exception mse)
@@ -191,7 +184,6 @@ public class EventController
 			LOG.error(e.getMessage());
 			return Collections.EMPTY_LIST;
 		}
-		//FIXME
 		final List<EventDto> eventsDto = calendarEventService.getMonthlyScheduleOnCallAndQM(dateFrom, dateTo);
 		if (eventsDto.size() == 0)
 		{
@@ -203,12 +195,13 @@ public class EventController
 		String test = "test";
 		for (final EventDto event : eventsDto)
 		{
+			final String employee = event.getEmployee().getName() + " ";
 			test = test + "" + i++;
 			final FeedCalendarDto feedCalendar = new FeedCalendarDto();
 			feedCalendar.setClassevent(
 					eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType()) : "event-success");
-			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null ? eventTypeShortName.get(event.getType())
-					: event.getType() + "  " + event.getEmployee().getName() + event.getEmployee().getSurname());
+			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null
+					? eventTypeShortName.get(event.getType()) + "  " + employee : event.getType() + " " + employee);
 			feedCalendar.setUrl(event.getType());
 			feedCalendar.setStart(String.valueOf(event.getFromDate().getTime()));
 			feedCalendar.setEnd(String.valueOf(event.getToDate().getTime()));

@@ -54,7 +54,6 @@
 						<form id="sendeventform" style="position: relative;">
 							<label for="inumber">Select Employee</label> 
 							<select id="inumber" class="form-control" name="pk"></select> 
-							
 							<br /> 
 							<label for="typeevents">Event</label> 
 							<select class="form-control"  id="typeevents" name="typeevent"></select> 
@@ -65,12 +64,15 @@
 							<input id="todate" type="date" name="toDate" class="form-control" required="required" /> <br />
 							<br />
 							<div id="hidedescription">
+								<label for="training-time">Training</label>
+								<select class="form-control"  id="training-time" name="training-time">
+									<c:forEach var="training" items="${trainings}">
+										<option value="${training}"> ${training}</option>
+									</c:forEach>
+								</select>
+								<br />
 								<label for="description">Description</label> 
-								<select class="form-control"  id="description" name="description">
-									<option>MORNING</option>
-									<option>AFTERNOON</option>
-									<option>ALL_DAY</option>
-								</select><br />
+								<input id="description" type="text" name="description" class="form-control" /> <br />
 							</div>
 							<button id="submitbutton" type="submit"	class="btn btn-default btn-info">Submit</button>
 						</form>

@@ -12,12 +12,12 @@
 		<div class="events-list" data-cal-start="<%= start %>"
 			data-cal-end="<%= end %>">
 			<% _.each(events, function(event) {  %>
-			<span class="label label-primary"> <%= event.title %> </span>
+			<h4><span class="label label-<%= event['classevent'] %>"> <%= event.title %> </span></h4>
 			<% }); %>
 		</div>
 		<% } %>
 	</div>
-	<div class="col-md-2">
+	<div class="col-md-1">
 		<div>
 			<button type="button" class="btn btn-default btn-xs"
 				data-addevent='<%= data_day  %>' data-toggle="modal"

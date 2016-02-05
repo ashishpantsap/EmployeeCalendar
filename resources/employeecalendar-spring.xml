@@ -46,9 +46,9 @@
  	
 	<util:map id="eventTypeMapping">
 		<entry key="OUT_OF_THE_OFFICE" value="event-important" />
-		<entry key="QUEUE_MANAGER" value="event-info" />
+		<entry key="QUEUE_MANAGER" value="primary" />
 		<entry key="AFTERNOON_SHIFT" value="event-warning" />
-		<entry key="ON_CALL" value="event-special" />
+		<entry key="ON_CALL" value="danger" />
 		<entry key="TRAINING" value="event-special" />
 	</util:map>
  			

@@ -87,5 +87,15 @@
 			</indexes>
 		</itemtype>
 		
+		<itemtype code="SapEmployee" generate="true" autocreate="false">
+			<deployment table="sapemployees" typecode="10123" />
+			<attributes>
+				<attribute qualifier="email" type="java.lang.String">
+					<description>Email</description>
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
 	</itemtypes>
 </items>

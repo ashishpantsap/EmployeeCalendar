@@ -266,4 +266,35 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 		return result;
 
 	}
+	
+	@Override
+	public List<SapEventModel> getTypeEventsFromDate(final Date date, final EventType eventType) throws ParseException
+	{
+		if (date == null || eventType == null)
+		{
+			return null;
+		}
+
+		final DateRangeDto dateRange = HelperUtil.getDateRangeOfTheDay(date);
+
+		final String queryString = //
+		"SELECT {e:PK } " //
+				+ "FROM { SapEvent AS e } "//
+				+ "WHERE  {e:TYPE} = ?eventType "//
+				+ "AND {e:FROMDATE} >= ?from "//
+				+ "AND {e:TODATE} <= ?to ";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("from", dateRange.getFromDate());
+		query.addQueryParameter("to", dateRange.getToDate());
+		query.addQueryParameter("eventType", eventType);
+		final List<SapEventModel> result = flexibleSearchService.<SapEventModel> search(query).getResult();
+
+		if (result == null || result.size() == 0)
+		{
+			return null;
+		}
+
+		return result;
+	}
 }

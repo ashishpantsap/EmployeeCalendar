@@ -34,4 +34,6 @@ public interface CalendarEventDao
 	public List<SapEventModel> getReport(final Date date, final EventType event, final String PK) throws ParseException;
 
 	public void deleteEventsInTheDay(Date date, String PK) throws ParseException;
+
+	public List<SapEventModel> getTypeEventsFromDate(Date date, EventType eventType) throws ParseException;
 }

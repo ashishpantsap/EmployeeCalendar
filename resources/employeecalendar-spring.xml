@@ -50,5 +50,7 @@
 		<entry key="TRAINING" value="event-special" />
 		<entry key="WORKING_BANK_HOLIDAY" value="event-special" />
 	</util:map>
- 			
+ 	
+ 	<bean id="sendReminderJob" class="com.hybris.employeecalendar.cronJob.SendNotificationJob" autowire="byName"/>
+ 	<bean id="mailService" class="com.hybris.employeecalendar.services.impl.DefaultMailService"></bean>
 </beans>

@@ -90,6 +90,7 @@ public class HelperUtil
 	{
 
 		final Date date = event.getFromDate();
+		final Date toDate = event.getToDate();
 		if (date == null)
 		{
 			return null;
@@ -99,26 +100,27 @@ public class HelperUtil
 		String to = "";
 		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-		final String dateToString = format.format(date);
+		final String dateFromToString = format.format(date);
+		final String dateToString = format.format(toDate);
 
 		if (EventType.AFTERNOON_SHIFT.getCode().equalsIgnoreCase(event.getType()))
 		{
-			from = dateToString + " 12:00:00";
+			from = dateFromToString + " 12:00:00";
 			to = dateToString + " 20:00:00";
 		}
 		else if (EventType.ON_CALL.getCode().equalsIgnoreCase(event.getType()))
 		{
-			from = dateToString + " 08:00:00";
+			from = dateFromToString + " 08:00:00";
 			to = dateToString + " 16:00:00";
 		}
 		else if (EventType.QUEUE_MANAGER.getCode().equalsIgnoreCase(event.getType()))
 		{
-			from = dateToString + " 10:00:00";
+			from = dateFromToString + " 10:00:00";
 			to = dateToString + " 18:00:00";
 		}
 		else if (EventType.OUT_OF_THE_OFFICE.getCode().equalsIgnoreCase(event.getType()))
 		{
-			from = dateToString + " 10:00:00";
+			from = dateFromToString + " 10:00:00";
 			to = dateToString + " 18:00:00";
 		} //TRAINING TO BE DECIDED WITH NEW VALUE ENUMTYPE
 		else if (EventType.TRAINING.getCode().equalsIgnoreCase(event.getType()))
@@ -127,23 +129,23 @@ public class HelperUtil
 			{
 				if ("MORNING".equals(event.getTrainingTime()))
 				{
-					from = dateToString + " 09:00:00";
+					from = dateFromToString + " 09:00:00";
 					to = dateToString + " 12:00:00";
 				}
 				else if (("AFTERNOON".equals(event.getTrainingTime())))
 				{
-					from = dateToString + " 14:00:00";
+					from = dateFromToString + " 14:00:00";
 					to = dateToString + " 18:00:00";
 				}
 				else if (("ALL_DAY".equals(event.getTrainingTime())))
 				{
-					from = dateToString + " 09:00:00";
+					from = dateFromToString + " 09:00:00";
 					to = dateToString + " 18:00:00";
 				}
 			}
 			else
 			{
-				from = dateToString + " 09:00:00";
+				from = dateFromToString + " 09:00:00";
 				to = dateToString + " 18:00:00";
 			}
 		}

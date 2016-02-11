@@ -229,7 +229,10 @@
 	                data: {'date':new Date(date)}
 				});
 				request.done(function(data){
-					_.each(data, function(key, value){
+					var list = _.sortBy(data, function(o) { return o.employee.name; });
+					console.log(list);
+					//console.log(data[0].employee)
+					_.each(list, function(key, value){
 						row=document.createElement('tr');
 						cell=document.createElement('td');
 						text=document.createTextNode(key.employee.name+' '+key.employee.surname+':');	

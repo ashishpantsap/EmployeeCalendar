@@ -21,6 +21,7 @@
 <body>
 <body>
 	<c:import url="header.jsp" />
+	<div id="successmsg"></div>
 	<div class="container-fluid">
 		<h3 class="text-center" id="MonthYear"></h3>
 		<div class="pull-right form-inline">
@@ -264,6 +265,7 @@
 					type:'POST',					
 	                data: {'name':data.name + ',' + data.surname, 'event':data.event, 'date':new Date(data.date)}
 				}).done(function(data){
+					$('#myModal').modal('hide');
 					window.location='/employeecalendar/home';
 					console.log(data);
 				}).fail(function(err){
@@ -285,9 +287,9 @@
 					console.log(data);
 					console.log(data.alert);
 					if(data.alert==='SUCCESS')
-					{
+					{											
 						$('#myModal').modal('hide');
-						window.location='/employeecalendar/home';						
+						window.location='/employeecalendar/home';											
 					};
 				});
 				request.fail(function(data){

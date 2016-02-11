@@ -7,7 +7,9 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -57,12 +59,6 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 	}
 
-	@Override
-	public void deleteEventOnCalendar(final SapEventModel event)
-	{
-		// YTODO Auto-generated method stub
-
-	}
 
 	@Override
 	public List<Date> getMonthlyEventByInumber(final String iNumber)
@@ -111,7 +107,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#getQMfromDate(java.util.Date)
 	 */
 	@Override
@@ -147,7 +143,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#getReport(java.util.Date,
 	 * com.hybris.employeecalendar.enums.EventType, java.lang.String)
 	 */
@@ -204,44 +200,44 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#deleteEventsInTheDay(java.util.Date, java.lang.String)
 	 */
-	@Override
-	public void deleteEventsInTheDay(final Date date, final String PK) throws ParseException
-	{
-		if (date == null || PK == null)
-		{
-			return;
-		}
-
-		final DateRangeDto dateRange = HelperUtil.getDateRangeOfTheDay(date);
-
-		final String queryString = //
-		"SELECT {e:PK } " //
-				+ "FROM { SapEvent AS e JOIN SapEmployee AS em ON {e:employee} = {em:PK}} "//
-				+ "WHERE {e:FROMDATE} >= ?from "//
-				+ "AND {e:TODATE} <= ?to "//
-				+ "AND {em:PK}=?pk";
-
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("from", dateRange.getFromDate());
-		query.addQueryParameter("to", dateRange.getToDate());
-		query.addQueryParameter("pk", PK);
-		final List<SapEventModel> result = flexibleSearchService.<SapEventModel> search(query).getResult();
-
-		if (result == null || result.size() == 0)
-		{
-			return;
-		}
-
-		modelService.removeAll(result);
-
-	}
+	//	@Override
+	//	public void deleteEventsInTheDay(final Date date, final String PK) throws ParseException
+	//	{
+	//		if (date == null || PK == null)
+	//		{
+	//			return;
+	//		}
+	//
+	//		final DateRangeDto dateRange = HelperUtil.getDateRangeOfTheDay(date);
+	//
+	//		final String queryString = //
+	//		"SELECT {e:PK } " //
+	//				+ "FROM { SapEvent AS e JOIN SapEmployee AS em ON {e:employee} = {em:PK}} "//
+	//				+ "WHERE {e:FROMDATE} >= ?from "//
+	//				+ "AND {e:TODATE} <= ?to "//
+	//				+ "AND {em:PK}=?pk";
+	//
+	//		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+	//		query.addQueryParameter("from", dateRange.getFromDate());
+	//		query.addQueryParameter("to", dateRange.getToDate());
+	//		query.addQueryParameter("pk", PK);
+	//		final List<SapEventModel> result = flexibleSearchService.<SapEventModel> search(query).getResult();
+	//
+	//		if (result == null || result.size() == 0)
+	//		{
+	//			return;
+	//		}
+	//
+	//		modelService.removeAll(result);
+	//
+	//	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#getMonthlyScheduleOnCallAndQM(java.util.Date,
 	 * java.util.Date)
 	 */
@@ -266,4 +262,51 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 		return result;
 
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.hybris.employeecalendar.dao.CalendarEventDao#getAllEventsInTheDay(java.util.Date)
+	 */
+	@Override
+	public List<SapEventModel> getAllEventsInTheDay(final Date date, final String name, final String event) throws ParseException
+	{
+		final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		final String newDate = df.format(date);
+		final String queryString;
+		final boolean emptyNameAndEvent = isNameAndEventEmpty(name, event);
+		final String[] splitName = emptyNameAndEvent ? null : name.split(",");
+
+		if (emptyNameAndEvent)
+		{
+			queryString = "SELECT {p:PK }" //
+					+ "FROM { SapEvent AS p JOIN SapEmployee AS e " + "ON {p:employee} = {e:PK} } "//
+					+ "WHERE {p:FROMDATE} LIKE ?newDate ";
+		}
+
+		else
+		{
+			queryString = "SELECT {p:PK }" //
+					+ "FROM { SapEvent AS p JOIN SapEmployee AS e " + "ON {p:employee} = {e:PK} } "//
+					+ "WHERE {p:FROMDATE} LIKE ?newDate AND {e.name} = ?name AND {e.surname} = ?surname";
+		}
+
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("newDate", newDate + '%');
+
+		if (!emptyNameAndEvent)
+		{
+			query.addQueryParameter("name", splitName[0]);
+			query.addQueryParameter("surname", splitName[1]);
+		}
+		final List<SapEventModel> result = flexibleSearchService.<SapEventModel> search(query).getResult();
+		return result;
+	}
+
+	private boolean isNameAndEventEmpty(final String name, final String event)
+	{
+		return ((name == null || event == null) || (name.equals("") || event.equals("")));
+	}
+
 }

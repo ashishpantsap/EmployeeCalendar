@@ -1,7 +1,7 @@
 /*
  * ----------------------------------------------------------------
  * --- WARNING: THIS FILE IS GENERATED AND WILL BE OVERWRITTEN! ---
- * --- Generated at 02-Sep-2015 13:42:45                        ---
+ * --- Generated at 10-Feb-2016 11:35:39                        ---
  * ----------------------------------------------------------------
  */
 package com.hybris.employeecalendar.jalo;
@@ -32,8 +32,10 @@ public abstract class GeneratedSapEvent extends GenericItem
 	public static final String TYPE = "type";
 	/** Qualifier of the <code>SapEvent.description</code> attribute **/
 	public static final String DESCRIPTION = "description";
-	/** Qualifier of the <code>SapEvent.date</code> attribute **/
-	public static final String DATE = "date";
+	/** Qualifier of the <code>SapEvent.fromDate</code> attribute **/
+	public static final String FROMDATE = "fromDate";
+	/** Qualifier of the <code>SapEvent.toDate</code> attribute **/
+	public static final String TODATE = "toDate";
 	/** Qualifier of the <code>SapEvent.employee</code> attribute **/
 	public static final String EMPLOYEE = "employee";
 	/**
@@ -54,7 +56,8 @@ public abstract class GeneratedSapEvent extends GenericItem
 		final Map<String, AttributeMode> tmp = new HashMap<String, AttributeMode>();
 		tmp.put(TYPE, AttributeMode.INITIAL);
 		tmp.put(DESCRIPTION, AttributeMode.INITIAL);
-		tmp.put(DATE, AttributeMode.INITIAL);
+		tmp.put(FROMDATE, AttributeMode.INITIAL);
+		tmp.put(TODATE, AttributeMode.INITIAL);
 		tmp.put(EMPLOYEE, AttributeMode.INITIAL);
 		DEFAULT_INITIAL_ATTRIBUTES = Collections.unmodifiableMap(tmp);
 	}
@@ -69,42 +72,6 @@ public abstract class GeneratedSapEvent extends GenericItem
 	{
 		EMPLOYEEHANDLER.newInstance(ctx, allAttributes);
 		return super.createItem( ctx, type, allAttributes );
-	}
-	
-	/**
-	 * <i>Generated method</i> - Getter of the <code>SapEvent.date</code> attribute.
-	 * @return the date - date
-	 */
-	public Date getDate(final SessionContext ctx)
-	{
-		return (Date)getProperty( ctx, DATE);
-	}
-	
-	/**
-	 * <i>Generated method</i> - Getter of the <code>SapEvent.date</code> attribute.
-	 * @return the date - date
-	 */
-	public Date getDate()
-	{
-		return getDate( getSession().getSessionContext() );
-	}
-	
-	/**
-	 * <i>Generated method</i> - Setter of the <code>SapEvent.date</code> attribute. 
-	 * @param value the date - date
-	 */
-	public void setDate(final SessionContext ctx, final Date value)
-	{
-		setProperty(ctx, DATE,value);
-	}
-	
-	/**
-	 * <i>Generated method</i> - Setter of the <code>SapEvent.date</code> attribute. 
-	 * @param value the date - date
-	 */
-	public void setDate(final Date value)
-	{
-		setDate( getSession().getSessionContext(), value );
 	}
 	
 	/**
@@ -177,6 +144,78 @@ public abstract class GeneratedSapEvent extends GenericItem
 	public void setEmployee(final SapEmployee value)
 	{
 		setEmployee( getSession().getSessionContext(), value );
+	}
+	
+	/**
+	 * <i>Generated method</i> - Getter of the <code>SapEvent.fromDate</code> attribute.
+	 * @return the fromDate - from date
+	 */
+	public Date getFromDate(final SessionContext ctx)
+	{
+		return (Date)getProperty( ctx, FROMDATE);
+	}
+	
+	/**
+	 * <i>Generated method</i> - Getter of the <code>SapEvent.fromDate</code> attribute.
+	 * @return the fromDate - from date
+	 */
+	public Date getFromDate()
+	{
+		return getFromDate( getSession().getSessionContext() );
+	}
+	
+	/**
+	 * <i>Generated method</i> - Setter of the <code>SapEvent.fromDate</code> attribute. 
+	 * @param value the fromDate - from date
+	 */
+	public void setFromDate(final SessionContext ctx, final Date value)
+	{
+		setProperty(ctx, FROMDATE,value);
+	}
+	
+	/**
+	 * <i>Generated method</i> - Setter of the <code>SapEvent.fromDate</code> attribute. 
+	 * @param value the fromDate - from date
+	 */
+	public void setFromDate(final Date value)
+	{
+		setFromDate( getSession().getSessionContext(), value );
+	}
+	
+	/**
+	 * <i>Generated method</i> - Getter of the <code>SapEvent.toDate</code> attribute.
+	 * @return the toDate - to date
+	 */
+	public Date getToDate(final SessionContext ctx)
+	{
+		return (Date)getProperty( ctx, TODATE);
+	}
+	
+	/**
+	 * <i>Generated method</i> - Getter of the <code>SapEvent.toDate</code> attribute.
+	 * @return the toDate - to date
+	 */
+	public Date getToDate()
+	{
+		return getToDate( getSession().getSessionContext() );
+	}
+	
+	/**
+	 * <i>Generated method</i> - Setter of the <code>SapEvent.toDate</code> attribute. 
+	 * @param value the toDate - to date
+	 */
+	public void setToDate(final SessionContext ctx, final Date value)
+	{
+		setProperty(ctx, TODATE,value);
+	}
+	
+	/**
+	 * <i>Generated method</i> - Setter of the <code>SapEvent.toDate</code> attribute. 
+	 * @param value the toDate - to date
+	 */
+	public void setToDate(final Date value)
+	{
+		setToDate( getSession().getSessionContext(), value );
 	}
 	
 	/**

@@ -18,6 +18,7 @@ import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
 import com.hybris.employeecalendar.model.SapEventModel;
 import com.hybris.employeecalendar.services.CalendarEventService;
+import com.hybris.employeecalendar.services.SAPEmployeeService;
 
 
 /**
@@ -29,6 +30,9 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 
 	private CalendarEventDao calendarEventDao;
+	private SAPEmployeeService sapEmployeeService;
+
+
 
 	/**
 	 * @param calendarEventDao
@@ -40,6 +44,11 @@ public class DefaultCalendarEventService implements CalendarEventService
 		this.calendarEventDao = calendarEventDao;
 	}
 
+	@Autowired
+	public void setSAPEmployeeService(final SAPEmployeeService sapEmployeeService)
+	{
+		this.sapEmployeeService = sapEmployeeService;
+	}
 
 	@Override
 	public void saveEventOnCalendar(final EventDto event)
@@ -72,14 +81,6 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 	@Override
 	public void saveEventsOnCalendar(final List<EventDto> events)
-	{
-		// YTODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void deleteEventOnCalendar(final EventDto event)
 	{
 		// YTODO Auto-generated method stub
 
@@ -125,7 +126,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.employeecalendar.services.CalendarEventService#getReport(java.util.Date,
 	 * com.hybris.employeecalendar.enums.EventType, java.lang.String)
 	 */
@@ -135,6 +136,69 @@ public class DefaultCalendarEventService implements CalendarEventService
 		final List<SapEventModel> eventsModel = calendarEventDao.getReport(date, event, PK);
 
 		return populateDtos(eventsModel);
+	}
+
+	//TODO Change Generic Exception
+	@Override
+	public void deleteEventOnCalendar(final EventDto event) throws Exception
+	{
+		//
+	}
+
+	//TODO Change Generic Exception
+	private SapEventModel convertEventDtoToModel(final EventDto eventDto) throws Exception
+	{
+		if (eventDto == null)
+		{
+			throw new Exception("Could not convert Dto to Model: No event present.");
+		}
+		final SapEventModel sapEventModel = new SapEventModel();
+		final SAPEmployeeDto sapEmployeeDto = sapEmployeeService.getSapEmployeeByInumber(eventDto.getEmployee().getInumber());
+		sapEventModel.setEmployee(convertEmployeeDtoToModel(sapEmployeeDto));
+		sapEventModel.setFromDate(eventDto.getFromDate());
+		sapEventModel.setType(EventType.valueOf(eventDto.getType()));
+		return sapEventModel;
+
+		//		final SapEmployeeModel sapEmployeeModel = convertEmployeeDtoToModel(sapEmployeeDto);
+		//		final Collection<SapEventModel> events = sapEmployeeModel.getEvents();
+		//		final Iterator i = events.iterator();
+		//		while (i.hasNext())
+		//		{
+		//			final SapEventModel sapEventModel = (SapEventModel) i;
+		//			if (sapEventModel.getFromDate().equals(eventDto.getFromDate()) && sapEventModel.getType().equals(eventDto.getType()))
+		//			{
+		//				return sapEventModel;
+		//			}
+		//		}
+		//		return null;
+
+
+
+		//		model.setEmployee(value);
+		//			model.setEmployee(eventDto.getEmployee());
+		//			final EventDto eventDto = new EventDto();
+		//			eventDto.setFromDate(model.getFromDate());
+		//			eventDto.setToDate(model.getToDate());
+		//			eventDto.setDescription(model.getDescription());
+		//			eventDto.setType(model.getType().getCode());
+		//
+		//			final SapEmployeeModel employee = model.getEmployee();
+		//			final SAPEmployeeDto employeeDto = new SAPEmployeeDto();
+		//			employeeDto.setInumber(employee.getInumber());
+		//			employeeDto.setName(employee.getName());
+		//			employeeDto.setSurname(employee.getSurname());
+		//
+		//			// employeeDto should set the PK as id dto shuould be modified
+		//			eventDto.setEmployee(employeeDto);
+		//
+		//			events.add(eventDto);
+	}
+
+	private SapEmployeeModel convertEmployeeDtoToModel(final SAPEmployeeDto sapEmployeeDto) throws Exception
+	{
+		final SapEmployeeModel sapEmployeeModel = new SapEmployeeModel();
+		sapEmployeeModel.setInumber(sapEmployeeDto.getInumber());
+		return sapEmployeeModel;
 	}
 
 
@@ -171,20 +235,38 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.employeecalendar.services.CalendarEventService#deleteEventsInTheDay(java.util.Date,
 	 * java.lang.String)
 	 */
-	@Override
-	public void deleteEventsInTheDay(final Date date, final String PK) throws ParseException
-	{
-		calendarEventDao.deleteEventsInTheDay(date, PK);
-	}
+
 
 	@Override
 	public List<EventDto> getMonthlyScheduleOnCallAndQM(final Date from, final Date to)
 	{
 		final List<SapEventModel> monthlyScheduleOnCallAndQM = calendarEventDao.getMonthlyScheduleOnCallAndQM(from, to);
 		return populateDtos(monthlyScheduleOnCallAndQM);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.hybris.employeecalendar.services.CalendarEventService#getAllEventsInTheDay(java.util.Date)
+	 */
+	@Override
+	public List<SapEventModel> getAllEventsInTheDay(final Date date, final String name, final String eventType)
+			throws ParseException
+	{
+		return calendarEventDao.getAllEventsInTheDay(date, name, eventType);
+
+
+	}
+
+	@Override
+	public List<EventDto> getAllEventsForDay(final Date date) throws ParseException
+	{
+		final List<SapEventModel> daysEvents = calendarEventDao.getAllEventsInTheDay(date, null, null);
+		return populateDtos(daysEvents);
+
 	}
 }

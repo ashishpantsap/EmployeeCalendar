@@ -21,8 +21,6 @@ public interface CalendarEventDao
 
 	public void saveEventsOnCalendar(List<SapEventModel> events);
 
-	public void deleteEventOnCalendar(SapEventModel event);
-
 	public List<Date> getMonthlyEventByInumber(String iNumber);
 
 	public List<SapEventModel> getSapEventByInumberAndDate(final String iNumber, final Date date) throws ParseException;
@@ -35,5 +33,5 @@ public interface CalendarEventDao
 
 	public List<SapEventModel> getReport(final Date date, final EventType event, final String PK) throws ParseException;
 
-	public void deleteEventsInTheDay(Date date, String PK) throws ParseException;
+	public List<SapEventModel> getAllEventsInTheDay(Date date, String name, String event) throws ParseException;
 }

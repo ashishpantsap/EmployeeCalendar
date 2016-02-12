@@ -21,7 +21,28 @@
 <body>
 <body>
 	<c:import url="header.jsp" />
-	<div id="successmsg"></div>
+	<div id="successmsg">
+		<script>
+			var eventSaved = "${eventSaved}";
+			window.onload = function(){
+				console.log('ghwghw');				
+				if(eventSaved){
+					var successDiv=document.getElementById('successmsg');
+					console.log(successDiv);
+					successDiv.innerHTML=' &nbsp; Event Saved Successfully!!';
+					var r=(0).toString(16);
+					var g=(255).toString(16);
+					var b=(0).toString(16);
+					console.log('ghwghw');
+					successDiv.style.color="#"+'00'+g+'00';
+					
+						setTimeout(function(){
+							remove(successDiv,r,g,b);
+						},1000);		
+				}
+			}
+		</script>
+	</div>
 	<div class="container-fluid">
 		<h3 class="text-center" id="MonthYear"></h3>
 		<div class="pull-right form-inline">
@@ -76,6 +97,9 @@
 								<br />
 								<label for="description">Description</label> 
 								<input id="description" type="text" name="description" class="form-control" /> <br />
+							</div>
+							<div id="error">
+								&nbsp;
 							</div>
 							<div class="modal-footer">
 								<button id="submitbutton" type="submit"	class="btn btn-default btn-info">Submit</button>
@@ -171,7 +195,7 @@
 					url : 'sapemployees',
 					method : 'GET',
 					error : function(err) {
-						console.log(err);
+						console.log('MyError',err);
 					}
 				})).then(function(data) {
 					var names = _.sortBy(data, 'name'),selectedInum;
@@ -188,7 +212,7 @@
 					url : 'sapevents',
 					method : 'GET',
 					error : function(err) {
-						console.log(err);
+						console.log('BLAH ERROR',err);
 					}
 				})).then(function(data) {
 					var _events = _.sortBy(data);
@@ -230,8 +254,6 @@
 				});
 				request.done(function(data){
 					var list = _.sortBy(data, function(o) { return o.employee.name; });
-					console.log(list);
-					//console.log(data[0].employee)
 					_.each(list, function(key, value){
 						row=document.createElement('tr');
 						cell=document.createElement('td');
@@ -253,7 +275,7 @@
 					});				
 				});
 				request.error(function(err){
-					console.log(err);
+					console.log('error',err);
 				});
 			});
 				
@@ -261,8 +283,6 @@
 			$('#displayModel').on('click','.delete',function(e){
 				e.preventDefault();	
 				var data=e.target.tempData;
-								
-				console.log(data.name,data.event,data.date);
 				$.ajax({
 					url:'deleteevent',
 					type:'POST',					
@@ -270,14 +290,12 @@
 				}).done(function(data){
 					$('#myModal').modal('hide');
 					window.location='/employeecalendar/home';
-					console.log(data);
 				}).fail(function(err){
-					console.log(err);
+					console.log('ERROR',err);
 				});				
 			});						
 			
 			$("#submitbutton").click(function(e) {
-				console.log($('myModel'));
 				var request = $.ajax({
 					url:'sendevent',
 					type:'POST',
@@ -287,13 +305,24 @@
 	                data: $('#sendeventform').serializeArray()
 				});
 				request.done(function(data){
-					console.log(data);
-					console.log(data.alert);
 					if(data.alert==='SUCCESS')
 					{											
 						$('#myModal').modal('hide');
-						window.location='/employeecalendar/home';											
-					};
+						window.location='/employeecalendar/home?eventSaved=Success';											
+					}
+					else if(data.alert==='DANGER')
+					{
+						var r=(255).toString(16);
+						var g=(0).toString(16);
+						var b=(0).toString(16);
+						var errorDiv=document.getElementById('error');
+						errorDiv.style.color="#"+r+'00'+'00';
+						$('#error').text('Error check todays scheduled events.');
+							setTimeout(function(){
+								remove(errorDiv,r,g,b);
+							},1000);						
+						
+					}
 				});
 				request.fail(function(data){
 					alert("Request Failed");
@@ -301,6 +330,35 @@
 				e.preventDefault();
 			});	
 		}(jQuery));
+		
+		function remove(element,r,g,b){	
+			console.log(r,g,b);
+			r=r=='ff'||r=='255'?'255':parseInt(r)+1
+			g=g=='ff'||g=='255'?'255':parseInt(g)+1;
+			b=parseInt(b)+1;
+			
+			element.style.color='rgb('+r+','+g+','+b+')';
+			console.log(element.style.color);
+			if(element.style.color!="rgb(255, 255, 255)")
+			{	
+				setTimeout(function(){
+					remove(element,r,g,b);
+				},10);				
+			}							
+		};
+		
+// 		function remove(element,r,g,b){	
+// 			g=parseInt(g)+1;
+// 			b=parseInt(b)+1;
+// 			element.style.color='rgb('+r+','+g+','+b+')';
+// 			console.log(element.style.color);
+// 			if(element.style.color!="rgb(255, 255, 255)")
+// 			{	
+// 				setTimeout(function(){
+// 					remove(element,255,g,b);
+// 				},1);				
+// 			}							
+// 		};
 	
 		
 	</script>

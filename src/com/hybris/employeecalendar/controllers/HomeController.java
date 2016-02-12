@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.hybris.employeecalendar.enums.TrainingType;
 
 
-/**
- * @author I310388
- *
- */
+
 @Controller
 public class HomeController
 {

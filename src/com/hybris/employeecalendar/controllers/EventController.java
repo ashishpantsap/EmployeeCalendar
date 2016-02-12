@@ -3,12 +3,15 @@
  */
 package com.hybris.employeecalendar.controllers;
 
+import de.hybris.platform.servicelayer.model.ModelService;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -31,6 +34,7 @@ import com.hybris.employeecalendar.data.SAPEmployeeDto;
 import com.hybris.employeecalendar.data.enums.Alerts;
 import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
+import com.hybris.employeecalendar.model.SapEventModel;
 import com.hybris.employeecalendar.services.CalendarEventService;
 import com.hybris.employeecalendar.services.SAPEmployeeService;
 import com.hybris.employeecalendar.util.HelperUtil;
@@ -45,6 +49,8 @@ public class EventController
 	private CalendarEventService calendarEventService;
 
 	private SAPEmployeeService sapEmployeeService;
+
+	private ModelService modelService;
 
 	private Map<String, String> eventTypeMapping;
 
@@ -76,6 +82,11 @@ public class EventController
 		this.sapEmployeeService = sapEmployeeService;
 	}
 
+	@Autowired
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
 
 	@RequestMapping(value = "/submiteventpage", method = RequestMethod.GET)
 	public String submitEvent(final Model model)
@@ -198,10 +209,10 @@ public class EventController
 			final String employee = event.getEmployee().getName() + " ";
 			test = test + "" + i++;
 			final FeedCalendarDto feedCalendar = new FeedCalendarDto();
-			feedCalendar.setClassevent(
-					eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType()) : "event-success");
-			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null
-					? eventTypeShortName.get(event.getType()) + "  " + employee : event.getType() + " " + employee);
+			feedCalendar.setClassevent(eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType())
+					: "event-success");
+			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null ? eventTypeShortName.get(event.getType()) + "  "
+					+ employee : event.getType() + " " + employee);
 			feedCalendar.setUrl(event.getType());
 			feedCalendar.setStart(String.valueOf(event.getFromDate().getTime()));
 			feedCalendar.setEnd(String.valueOf(event.getToDate().getTime()));
@@ -209,7 +220,6 @@ public class EventController
 
 			events.add(feedCalendar);
 		}
-
 
 		return events;
 
@@ -234,5 +244,47 @@ public class EventController
 			events.add(event.getCode());
 		}
 		return events;
+	}
+
+	@RequestMapping(value = "/daysevents", method = RequestMethod.GET)
+	@ResponseBody
+	public List<EventDto> daysEvents(@RequestParam(value = "date") final Date date)
+	{
+		List<EventDto> events = new ArrayList<EventDto>();
+		try
+		{
+			events = calendarEventService.getAllEventsForDay(date);
+		}
+		catch (final ParseException e)
+		{
+			LOG.info("Could Not Retrieve Events For Today");
+		}
+
+		return events;
+	}
+
+	//Warning: The deletion doesn't take into account hh:mm
+	@RequestMapping(value = "/deleteevent", method = RequestMethod.POST, headers = "Accept=application/json")
+	@ResponseBody
+	public void deleteevent(@RequestParam(value = "name") final String name, @RequestParam(value = "event") final String event,
+			@RequestParam(value = "date") final Date date) throws Exception
+	{
+		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		final List<SapEventModel> events = calendarEventService
+				.getAllEventsInTheDay(format.parse(format.format(date)), name, event); //NEED TO FORMAT DATE
+		final Iterator i = events.iterator();
+		SapEventModel sapEventModel;
+		while (i.hasNext())
+		{
+			sapEventModel = (SapEventModel) i.next();
+			final String dtoDate = format.format(sapEventModel.getFromDate());
+			final String newEvent = sapEventModel.getType().toString();
+			final String newDate = format.format(date);
+			final String newName = sapEventModel.getEmployee().getName() + "," + sapEventModel.getEmployee().getSurname();
+			if (newName.equals(name) && dtoDate.equals(newDate) && newEvent.equals(event))
+			{
+				modelService.remove(sapEventModel);
+			}
+		}
 	}
 }

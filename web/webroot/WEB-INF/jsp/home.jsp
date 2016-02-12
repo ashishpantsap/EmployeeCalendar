@@ -21,11 +21,12 @@
 <body>
 <body>
 	<c:import url="header.jsp" />
+	<div id="successmsg"></div>
 	<div class="container-fluid">
 		<h3 class="text-center" id="MonthYear"></h3>
 		<div class="pull-right form-inline">
 			<div class="btn-group">
-				<button class="btn btn-primary" data-calendar-nav="prev"><<
+				<button class="btn btn-primary" data-calendar-nav="prev">
 					Prev</button>
 				<button class="btn" data-calendar-nav="today">Today</button>
 				<button class="btn btn-primary" data-calendar-nav="next">Next
@@ -43,14 +44,16 @@
 			aria-labelledby="myModalLabel">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h4 class="modal-title" id="myModalLabel"></h4>
-					</div>
+<!-- 					<div class="modal-header"> -->
+<!-- 						<button type="button" class="close" data-dismiss="modal" -->
+<!-- 							aria-label="Close"> -->
+<!-- 							<span aria-hidden="true">&times;</span> -->
+<!-- 						</button> -->
+<!-- 						<h4 class="modal-title" id="myModalLabel"></h4> -->
+<!-- 					</div> -->
 					<div class="modal-body">
+						<h3 class="currentDate"></h3>
+						<hr>
 						<form id="sendeventform" style="position: relative;">
 							<label for="inumber">Select Employee</label> 
 							<select id="inumber" class="form-control" name="pk"></select> 
@@ -74,7 +77,10 @@
 								<label for="description">Description</label> 
 								<input id="description" type="text" name="description" class="form-control" /> <br />
 							</div>
-							<button id="submitbutton" type="submit"	class="btn btn-default btn-info">Submit</button>
+							<div class="modal-footer">
+								<button id="submitbutton" type="submit"	class="btn btn-default btn-info">Submit</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							</div>
 						</form>
 					</div>
 				</div>
@@ -84,31 +90,29 @@
 		<div class="modal fade" id="displayModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
+<!-- 					<div class="modal-header"> -->
+<!-- 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+<!-- 							<span aria-hidden="true">&times;</span> -->
+<!-- 						</button> -->
+<!-- 					</div> -->
 					<div class="modal-body">
+						<h3 class="currentDate"></h3>
+						<hr>
 						<form action="#" method="post" id="display"	style="position: relative;">
 							<label for="listevents">Todays Events</label> 
-							<ul id="listevents" name="typeevent">
-								<li></li>
-								<li></li>
-								<li></li>
-								<li></li>
-							</ul> 
+							<div class=container-fluid>
+							<table class="modaltable tdhover" id="listevents"></table> 
+							</div>
 							<br /> 							
 						</form>
 					</div>
 					<div class="modal-footer">
+<!-- 						<button type="button" class="btn btn-primary">Save changes</button> -->
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Save changes</button>
 					</div>
 				</div>
 			</div>
 		</div>
-
 	</div>
 	<spring:url value="/resources/js/underscore-min.js" var="underscorejs" />
 	<spring:url value="/resources/js/mycalendar.js" var="calendarjs" />
@@ -117,8 +121,7 @@
 	<script type="text/javascript" src="${calendarjs}"></script>
 	<script type="text/javascript">
 		(function($) {
-			"use strict";
-			
+			"use strict";			
 			var options = {
 				events_source : "feedCalendar",
 				view : 'month',
@@ -159,7 +162,6 @@
 				var hidedesc=$('#hidedescription');
 				var typeevents=$('#typeevents');
 				var inum=$('#inumber');
-// 				var inumpk=$('#inumberpk');
 				
 				inum.find('option').remove();
 				typeevents.find('option').remove();
@@ -178,8 +180,7 @@
 							text : key.name + ' ' + key.surname,
 							value: key.pk
 						}));
-						selectedInum=$('#inumber :selected')[0].value;						
-// 						inumpk.val(selectedInum);						
+						selectedInum=$('#inumber :selected')[0].value;		
 					});
 				});
 				
@@ -197,12 +198,7 @@
 						}));
 					});
 				});				
-				
-				inum.change(function() {
-					var inum=$('#inumber :selected')[0].value;
-					inumpk.val(selectedInum)
-				});
-				
+								
 				typeevents.change(function() {
 					var training = $('#typeevents :selected')
 							.text() === 'TRAINING';
@@ -219,8 +215,63 @@
 			});			
 
 			$('#displayModel').on('show.bs.modal', function(event) {
-				console.log('########');
+				var eventtable=$('#listevents'), date=event.relatedTarget.dataset.addevent, row, cell, cell2, cell3, text, text2, button;
+				eventtable.find('tr').remove();
+
+				$('.currentDate').text(date);
+				
+				var request = $.ajax({
+					url:'daysevents',
+					type:'GET',
+					headers:{
+	                    'Accept':'application/json'
+	                },
+	                data: {'date':new Date(date)}
+				});
+				request.done(function(data){
+					_.each(data, function(key, value){
+						row=document.createElement('tr');
+						cell=document.createElement('td');
+						text=document.createTextNode(key.employee.name+' '+key.employee.surname+':');	
+						cell.appendChild(text);						
+						cell2=document.createElement('td');
+						text2=document.createTextNode(key.type);
+						cell2.appendChild(text2);
+						cell3=document.createElement('td');
+						button=document.createElement('button');
+						button.className='delete btn-danger glyphicon glyphicon-remove';	
+						button.tempData={'date':date,'name':key.employee.name,'surname':key.employee.surname,'event':key.type};    //Appending date to handle for delete click event
+						cell3.appendChild(button);
+						cell3.style.cssFloat='right';						
+						row.appendChild(cell);
+						row.appendChild(cell2);
+						row.appendChild(cell3);
+						$('#listevents').append(row);
+					});				
+				});
+				request.error(function(err){
+					console.log(err);
+				});
 			});
+				
+				
+			$('#displayModel').on('click','.delete',function(e){
+				e.preventDefault();	
+				var data=e.target.tempData;
+								
+				console.log(data.name,data.event,data.date);
+				$.ajax({
+					url:'deleteevent',
+					type:'POST',					
+	                data: {'name':data.name + ',' + data.surname, 'event':data.event, 'date':new Date(data.date)}
+				}).done(function(data){
+					$('#myModal').modal('hide');
+					window.location='/employeecalendar/home';
+					console.log(data);
+				}).fail(function(err){
+					console.log(err);
+				});				
+			});						
 			
 			$("#submitbutton").click(function(e) {
 				console.log($('myModel'));
@@ -236,10 +287,9 @@
 					console.log(data);
 					console.log(data.alert);
 					if(data.alert==='SUCCESS')
-					{
+					{											
 						$('#myModal').modal('hide');
-						window.location='/employeecalendar/home';
-						
+						window.location='/employeecalendar/home';											
 					};
 				});
 				request.fail(function(data){
@@ -248,7 +298,7 @@
 				e.preventDefault();
 			});	
 		}(jQuery));
-		
+	
 		
 	</script>
 </body>

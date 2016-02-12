@@ -518,3 +518,17 @@ a.cal-event-week {
 .my-pull-left{
 	float: left !important;
 }
+
+.tdhover td:nth-child(3){
+	text-align: right;
+	background-color: #fff;
+}
+
+.tdhover tr:hover{
+	background-color: #ffa31a;	
+	border-radius: 20px;
+}
+
+.modaltable{
+	width: 100%;
+}

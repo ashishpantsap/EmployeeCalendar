@@ -16,13 +16,19 @@
 	        <value code="AFTERNOON_SHIFT"/>
 	        <value code="OUT_OF_THE_OFFICE"/>
 	        <value code="QUEUE_MANAGER"/>                
-	        <value code="TRAINING"/>
+	        <value code="OTHERS"/>
 	    </enumtype>
 	    
 	    <enumtype code="TrainingType" autocreate="true" generate="true">
 	        <value code="MORNING"/>
 	        <value code="AFTERNOON"/>
 	        <value code="ALL_DAY"/>
+	    </enumtype>
+	    
+	    
+	    <enumtype code="OOOType" autocreate="true" generate="true">
+	        <value code="HALF_DAY"/>
+	        <value code="FULL_DAY"/>
 	    </enumtype>
 	</enumtypes>
 	
@@ -64,6 +70,11 @@
 					<description>type event</description>
 					<persistence type="property" />
 					<defaultvalue>em().getEnumerationValue("EventType", "OUT_OF_THE_OFFICE")</defaultvalue>
+				</attribute>
+				<attribute qualifier="oooType" type="OOOType">
+					<description>important for OOO, needs to be added for rules in the Interceptor</description>
+					<persistence type="property" />
+					<defaultvalue>em().getEnumerationValue("OOOType", "FULL_DAY")</defaultvalue>
 				</attribute>
 				<attribute qualifier="description" type="java.lang.String">
 					<description>description</description>

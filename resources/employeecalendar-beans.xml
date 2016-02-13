@@ -24,6 +24,7 @@
 		<property name="inumber" type="String" />
 		<property name="name" type="String" />
 		<property name="surname" type="String" />
+		<property name="email" type="String" />
 	</bean>
 
 	<bean class="com.hybris.employeecalendar.data.EventDto">
@@ -34,6 +35,7 @@
 		<property name="description" type="String" />
 		<property name="type" type="String" />
 		<property name="trainingTime" type="String" />
+		<property name="oooType" type="String" />
 	</bean>
 
 	<bean class="com.hybris.employeecalendar.data.MessageDto">

@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.hybris.employeecalendar.dao.CalendarEventDao;
 import com.hybris.employeecalendar.enums.EventType;
+import com.hybris.employeecalendar.enums.OOOType;
 import com.hybris.employeecalendar.model.SapEventModel;
 
 
@@ -27,10 +28,7 @@ public class EventTypeConsistency implements ValidateInterceptor<SapEventModel>
 
 	private CalendarEventDao sapEventDao;
 
-	/**
-	 * @param sapEventDao
-	 *           the sapEventDao to set
-	 */
+
 	public void setSapEventDao(final CalendarEventDao sapEventDao)
 	{
 		this.sapEventDao = sapEventDao;
@@ -71,14 +69,6 @@ public class EventTypeConsistency implements ValidateInterceptor<SapEventModel>
 	}
 
 
-	//1 ON_CALL cannot have other events in the day
-	//2 AFTERNOON_SHIFT cannot have ON_CALL,MORNING_SHIFT,OUT_OF_THE_OFFICE
-	//3 MORNING_SHIFT cannot have ON_CALL,AFTERNOON_SHIFT,OUT_OF_THE_OFFICE
-	//4 OUT_OF_THE_OFFICE cannot have other events in the day
-	//5 WORKING_FROM_HOME cannot have ON_CALL,OUT_OF_THE_OFFICE
-	//6 QUEUE_MANAGER cannot have ON_CALL,OUT_OF_THE_OFFICE
-	//7 WORKING_BANK_HOLIDAY cannot have ON_CALL,OUT_OF_THE_OFFICE
-	//8 TRAINING cannot have ON_CALL, WORKING_FROM_HOME, OUT_OF_THE_OFFICE, QUEUE_MANAGER, WORKING_BANK_HOLIDAY
 	private void checkConsistency(final SapEventModel eventOnDb, final SapEventModel model) throws InterceptorException
 	{
 		if (eventOnDb.getType().equals(EventType.ON_CALL))
@@ -94,10 +84,18 @@ public class EventTypeConsistency implements ValidateInterceptor<SapEventModel>
 						"No events can be added in this day. AFTERNOON_SHIFT event already saved it is not possible to add MORNING_SHIFT |  OUT_OF_THE_OFFICE | ON_CALL | SICK_LEAVE | AFTERNOON_SHIFT");
 			}
 		}
-		else if (eventOnDb.getType().equals(EventType.OUT_OF_THE_OFFICE))
+		else if (eventOnDb.getType().equals(EventType.OUT_OF_THE_OFFICE) && eventOnDb.getOooType().equals(OOOType.FULL_DAY))
 		{
 			throw new InterceptorException(
 					"No events can be added in this day. OUT_OF_THE_OFFICE event already saved for this date");
+		}
+		else if (eventOnDb.getType().equals(EventType.OUT_OF_THE_OFFICE) && eventOnDb.getOooType().equals(OOOType.HALF_DAY))
+		{
+			if (model.getType().equals(EventType.ON_CALL))
+			{
+				throw new InterceptorException(
+						"No events ON_CALL can be added in this day. OUT_OF_THE_OFFICE half_day already saved on DB");
+			}
 		}
 		else if (eventOnDb.getType().equals(EventType.QUEUE_MANAGER))
 		{
@@ -108,10 +106,10 @@ public class EventTypeConsistency implements ValidateInterceptor<SapEventModel>
 						"No events can be added in this day. QUEUE_MANAGER event already saved it is not possible to add ON_CALL |  OUT_OF_THE_OFFICE | SICK_LEAVE | QUEUE_MANAGER");
 			}
 		}
-		else if (eventOnDb.getType().equals(EventType.TRAINING))
+		else if (eventOnDb.getType().equals(EventType.OTHERS))
 		{
 			if (model.getType().equals(EventType.ON_CALL) || model.getType().equals(EventType.OUT_OF_THE_OFFICE)
-					|| model.getType().equals(EventType.QUEUE_MANAGER) || model.getType().equals(EventType.TRAINING))
+					|| model.getType().equals(EventType.QUEUE_MANAGER) || model.getType().equals(EventType.OTHERS))
 			{
 				throw new InterceptorException(
 						"No events can be added in this day. TRAINING event already saved it is not possible to add ON_CALL |  OUT_OF_THE_OFFICE | QUEUE_MANAGER | WORK_BANK_HOLIDAY | SICK_LEAVE | TRAINING");

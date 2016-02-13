@@ -51,7 +51,7 @@ public class DefaultSAPEmployeeService implements SAPEmployeeService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.employeecalendar.services.SAPEmployeeService#getSapEmployees()
 	 */
 	@Override
@@ -78,11 +78,7 @@ public class DefaultSAPEmployeeService implements SAPEmployeeService
 		return employees;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.hybris.employeecalendar.services.SAPEmployeeService#getSapEmployeeByPK(java.lang.String)
-	 */
+
 	@Override
 	public SapEmployeeModel getSapEmployeeByPK(final String pk)
 	{
@@ -91,4 +87,10 @@ public class DefaultSAPEmployeeService implements SAPEmployeeService
 		return sapEmployeeModel;
 	}
 
+
+	@Override
+	public void saveEmployee(final SapEmployeeModel model)
+	{
+		sapEmployeeDao.saveEmployeee(model);
+	}
 }

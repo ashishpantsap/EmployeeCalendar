@@ -22,4 +22,6 @@ public interface SAPEmployeeDao
 	public List<SapEmployeeModel> getSapEmployees();
 
 	public SapEmployeeModel getSapEmployeeByInumberAndDate(String iNumber, Date date);
+
+	public void saveEmployeee(SapEmployeeModel model);
 }

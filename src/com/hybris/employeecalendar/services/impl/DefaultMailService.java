@@ -60,7 +60,7 @@ public class DefaultMailService implements MailService, InitializingBean
 		{
 			final SapEventModel sapQMEvent = sapEventDao.getTypeEventFromDate(new Date(), EventType.QUEUE_MANAGER);
 			final List<SapEventModel> sapOOEvent = sapEventDao.getTypeEventsFromDate(new Date(), EventType.OUT_OF_THE_OFFICE);
-			final List<SapEventModel> sapTrainingEvent = sapEventDao.getTypeEventsFromDate(new Date(), EventType.TRAINING);
+			final List<SapEventModel> sapTrainingEvent = sapEventDao.getTypeEventsFromDate(new Date(), EventType.OTHERS);
 			final Calendar cal = Calendar.getInstance();
 			cal.setTime(new Date());
 			final boolean monday = cal.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY;
@@ -136,35 +136,24 @@ public class DefaultMailService implements MailService, InitializingBean
 				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
 				message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(managersEmail));
 				message.setSubject("Reminder for QM");
-				message
-						.setContent(
-								"<html><body><h4 style=\"color:#0000FF;\">Dear"
-										+ " "
-										+ toAddressName
-										+ ",</h4><p style=\"color:#0000FF;\">This to remind you that you are the Queue Manager for today. Please do keep on eye on P1 tickets.<br><br>Below are the list of Out of Office and Employees on Training for whom you may help to look after their tickets in case of any urgent action is required.<br><br><p>"
-										+ "<b> Out of Office</b>:"
-										+ emponOO.toString()
-										+ "<br>"
-										+ "<b>Training  </b>   :"
-										+ emponTraining
-										+ " <br><br></p><p style=\"color:#0000FF;\">Request you to get the phone from previous day QM"
-										+ " "
-										+ previousDayQMEvent.getEmployee().getName()
-										+ " "
-										+ previousDayQMEvent.getEmployee().getSurname()
-										+ "<br><br>Please be advised that the current email reminder service is in beta phase and the above details are sent considering the employee calendar is up to Date.<br><br>Have a good day.<br><br>Thanks & Regards,<br>Admin Group<br></p></body></html>",
-								"text/html; charset=utf-8");
+				message.setContent(
+						"<html><body><h4 style=\"color:#0000FF;\">Dear" + " " + toAddressName
+								+ ",</h4><p style=\"color:#0000FF;\">This to remind you that you are the Queue Manager for today. Please do keep on eye on P1 tickets.<br><br>Below are the list of Out of Office and Employees on Training for whom you may help to look after their tickets in case of any urgent action is required.<br><br><p>"
+								+ "<b> Out of Office</b>:" + emponOO.toString() + "<br>" + "<b>Training  </b>   :" + emponTraining
+								+ " <br><br></p><p style=\"color:#0000FF;\">Request you to get the phone from previous day QM" + " "
+								+ previousDayQMEvent.getEmployee().getName() + " " + previousDayQMEvent.getEmployee().getSurname()
+								+ "<br><br>Please be advised that the current email reminder service is in beta phase and the above details are sent considering the employee calendar is up to Date.<br><br>Have a good day.<br><br>Thanks & Regards,<br>Admin Group<br></p></body></html>",
+						"text/html; charset=utf-8");
 			}
 			else
 			{
 				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(managersEmail));
 				message.setSubject("Reminder to Update QM");
-				message
-						.setContent(
-								"<html><body><h4 style=\"color:#0000FF;\">Dear Nitin Garg"
-										+ ",</h4><p style=\"color:#0000FF;\">This to remind you that Queue Manager for today has not been updated. Please do update and let the person knows the same since the email reminder service is already been processed for today<br><br>"
-										+ "Have a good day.<br><br>Thanks & Regards,<br>Admin Group<br></p></body></html>",
-								"text/html; charset=utf-8");
+				message.setContent(
+						"<html><body><h4 style=\"color:#0000FF;\">Dear Nitin Garg"
+								+ ",</h4><p style=\"color:#0000FF;\">This to remind you that Queue Manager for today has not been updated. Please do update and let the person knows the same since the email reminder service is already been processed for today<br><br>"
+								+ "Have a good day.<br><br>Thanks & Regards,<br>Admin Group<br></p></body></html>",
+						"text/html; charset=utf-8");
 			}
 			Transport.send(message);
 		}

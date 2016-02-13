@@ -26,7 +26,7 @@ public interface CalendarEventService
 
 	public void saveEventOnCalendar(final EventDto event, SapEmployeeModel employee);
 
-	public void saveEventsOnCalendar(List<EventDto> events);
+	public void saveEventsOnCalendar(List<EventDto> events, SapEmployeeModel employee);
 
 	public void deleteEventOnCalendar(EventDto event) throws Exception;
 
@@ -42,13 +42,10 @@ public interface CalendarEventService
 
 	public List<EventDto> getReport(Date date, EventType event, String PK) throws ParseException;
 
-	/**
-	 * @param date
-	 * @return
-	 * @throws ParseException
-	 */
 	List<SapEventModel> getAllEventsInTheDay(Date date, String name, String event) throws ParseException;
 
 	public void deleteEventsInTheDay(Date date, String PK) throws ParseException;
+
+
 
 }

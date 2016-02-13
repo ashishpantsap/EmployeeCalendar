@@ -16,6 +16,11 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	
+<spring:url value="/resources/css/bootstrap-datepicker.min.css" var="datepickercss" />
+<spring:url value="/resources/js/bootstrap-datepicker.min.js" var="datepickerjs" />
+<link rel="stylesheet" href="${datepickercss}" type="text/css">
+<script src="${datepickerjs}"></script>
 <title>Home</title>
 </head>
 <body>
@@ -61,6 +66,8 @@
 							<label for="typeevents">Event</label> 
 							<select class="form-control"  id="typeevents" name="typeevent"></select> 
 							<br /> 
+							<div id="sandbox-container"></div>
+							<br />
 							<label for="fromdate">From Date</label> 
 							<input id="fromdate" type="date" name="fromDate" class="form-control" required="required" /> <br />
 							<label for="todate">To Date</label> 
@@ -157,7 +164,17 @@
 			});
 
 			$('#myModal').on('show.bs.modal',function(event) {
-
+				
+				var input = $("#sandbox-container");
+			    input.datepicker({
+			    	format: 'yyyy-mm-dd',
+				    multidate : true
+			    });
+			    /*
+			    input.data('datepicker').hide = function () {};
+			    input.datepicker('show');
+				*/
+				
 				var modal = $(this);
 				var hidedesc=$('#hidedescription');
 				var typeevents=$('#typeevents');

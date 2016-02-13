@@ -48,7 +48,7 @@ public class DefaultSAPEmployeeDao implements SAPEmployeeDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.employeecalendar.dao.SAPEmployeeDao#getSapEmployeeByInumber(java.lang.String)
 	 */
 	@Override
@@ -86,7 +86,7 @@ public class DefaultSAPEmployeeDao implements SAPEmployeeDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.employeecalendar.dao.SAPEmployeeDao#getSapEmployeeByInumberAndDate(java.lang.String,
 	 * java.util.Date)
 	 */
@@ -111,6 +111,13 @@ public class DefaultSAPEmployeeDao implements SAPEmployeeDao
 		{
 			return null;
 		}
+	}
+
+
+	@Override
+	public void saveEmployeee(final SapEmployeeModel model)
+	{
+		modelService.save(model);
 	}
 
 }

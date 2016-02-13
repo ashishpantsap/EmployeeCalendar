@@ -15,6 +15,7 @@ import com.hybris.employeecalendar.dao.CalendarEventDao;
 import com.hybris.employeecalendar.data.EventDto;
 import com.hybris.employeecalendar.data.SAPEmployeeDto;
 import com.hybris.employeecalendar.enums.EventType;
+import com.hybris.employeecalendar.enums.OOOType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
 import com.hybris.employeecalendar.model.SapEventModel;
 import com.hybris.employeecalendar.services.CalendarEventService;
@@ -80,10 +81,29 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 
 	@Override
-	public void saveEventsOnCalendar(final List<EventDto> events)
+	public void saveEventsOnCalendar(final List<EventDto> events, final SapEmployeeModel employee)
 	{
-		// YTODO Auto-generated method stub
+		if (events == null || events.isEmpty() || employee == null)
+		{
+			return;
+		}
+		final List<SapEventModel> eventsModel = new ArrayList<>();
+		for (final EventDto event : events)
+		{
+			final SapEventModel eventM = new SapEventModel();
 
+			eventM.setDescription(event.getDescription());
+			eventM.setEmployee(employee);
+			eventM.setFromDate(event.getFromDate());
+			eventM.setToDate(event.getToDate());
+			eventM.setType(EventType.valueOf(event.getType()));
+			eventM.setOooType(OOOType.valueOf(event.getOooType() != null ? event.getOooType() : OOOType.FULL_DAY.getCode()));
+
+			eventsModel.add(eventM);
+		}
+		employee.setEvents(eventsModel);
+
+		sapEmployeeService.saveEmployee(employee);
 	}
 
 
@@ -124,12 +144,6 @@ public class DefaultCalendarEventService implements CalendarEventService
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.hybris.employeecalendar.services.CalendarEventService#getReport(java.util.Date,
-	 * com.hybris.employeecalendar.enums.EventType, java.lang.String)
-	 */
 	@Override
 	public List<EventDto> getReport(final Date date, final EventType event, final String PK) throws ParseException
 	{
@@ -217,12 +231,14 @@ public class DefaultCalendarEventService implements CalendarEventService
 			eventDto.setToDate(model.getToDate());
 			eventDto.setDescription(model.getDescription());
 			eventDto.setType(model.getType().getCode());
+			eventDto.setOooType(model.getOooType().getCode());
 
 			final SapEmployeeModel employee = model.getEmployee();
 			final SAPEmployeeDto employeeDto = new SAPEmployeeDto();
 			employeeDto.setInumber(employee.getInumber());
 			employeeDto.setName(employee.getName());
 			employeeDto.setSurname(employee.getSurname());
+			//FIXME add email to
 
 			// employeeDto should set the PK as id dto shuould be modified
 			eventDto.setEmployee(employeeDto);

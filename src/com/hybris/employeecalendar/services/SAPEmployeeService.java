@@ -23,4 +23,6 @@ public interface SAPEmployeeService
 
 	public List<SAPEmployeeDto> getSapEmployees();
 
+	public void saveEmployee(SapEmployeeModel model);
+
 }

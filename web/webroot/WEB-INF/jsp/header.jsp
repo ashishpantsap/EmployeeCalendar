@@ -15,8 +15,7 @@
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="submiteventpage">Submit event<span class="sr-only">(current)</span></a></li>
-					<li><a href="deleteeventpage">Delete event</a></li>
+					
 					<li><a href="reportspage">Reports</a></li>
 				</ul>
 			</div>

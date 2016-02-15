@@ -110,7 +110,7 @@ public class EventController
 	@RequestMapping(value = "/sendevents", method = RequestMethod.POST, headers = "Accept=application/json")
 	public MessageDto sendEvents(final Model model, //
 			@RequestParam(value = "pk") final String pk, //
-			@RequestParam(value = "dates") final List<String> dates, //
+			@RequestParam(value = "dates") final String[] dates, //
 			@RequestParam(value = "description", required = false) final String description, //
 			@RequestParam(value = "training-time", required = false) final String trainingTime, //
 			@RequestParam(value = "ooo-type", required = false) final String oooType, //
@@ -289,10 +289,10 @@ public class EventController
 			final String employee = event.getEmployee().getName() + " ";
 			test = test + "" + i++;
 			final FeedCalendarDto feedCalendar = new FeedCalendarDto();
-			feedCalendar.setClassevent(
-					eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType()) : "event-success");
-			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null
-					? eventTypeShortName.get(event.getType()) + "  " + employee : event.getType() + " " + employee);
+			feedCalendar.setClassevent(eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType())
+					: "event-success");
+			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null ? eventTypeShortName.get(event.getType()) + "  "
+					+ employee : event.getType() + " " + employee);
 			feedCalendar.setUrl(event.getType());
 			feedCalendar.setStart(String.valueOf(event.getFromDate().getTime()));
 			feedCalendar.setEnd(String.valueOf(event.getToDate().getTime()));
@@ -352,8 +352,8 @@ public class EventController
 			@RequestParam(value = "date") final Date date) throws Exception
 	{
 		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-		final List<SapEventModel> events = calendarEventService.getAllEventsInTheDay(format.parse(format.format(date)), name,
-				event); //NEED TO FORMAT DATE
+		final List<SapEventModel> events = calendarEventService
+				.getAllEventsInTheDay(format.parse(format.format(date)), name, event); //NEED TO FORMAT DATE
 		final Iterator i = events.iterator();
 		SapEventModel sapEventModel;
 		while (i.hasNext())

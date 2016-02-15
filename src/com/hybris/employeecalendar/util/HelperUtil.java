@@ -187,9 +187,9 @@ public class HelperUtil
 	 * @param datesString
 	 * @return
 	 */
-	public static List<Date> parseStringsToDate(final List<String> datesString, final EventType event) throws ParseException
+	public static List<Date> parseStringsToDate(final String[] datesString, final EventType event) throws ParseException
 	{
-		if ((datesString == null || datesString.size() == 0) || (event == null))
+		if ((datesString == null || datesString.length == 0) || (event == null))
 		{
 			return null;
 		}

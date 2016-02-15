@@ -68,6 +68,7 @@
 							<br /> 
 							<div id="sandbox-container"></div>
 							<br />
+							<input id="dates" type="hidden" name="dates" class="form-control" /> <br />
 							<label for="fromdate">From Date</label> 
 							<input id="fromdate" type="date" name="fromDate" class="form-control" required="required" /> <br />
 							<label for="todate">To Date</label> 
@@ -168,13 +169,14 @@
 				var input = $("#sandbox-container");
 			    input.datepicker({
 			    	format: 'yyyy-mm-dd',
+			    	todayHighlight:true,
+					todayBtn:true,
 				    multidate : true
 			    });
 			    /*
 			    input.data('datepicker').hide = function () {};
 			    input.datepicker('show');
 				*/
-				
 				var modal = $(this);
 				var hidedesc=$('#hidedescription');
 				var typeevents=$('#typeevents');
@@ -293,7 +295,7 @@
 			$("#submitbutton").click(function(e) {
 				console.log($('myModel'));
 				var request = $.ajax({
-					url:'sendevent',
+					url:'sendevents',
 					type:'POST',
 					headers:{
 	                    'Accept':'application/json'
@@ -314,6 +316,13 @@
 				});
 				e.preventDefault();
 			});	
+			
+			$('#sandbox-container').on("changeDate", function() {
+				$('#dates').val();
+				$('#dates').val(
+			        ($('#sandbox-container').datepicker('getFormattedDate')).split(',')
+			    );
+			});
 		}(jQuery));
 	
 		

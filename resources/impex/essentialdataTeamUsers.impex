@@ -1,26 +1,15 @@
-INSERT_UPDATE SapEmployee; inumber[unique=true];name;surname;
-;i310531; Niko; Flores;
-;i310388; Sergio; Zullo;
-;i310533; Ben; Galvin;
-;i306697; Juan Carlos; Perez Ramirez;
-;i306560; Hongxian; Tian;
-;i040538; Le; Li;
-;i306992; Ignacio; Inigo;
-;i310470; Luke; Potter;
-;i310084; Nitin; Garg;
-;i313211; Devys; Zardini;
-;i317496; Jayahar; Rajkumar;
+INSERT_UPDATE SapEmployee; inumber[unique=true];name;surname;email
+;i310531; Niko; Flores;niko.flores@sap.com;
+;i310388; Sergio; Zullo;sergio.zullo@sap.com;
+;i310533; Ben; Galvin;ben.galvin@sap.com;
+;i306697; Juan Carlos; Perez Ramirez;juan.carlos.perez.ramirez@sap.com;
+;i306560; Hongxian; Tian;hongxian.tian@sap.com;
+;i040538; Le; Li;le01.li@sap.com;
+;i306992; Ignacio; Inigo;ignacio.inigo@sap.com;
+;i310470; Luke; Potter;luke.potter@sap.com;
+;i310084; Nitin; Garg;nitin.garg01@sap.com;
+;i313211; Devys; Zardini;devys.zardini@sap.com;
+;i317496; Jayahar; Rajkumar;jayahar.rajkumar@sap.com;
+;i324950; Sujitha; Purushothaman;sujitha.purushothaman@sap.com;
+;i324955; Ashish; Pant;ashish.pant01@sap.com;
 
-
-INSERT_UPDATE sapemployee;inumber[unique=true];email
-;i306697;juan.carlos.perez.ramirez@sap.com;
-;i310533;ben.galvin@sap.com;
-;i310388;sergio.zullo@sap.com;
-;i306560;hongxian.tian@sap.com;
-;i306992;ignacio.inigo@sap.com;
-;i310470;luke.potter@sap.com;
-;i040538;le01.li@sap.com;
-;i310084;nitin.garg01@sap.com;
-;i313211;devys.zardini@sap.com;
-;i317496;jayahar.rajkumar@sap.com;
-;i310531;niko.flores@sap.com;

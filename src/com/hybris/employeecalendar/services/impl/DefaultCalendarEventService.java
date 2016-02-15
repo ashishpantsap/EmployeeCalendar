@@ -238,7 +238,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 			employeeDto.setInumber(employee.getInumber());
 			employeeDto.setName(employee.getName());
 			employeeDto.setSurname(employee.getSurname());
-			//FIXME add email to
+			employeeDto.setEmail(employee.getEmail());
 
 			// employeeDto should set the PK as id dto shuould be modified
 			eventDto.setEmployee(employeeDto);

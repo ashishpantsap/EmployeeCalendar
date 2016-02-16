@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hybris.employeecalendar.data.DateRangeDto;
 import com.hybris.employeecalendar.data.EventDto;
 import com.hybris.employeecalendar.data.FeedCalendarDto;
 import com.hybris.employeecalendar.data.MessageDto;
@@ -102,6 +103,82 @@ public class EventController
 
 		model.addAttribute("events", events);
 		return "submiteventpage";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/sendevents", method = RequestMethod.POST, headers = "Accept=application/json")
+	public MessageDto sendEvents(final Model model, //
+			@RequestParam(value = "pk") final String pk, //
+			@RequestParam(value = "dates") final String[] dates, //
+			@RequestParam(value = "description", required = false) final String description, //
+			@RequestParam(value = "training-time", required = false) final String trainingTime, //
+			@RequestParam(value = "ooo-type", required = false) final String oooType, //
+			@RequestParam(value = "typeevent") final String typeevent)
+	{
+		//parse the dates and create a List of Dates
+		// call the service to generate a List of Events
+		// call the api service to save a List of Events with user
+		//exclude for afternoon_shift, others, OOO, QM the weekends
+		//exclude weekdays for on call
+		MessageDto msave = null;
+		List<Date> validDates = null;
+		try
+		{
+			validDates = HelperUtil.parseStringsToDate(dates, EventType.valueOf(typeevent));
+
+			if (validDates == null)
+			{
+				return msave;
+			}
+
+			final List<EventDto> events = new ArrayList<>();
+			DateRangeDto dateRange = null;
+			final SapEmployeeModel employee = sapEmployeeService.getSapEmployeeByPK(pk);
+			if (employee == null)
+			{
+				return HelperUtil.createMessage("No Employee found", Alerts.DANGER);
+			}
+
+			for (final Date date : validDates)
+			{
+				dateRange = HelperUtil.getDateRangeOfTheDay(date, EventType.valueOf(typeevent));
+
+				EventDto event = new EventDto();
+
+				event.setFromDate(dateRange.getFromDate());
+				event.setToDate(dateRange.getToDate());
+				event.setDescription(description == null ? "" : description);
+				event.setType(typeevent);
+				event.setTrainingTime(trainingTime);
+				event.setOooType(oooType);
+
+				//fixing date with time
+				event = HelperUtil.getDateRangeFromEventType(event);
+
+				events.add(event);
+			}
+
+			calendarEventService.saveEventsOnCalendar(events, employee);
+
+		}
+		catch (final ParseException e)
+		{
+			LOG.debug("error parsing date");
+			msave = HelperUtil.createMessage(e.getMessage(), Alerts.DANGER);
+		}
+		catch (final Exception mse)
+		{
+			msave = HelperUtil.createMessage(mse.getMessage(), Alerts.DANGER);
+		}
+
+		if (msave == null)
+		{
+			msave = HelperUtil.createMessage("Event saved successfully", Alerts.SUCCESS);
+		}
+
+		model.addAttribute("message", msave);
+
+		return msave;
 	}
 
 

@@ -144,7 +144,7 @@ public class EventController
 			{
 				dateRange = HelperUtil.getDateRangeOfTheDay(date, EventType.valueOf(typeevent));
 
-				EventDto event = new EventDto();
+				final EventDto event = new EventDto();
 
 				event.setFromDate(dateRange.getFromDate());
 				event.setToDate(dateRange.getToDate());
@@ -153,8 +153,7 @@ public class EventController
 				event.setTrainingTime(trainingTime);
 				event.setOooType(oooType);
 
-				//fixing date with time
-				event = HelperUtil.getDateRangeFromEventType(event);
+
 
 				events.add(event);
 			}
@@ -289,10 +288,10 @@ public class EventController
 			final String employee = event.getEmployee().getName() + " ";
 			test = test + "" + i++;
 			final FeedCalendarDto feedCalendar = new FeedCalendarDto();
-			feedCalendar.setClassevent(eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType())
-					: "event-success");
-			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null ? eventTypeShortName.get(event.getType()) + "  "
-					+ employee : event.getType() + " " + employee);
+			feedCalendar.setClassevent(
+					eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType()) : "event-success");
+			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null
+					? eventTypeShortName.get(event.getType()) + "  " + employee : event.getType() + " " + employee);
 			feedCalendar.setUrl(event.getType());
 			feedCalendar.setStart(String.valueOf(event.getFromDate().getTime()));
 			feedCalendar.setEnd(String.valueOf(event.getToDate().getTime()));
@@ -352,8 +351,8 @@ public class EventController
 			@RequestParam(value = "date") final Date date) throws Exception
 	{
 		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-		final List<SapEventModel> events = calendarEventService
-				.getAllEventsInTheDay(format.parse(format.format(date)), name, event); //NEED TO FORMAT DATE
+		final List<SapEventModel> events = calendarEventService.getAllEventsInTheDay(format.parse(format.format(date)), name,
+				event); //NEED TO FORMAT DATE
 		final Iterator i = events.iterator();
 		SapEventModel sapEventModel;
 		while (i.hasNext())

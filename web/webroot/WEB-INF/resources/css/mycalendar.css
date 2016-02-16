@@ -532,3 +532,7 @@ a.cal-event-week {
 .modaltable{
 	width: 100%;
 }
+
+.error{
+	color: #f00;
+}

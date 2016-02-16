@@ -55,8 +55,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 	@Override
 	public void saveEventsOnCalendar(final List<SapEventModel> events)
 	{
-		// YTODO Auto-generated method stub
-
+		modelService.saveAll(events);
 	}
 
 
@@ -344,9 +343,19 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 	@Override
 	public void deleteEventsInTheDay(final Date date, final String PK) throws ParseException
 	{
+		final List<SapEventModel> result = selectEventsFromDay(date, PK);
+		if (result != null)
+		{
+			modelService.removeAll(result);
+		}
+
+	}
+
+	private List<SapEventModel> selectEventsFromDay(final Date date, final String PK) throws ParseException
+	{
 		if (date == null || PK == null)
 		{
-			return;
+			return null;
 		}
 
 		final DateRangeDto dateRange = HelperUtil.getDateRangeOfTheDay(date);
@@ -366,12 +375,19 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 		if (result == null || result.size() == 0)
 		{
-			return;
+			return null;
 		}
-
-		modelService.removeAll(result);
+		return result;
 
 	}
+
+	@Override
+	public List<SapEventModel> getEventFromEmployeeAndDate(final Date date, final String pk) throws ParseException
+	{
+		final List<SapEventModel> result = selectEventsFromDay(date, pk);
+		return result;
+	}
+
 
 }
 

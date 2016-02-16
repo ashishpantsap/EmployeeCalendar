@@ -20,6 +20,7 @@ import com.hybris.employeecalendar.model.SapEmployeeModel;
 import com.hybris.employeecalendar.model.SapEventModel;
 import com.hybris.employeecalendar.services.CalendarEventService;
 import com.hybris.employeecalendar.services.SAPEmployeeService;
+import com.hybris.employeecalendar.util.HelperUtil;
 
 
 /**
@@ -81,16 +82,28 @@ public class DefaultCalendarEventService implements CalendarEventService
 
 
 	@Override
-	public void saveEventsOnCalendar(final List<EventDto> events, final SapEmployeeModel employee)
+	public void saveEventsOnCalendar(final List<EventDto> events, final SapEmployeeModel employee) throws ParseException
 	{
 		if (events == null || events.isEmpty() || employee == null)
 		{
 			return;
 		}
+
+		EventDto event = null;
+
 		final List<SapEventModel> eventsModel = new ArrayList<>();
-		for (final EventDto event : events)
+		for (final EventDto eventDto : events)
 		{
+
 			final SapEventModel eventM = new SapEventModel();
+			final List<SapEventModel> list = calendarEventDao.getEventFromEmployeeAndDate(eventDto.getFromDate(),
+					employee.getPk().toString());
+			if (list != null && !list.isEmpty())
+			{
+				eventsModel.addAll(list);
+			}
+			//fixing date with time
+			event = HelperUtil.getDateRangeFromEventType(eventDto);
 
 			eventM.setDescription(event.getDescription());
 			eventM.setEmployee(employee);
@@ -98,12 +111,9 @@ public class DefaultCalendarEventService implements CalendarEventService
 			eventM.setToDate(event.getToDate());
 			eventM.setType(EventType.valueOf(event.getType()));
 			eventM.setOooType(OOOType.valueOf(event.getOooType() != null ? event.getOooType() : OOOType.FULL_DAY.getCode()));
-
 			eventsModel.add(eventM);
 		}
-		employee.setEvents(eventsModel);
-
-		sapEmployeeService.saveEmployee(employee);
+		calendarEventDao.saveEventsOnCalendar(eventsModel);
 	}
 
 

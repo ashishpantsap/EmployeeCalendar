@@ -38,4 +38,6 @@ public interface CalendarEventDao
 	public List<SapEventModel> getTypeEventsFromDate(Date date, EventType eventType) throws ParseException;
 
 	public void deleteEventsInTheDay(Date date, String PK) throws ParseException;
+
+	public List<SapEventModel> getEventFromEmployeeAndDate(Date date, String pk) throws ParseException;
 }

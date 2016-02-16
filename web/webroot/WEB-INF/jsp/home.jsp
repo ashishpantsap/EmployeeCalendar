@@ -59,14 +59,10 @@
 							<label for="typeevents">Event</label> 
 							<select class="form-control"  id="typeevents" name="typeevent"></select> 
 							<br /> 
+							<label for="sanboxContainer">Choose Dates</label> 
 							<div id="sandbox-container"></div>
 							<br />
 							<input id="dates" type="hidden" name="dates" class="form-control" /> <br />
-							<label for="fromdate">From Date</label> 
-							<input id="fromdate" type="date" name="fromDate" class="form-control" required="required" /> <br />
-							<label for="todate">To Date</label> 
-							<input id="todate" type="date" name="toDate" class="form-control" required="required" /> <br />
-							<br />
 							<div id="hidedescription">
 								<label for="training-time">Training</label>
 								<select class="form-control"  id="training-time" name="training-time">
@@ -158,17 +154,6 @@
 
 			$('#myModal').on('show.bs.modal',function(event) {
 				
-				var input = $("#sandbox-container");
-			    input.datepicker({
-			    	format: 'yyyy-mm-dd',
-			    	todayHighlight:true,
-					todayBtn:true,
-				    multidate : true
-			    });
-			    /*
-			    input.data('datepicker').hide = function () {};
-			    input.datepicker('show');
-				*/
 				var modal = $(this);
 				var hidedesc=$('#hidedescription');
 				var typeevents=$('#typeevents');
@@ -219,10 +204,7 @@
 					} else {
 						hidedesc.hide();
 					}
-				});
-				
-				$("#fromdate").val($(event.relatedTarget).data("addevent"));				
-				$("#todate").val($(event.relatedTarget).data("addevent"));				
+				});			
 			});			
 
 			$('#displayModel').on('show.bs.modal', function(event) {
@@ -310,12 +292,20 @@
 				e.preventDefault();
 			});	
 			
+			var input = $("#sandbox-container");
+			 input.datepicker({
+		    	format: 'yyyy-mm-dd',
+		    	todayHighlight:true,
+				todayBtn:true,
+				multidate : true
+		    });
 			$('#sandbox-container').on("changeDate", function() {
-				$('#dates').val();
-				$('#dates').val(
-			        ($('#sandbox-container').datepicker('getFormattedDate')).split(',')
-			    );
-			});
+					$('#dates').val();
+					$('#dates').val(
+				        ($('#sandbox-container').datepicker('getFormattedDate')).split(',')
+				    );
+				});
+		  
 		}(jQuery));
 		
 	

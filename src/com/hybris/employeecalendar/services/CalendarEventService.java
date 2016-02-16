@@ -26,7 +26,7 @@ public interface CalendarEventService
 
 	public void saveEventOnCalendar(final EventDto event, SapEmployeeModel employee);
 
-	public void saveEventsOnCalendar(List<EventDto> events, SapEmployeeModel employee);
+	public void saveEventsOnCalendar(List<EventDto> events, SapEmployeeModel employee) throws ParseException;
 
 	public void deleteEventOnCalendar(EventDto event) throws Exception;
 

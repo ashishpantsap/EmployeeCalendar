@@ -28,8 +28,8 @@
 	</bean>
 
 	<bean class="com.hybris.employeecalendar.data.EventDto">
-		<property name="employee"
-			type="com.hybris.employeecalendar.data.SAPEmployeeDto" />
+		<property name="PK" type="String" />
+		<property name="employee" type="com.hybris.employeecalendar.data.SAPEmployeeDto" />
 		<property name="fromDate" type="java.util.Date" />
 		<property name="toDate" type="java.util.Date" />
 		<property name="description" type="String" />

@@ -59,10 +59,6 @@
 							<label for="typeevents">Event</label> 
 							<select class="form-control"  id="typeevents" name="typeevent"></select> 
 							<br /> 
-							<label for="sanboxContainer">Choose Dates</label> 
-							<div id="sandbox-container"></div>
-							<br />
-							<input id="dates" type="hidden" name="dates" class="form-control" /> <br />
 							<div id="hidedescription">
 								<label for="training-time">Training</label>
 								<select class="form-control"  id="training-time" name="training-time">
@@ -74,7 +70,12 @@
 								<label for="description">Description</label> 
 								<input id="description" type="text" name="description" class="form-control" /> <br />
 							</div>
-							<div id="error">
+							<label for="sanboxContainer">Choose Dates</label> 
+							<div id="sandbox-container"></div>
+							<br />
+							<input id="dates" type="hidden" name="dates" class="form-control" /> <br />
+							
+							<div id="displaymsg">
 								&nbsp;
 							</div>
 							<div class="modal-footer">
@@ -152,17 +153,227 @@
 				});
 			});
 
-			$('#myModal').on('show.bs.modal',function(event) {
+// 			$('#myModal').on('show.bs.modal',function(event) {
+// 				var date=event.relatedTarget.dataset.addevent.split('-');
+// 				var modal = $(this);
+// 				var hidedesc=$('#hidedescription');
+// 				var typeevents=$('#typeevents');
+// 				var inum=$('#inumber');
+// 				var year=date[0];
+// 				var month=parseInt(date[1])-1;
+// 				var day=date[2];
+// 				console.log(year,month,day)
 				
+// 				$('.currentDate').text(date.join('-'));				
+// 				$("#sandbox-container").datepicker('setDate',new Date(year,month,day));
+// 				inum.find('option').remove();
+// 				typeevents.find('option').remove();
+// 				hidedesc.hide();
+				
+// 				$.when($.ajax({
+// 					url : 'sapemployees',
+// 					method : 'GET',
+// 					error : function(err) {
+// 						console.log('MyError',err);
+// 					}
+// 				})).then(function(data) {
+// 					var names = _.sortBy(data, 'name'),selectedInum;
+// 					_.each(names, function(key, value) {
+// 						inum.append($('<option>', {
+// 							text : key.name + ' ' + key.surname,
+// 							value: key.pk
+// 						}));
+// 						selectedInum=$('#inumber :selected')[0].value;		
+// 					});
+// 				});
+				
+// 				$.when($.ajax({
+// 					url : 'sapevents',
+// 					method : 'GET',
+// 					error : function(err) {
+// 						console.log('BLAH ERROR',err);
+// 					}
+// 				})).then(function(data) {
+// 					var _events = _.sortBy(data);
+// 					_.each(_events, function(key, value) {
+// 						typeevents.append($('<option>', {
+// 							text : key
+// 						}));
+// 					});
+// 				});				
+								
+// 				typeevents.change(function() {
+// 					var training = $('#typeevents :selected')
+// 							.text() === 'TRAINING';
+// 					if (training) {
+// 						hidedesc.show();
+// 						var description = $('#description :selected');
+// 					} else {
+// 						hidedesc.hide();
+// 					}
+// 				});			
+// 			});			
+
+// 			$('#displayModel').on('show.bs.modal', function(event) {
+				
+// 				var eventtable=$('#listevents'), date=event.relatedTarget.dataset.addevent, row, cell, cell2, cell3, text, text2, button;
+// 				eventtable.find('tr').remove();
+
+// 				$('.currentDate').text(date);
+				
+// 				var request = $.ajax({
+// 					url:'daysevents',
+// 					type:'GET',
+// 					headers:{
+// 	                    'Accept':'application/json'
+// 	                },
+// 	                data: {'date':new Date(date)}
+// 				});
+				
+// 				request.done(function(data){
+// 					var target, list, table, tbody, row, cell, text, text2, cell2, cell3, button;
+// 					list = _.sortBy(data, function(o) { return o.employee.name; });
+// 					table=$('.modaltable tdhover');
+// 					tbody=document.createElement('tbody');
+// 					target=$('#listevents');
+// 					table.append(tbody);
+// 					console.log(date);
+// 					createTable(target, date, list, table, tbody, row, cell, cell2, cell3, button);
+// 				});
+// 				request.error(function(err){
+// 					console.log('error',err);
+// 				});
+// 			});
+				
+				
+			$('#displayModel').on('click','.delete',function(e){
+				
+				e.preventDefault();	
+				var data=e.target.tempData;
+				$.ajax({
+					url:'deleteevent',
+					type:'POST',					
+	                data: {'name':data.name + ',' + data.surname, 'event':data.event, 'date':new Date(data.date)}
+				}).done(function(data){
+									
+						$('#myModal').modal('hide');						
+						window.location='/employeecalendar/home?eventsMutated=Deleted';											
+								
+				}).fail(function(err){
+					console.log('ERROR',err);
+				});				
+			});						
+			
+			$("#submitbutton").click(function(e) {
+				var request = $.ajax({
+					url:'sendevents',
+					type:'POST',
+					headers:{
+	                    'Accept':'application/json'
+	                },
+	                data: $('#sendeventform').serializeArray()
+				});
+				request.done(function(data){
+					$("#displaymsg").removeClass();
+					$("#displaymsg").addClass("alert alert-" + data.alert.toLowerCase() +" alert-dismissible");
+					$("#displaymsg").text(data.description);
+					console.log(data)
+// 					if(data.alert==='SUCCESS')
+// 					{											
+// 						$('#myModal').modal('hide');
+// 						window.location='/employeecalendar/home?eventsMutated=Created';											
+// 					}
+// 					else if(data.alert==='DANGER')
+// 					{
+// 						var r=255;
+// 						var g=0;
+// 						var b=0;
+// 						var errorDiv=document.getElementById('error');
+// 						errorDiv.style.color='rgb('+r+', '+g+', '+b+')';
+// 						$('#displaymsg').text('Error check todays scheduled events.');
+// 							setTimeout(function(){
+// 								remove(errorDiv,r,g,b);
+// 							},1000);	
+						
+// 					}
+				});
+				request.fail(function(data){
+					alert("Request Failed");
+				});
+				e.preventDefault();
+			});	
+			
+			
+// 			var input = $("#sandbox-container");
+// 			input.datepicker({					
+// 		    	format: 'yyyy-mm-dd',
+// 				todayHighlight:true,
+// 				todayBtn:true,
+// 				multidate : true,				
+// 		    });
+			
+// 			$('#sandbox-container').on("changeDate", function() {
+// 					$('#dates').val();
+// 					$('#dates').val(
+// 				        ($('#sandbox-container').datepicker('getFormattedDate')).split(',')
+// 				    );
+// 				});
+
+			
+		  
+		}(jQuery));
+		
+		
+	
+// 		var mutated = "${eventsMutated}";		
+		window.onload = function(){	
+			var input = $("#sandbox-container");
+			input.datepicker({					
+		    	format: 'yyyy-mm-dd',
+				todayHighlight:true,
+				todayBtn:true,
+				multidate : true,				
+		    });
+			
+			input.on("changeDate", function(e) {
+				console.log(e);
+				$('#dates').val();
+				$('#dates').val(
+			        ($('#sandbox-container').datepicker('getFormattedDate')).split(',')
+			    );
+				console.log($('#dates').val());
+			});
+			
+// 			if(mutated){
+// 				console.log('BEN',mutated);
+// 				var successDiv=document.getElementById('successmsg');
+// 				console.log(successDiv);
+// 				successDiv.innerHTML=' &nbsp; Event Successfully '+mutated.toString();				
+// 				var r=0;
+// 				var g=255;
+// 				var b=0;
+// 				successDiv.style.color='rgb('+r+', '+g+', '+b+')';					
+// 					setTimeout(function(){
+// 						remove(successDiv,r,g,b);
+// 					},1000);		
+// 			}
+			
+			$('#myModal').on('show.bs.modal',function(event) {
+				var date=event.relatedTarget.dataset.addevent.split('-');
 				var modal = $(this);
 				var hidedesc=$('#hidedescription');
 				var typeevents=$('#typeevents');
 				var inum=$('#inumber');
+				var year=date[0];
+				var month=parseInt(date[1])-1;
+				var day=date[2];
 				
+				$('.currentDate').text(date.join('-'));				
+				$("#sandbox-container").datepicker('setDate',new Date(year,month,day));
 				inum.find('option').remove();
 				typeevents.find('option').remove();
 				hidedesc.hide();
-
+				
 				$.when($.ajax({
 					url : 'sapemployees',
 					method : 'GET',
@@ -196,17 +407,19 @@
 				});				
 								
 				typeevents.change(function() {
-					var training = $('#typeevents :selected')
-							.text() === 'TRAINING';
+					console.log($('#typeevents :selected').text());
+					var training = $('#typeevents :selected').text() === 'OTHERS';
 					if (training) {
 						hidedesc.show();
-						var description = $('#description :selected');
+						//var description = $('#description :selected');
+						
+						$('#description').focus();
 					} else {
 						hidedesc.hide();
 					}
 				});			
-			});			
-
+			});	
+			
 			$('#displayModel').on('show.bs.modal', function(event) {
 				
 				var eventtable=$('#listevents'), date=event.relatedTarget.dataset.addevent, row, cell, cell2, cell3, text, text2, button;
@@ -237,94 +450,7 @@
 					console.log('error',err);
 				});
 			});
-				
-				
-			$('#displayModel').on('click','.delete',function(e){
-				
-				e.preventDefault();	
-				var data=e.target.tempData;
-				$.ajax({
-					url:'deleteevent',
-					type:'POST',					
-	                data: {'name':data.name + ',' + data.surname, 'event':data.event, 'date':new Date(data.date)}
-				}).done(function(data){
-									
-						$('#myModal').modal('hide');						
-						window.location='/employeecalendar/home?eventsMutated=Deleted';											
-								
-				}).fail(function(err){
-					console.log('ERROR',err);
-				});				
-			});						
 			
-			$("#submitbutton").click(function(e) {
-				var request = $.ajax({
-					url:'sendevents',
-					type:'POST',
-					headers:{
-	                    'Accept':'application/json'
-	                },
-	                data: $('#sendeventform').serializeArray()
-				});
-				request.done(function(data){
-					if(data.alert==='SUCCESS')
-					{											
-						$('#myModal').modal('hide');
-						window.location='/employeecalendar/home?eventsMutated=Created';											
-					}
-					else if(data.alert==='DANGER')
-					{
-						var r=255;
-						var g=0;
-						var b=0;
-						var errorDiv=document.getElementById('error');
-						errorDiv.style.color='rgb('+r+', '+g+', '+b+')';
-						$('#error').text('Error check todays scheduled events.');
-							setTimeout(function(){
-								remove(errorDiv,r,g,b);
-							},1000);	
-						
-					}
-				});
-				request.fail(function(data){
-					alert("Request Failed");
-				});
-				e.preventDefault();
-			});	
-			
-			var input = $("#sandbox-container");
-			 input.datepicker({
-		    	format: 'yyyy-mm-dd',
-		    	todayHighlight:true,
-				todayBtn:true,
-				multidate : true
-		    });
-			$('#sandbox-container').on("changeDate", function() {
-					$('#dates').val();
-					$('#dates').val(
-				        ($('#sandbox-container').datepicker('getFormattedDate')).split(',')
-				    );
-				});
-		  
-		}(jQuery));
-		
-	
-		var mutated = "${eventsMutated}";
-		console.log('BEN',event);
-		window.onload = function(){			
-			if(mutated){
-				console.log('BEN',mutated);
-				var successDiv=document.getElementById('successmsg');
-				console.log(successDiv);
-				successDiv.innerHTML=' &nbsp; Event Successfully '+mutated.toString();				
-				var r=0;
-				var g=255;
-				var b=0;
-				successDiv.style.color='rgb('+r+', '+g+', '+b+')';					
-					setTimeout(function(){
-						remove(successDiv,r,g,b);
-					},1000);		
-			}
 		}
 		</script>
 </body>

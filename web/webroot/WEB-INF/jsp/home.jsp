@@ -71,7 +71,7 @@
 								<input id="description" type="text" name="description" class="form-control" /> <br />
 							</div>
 							<label for="sanboxContainer">Choose Dates</label> 
-							<div id="sandbox-container"></div>
+							<div class=sandbox id="sandbox-container"></div>
 							<br />
 							<input id="dates" type="hidden" name="dates" class="form-control" /> <br />
 							
@@ -334,7 +334,7 @@
 				todayBtn:true,
 				multidate : true,				
 		    });
-			
+			console.log('BEN',input);
 			input.on("changeDate", function(e) {
 				console.log(e);
 				$('#dates').val();
@@ -344,6 +344,7 @@
 				console.log($('#dates').val());
 			});
 			
+						
 // 			if(mutated){
 // 				console.log('BEN',mutated);
 // 				var successDiv=document.getElementById('successmsg');
@@ -417,7 +418,16 @@
 					} else {
 						hidedesc.hide();
 					}
-				});			
+				});	
+				
+				$('.table-condensed tbody').children().hover(function(e) {
+					$(this).children().hover(function(e){
+						console.log($(this).text(),$(this).attr('class'));
+					});
+				},
+				function() {
+					
+				});						
 			});	
 			
 			$('#displayModel').on('show.bs.modal', function(event) {

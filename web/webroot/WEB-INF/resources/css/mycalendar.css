@@ -541,3 +541,7 @@ a.cal-event-week {
 .error{
 	color: #f00;
 }
+
+.sandbox{
+	width: 50%;
+}

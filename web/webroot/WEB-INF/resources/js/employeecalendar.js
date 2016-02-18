@@ -49,6 +49,10 @@
 				});
 				e.preventDefault();
 			});	
+			
+			$('#myModal').on('hidden.bs.modal', function (e) {
+				  location.reload();
+				})
 		}(jQuery));
 	
 	window.onload = function(){	
@@ -168,13 +172,4 @@
 			});
 		});
 		
-		
-		
-		
-		//refresh the page after closing the modal
-		/*
-		$('#displayModel').on('hidden.bs.modal', function (e) {
-			createFormMessage("test ", "SUCCESS");	
-		});
-		*/
 }

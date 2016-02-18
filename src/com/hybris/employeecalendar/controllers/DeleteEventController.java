@@ -67,7 +67,7 @@ public class DeleteEventController
 
 		if (date == null || pk == null)
 		{
-			message = HelperUtil.createMessage("error with parameter : date/pk is null", Alerts.WARNING);
+			message = HelperUtil.createMessage("Error with parameter : date/pk is null", Alerts.WARNING);
 			return message;
 		}
 
@@ -80,11 +80,11 @@ public class DeleteEventController
 		}
 		catch (final ParseException pe)
 		{
-			message = HelperUtil.createMessage("error parsing date", Alerts.WARNING);
+			message = HelperUtil.createMessage("Error parsing date", Alerts.WARNING);
 		}
 		catch (final ModelRemovalException mre)
 		{
-			message = HelperUtil.createMessage("error removing events", Alerts.DANGER);
+			message = HelperUtil.createMessage("Error removing events", Alerts.DANGER);
 		}
 		catch (final Exception e)
 		{
@@ -93,7 +93,7 @@ public class DeleteEventController
 
 		if (message == null)
 		{
-			message = HelperUtil.createMessage("events have been deleted from database", Alerts.SUCCESS);
+			message = HelperUtil.createMessage("Events have been deleted from database", Alerts.SUCCESS);
 		}
 
 		return message;
@@ -112,7 +112,7 @@ public class DeleteEventController
 
 		calendarEventService.deleteEventFromPk(pk);
 
-		return HelperUtil.createMessage("event deleted succefully", Alerts.SUCCESS);
+		return HelperUtil.createMessage("Event deleted succefully", Alerts.SUCCESS);
 	}
 
 

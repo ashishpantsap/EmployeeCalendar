@@ -31,7 +31,8 @@ function createTable(target, date, list, table, tbody, row, cell, cell2, cell3,
 			'date' : date,
 			'name' : key.employee.name,
 			'surname' : key.employee.surname,
-			'event' : key.type
+			'event' : key.type,
+			'pk' : key.pk
 		}; // Appending date to handle for delete click event
 		cell3.appendChild(button);
 		cell3.style.cssFloat = 'right';

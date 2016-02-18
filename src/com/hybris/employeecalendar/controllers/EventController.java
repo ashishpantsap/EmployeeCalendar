@@ -5,15 +5,11 @@ package com.hybris.employeecalendar.controllers;
 
 import de.hybris.platform.servicelayer.model.ModelService;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +26,6 @@ import com.hybris.employeecalendar.data.MessageDto;
 import com.hybris.employeecalendar.data.enums.Alerts;
 import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
-import com.hybris.employeecalendar.model.SapEventModel;
 import com.hybris.employeecalendar.services.CalendarEventService;
 import com.hybris.employeecalendar.services.CalendarValidationService;
 import com.hybris.employeecalendar.services.SAPEmployeeService;
@@ -101,15 +96,15 @@ public class EventController
 			for (final Date date : validDates)
 			{
 				dateRange = HelperUtil.getDateRangeOfTheDay(date, EventType.valueOf(typeevent));
-				EventDto event = new EventDto();
+				final EventDto event = new EventDto();
 				event.setFromDate(dateRange.getFromDate());
 				event.setToDate(dateRange.getToDate());
 				event.setDescription(description == null ? "" : description);
 				event.setType(typeevent);
 				event.setTrainingTime(trainingTime);
 				event.setOooType(oooType);
-				//fixing date with time
-				event = HelperUtil.getDateRangeFromEventType(event);
+				//fixing date with time ADDED in the service redudant
+				//event = HelperUtil.getDateRangeFromEventType(event);
 				events.add(event);
 			}
 			calendarEventService.saveEventsOnCalendar(events, employee);
@@ -161,30 +156,5 @@ public class EventController
 		}
 
 		return events;
-	}
-
-	//Warning: The deletion doesn't take into account hh:mm
-	@RequestMapping(value = "/deleteevent", method = RequestMethod.POST, headers = "Accept=application/json")
-	@ResponseBody
-	public void deleteevent(@RequestParam(value = "name") final String name, @RequestParam(value = "event") final String event,
-			@RequestParam(value = "date") final Date date) throws Exception
-	{
-		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-		final List<SapEventModel> events = calendarEventService
-				.getAllEventsInTheDay(format.parse(format.format(date)), name, event); //NEED TO FORMAT DATE
-		final Iterator i = events.iterator();
-		SapEventModel sapEventModel;
-		while (i.hasNext())
-		{
-			sapEventModel = (SapEventModel) i.next();
-			final String dtoDate = format.format(sapEventModel.getFromDate());
-			final String newEvent = sapEventModel.getType().toString();
-			final String newDate = format.format(date);
-			final String newName = sapEventModel.getEmployee().getName() + "," + sapEventModel.getEmployee().getSurname();
-			if (newName.equals(name) && dtoDate.equals(newDate) && newEvent.equals(event))
-			{
-				modelService.remove(sapEventModel);
-			}
-		}
 	}
 }

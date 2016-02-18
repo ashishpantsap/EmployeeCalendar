@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,6 +28,12 @@
 <body>
 	<c:import url="header.jsp" />
 	<div id="successmsg"></div>
+	<c:if test="${not empty messageDto}">
+		<div id="alertmessage" role="alert" class='alert alert-${fn:toLowerCase(messageDto.alert)} alert-dismissible'>
+		  <strong id="strongalert">${messageDto.alert}</strong>
+		  <p id="contentalert">${messageDto.description}</p>
+		</div>
+	</c:if>
 	<div class="container-fluid">
 		<h3 class="text-center" id="MonthYear"></h3>
 		<div class="pull-right form-inline">

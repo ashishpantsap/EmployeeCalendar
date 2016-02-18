@@ -101,5 +101,19 @@ public class DeleteEventController
 	}
 
 
+	@RequestMapping(value = "/deleteevent", method = RequestMethod.POST, headers = "Accept=application/json")
+	@ResponseBody
+	public MessageDto deleteevent(@RequestParam(value = "pk") final String pk)
+	{
+		if (pk == null || pk.isEmpty())
+		{
+			return HelperUtil.createMessage("Error pk empty", Alerts.DANGER);
+		}
+
+		calendarEventService.deleteEventFromPk(pk);
+
+		return HelperUtil.createMessage("event deleted succefully", Alerts.SUCCESS);
+	}
+
 
 }

@@ -40,4 +40,6 @@ public interface CalendarEventDao
 	public void deleteEventsInTheDay(Date date, String PK) throws ParseException;
 
 	public List<SapEventModel> getEventFromEmployeeAndDate(Date date, String pk) throws ParseException;
+
+	public void deleteEventFromPk(String pk);
 }

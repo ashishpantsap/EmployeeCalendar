@@ -237,6 +237,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 		for (final SapEventModel model : eventsModel)
 		{
 			final EventDto eventDto = new EventDto();
+			eventDto.setPK(model.getPk().getLongValueAsString());
 			eventDto.setFromDate(model.getFromDate());
 			eventDto.setToDate(model.getToDate());
 			eventDto.setDescription(model.getDescription());
@@ -259,12 +260,11 @@ public class DefaultCalendarEventService implements CalendarEventService
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.hybris.employeecalendar.services.CalendarEventService#deleteEventsInTheDay(java.util.Date,
-	 * java.lang.String)
-	 */
+	@Override
+	public void deleteEventFromPk(final String pk)
+	{
+		calendarEventDao.deleteEventFromPk(pk);
+	}
 
 
 	@Override

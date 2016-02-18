@@ -46,6 +46,6 @@ public interface CalendarEventService
 
 	public void deleteEventsInTheDay(Date date, String PK) throws ParseException;
 
-
+	public void deleteEventFromPk(String pk);
 
 }

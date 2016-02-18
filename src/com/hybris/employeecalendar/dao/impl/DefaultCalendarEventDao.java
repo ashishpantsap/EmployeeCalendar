@@ -3,6 +3,7 @@
  */
 package com.hybris.employeecalendar.dao.impl;
 
+import de.hybris.platform.core.PK;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -388,6 +389,11 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 		return result;
 	}
 
+	@Override
+	public void deleteEventFromPk(final String pk)
+	{
+		modelService.remove(PK.parse(pk));
+	}
 
 }
 

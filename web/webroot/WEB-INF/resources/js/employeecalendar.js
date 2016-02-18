@@ -1,19 +1,27 @@
 (function($) {
 			"use strict";			
 			
+			function createFormMessage(message, alert)
+			{
+				$('<form action="showhome" method="POST">' + 
+					    '<input type="hidden" name="message" value="' + message + '">' +
+					    '<input type="hidden" name="alert" value="' + alert + '">' +
+					    '</form>').submit();
+			}
+			
 			$('#displayModel').on('click','.delete',function(e){
 				
 				e.preventDefault();	
 				var data=e.target.tempData;
+				console.log(data);
 				$.ajax({
 					url:'deleteevent',
 					type:'POST',					
-	                data: {'name':data.name + ',' + data.surname, 'event':data.event, 'date':new Date(data.date)}
+	                data: {'pk':data.pk }
 				}).done(function(data){
-									
-						$('#myModal').modal('hide');						
-						window.location='/employeecalendar/home?eventsMutated=Deleted';											
-								
+					$('#displayModel').modal('hide');
+					createFormMessage(data.description, data.alert);
+						//window.location='/employeecalendar/home?eventsMutated=Deleted';			
 				}).fail(function(err){
 					console.log('ERROR',err);
 				});				
@@ -159,5 +167,14 @@
 				console.log('error',err);
 			});
 		});
-	
+		
+		
+		
+		
+		//refresh the page after closing the modal
+		/*
+		$('#displayModel').on('hidden.bs.modal', function (e) {
+			createFormMessage("test ", "SUCCESS");	
+		});
+		*/
 }

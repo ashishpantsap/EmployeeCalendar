@@ -9,7 +9,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -85,11 +84,13 @@ public class EventController
 			@RequestParam(value = "ooo-type", required = false) final String oooType,
 			@RequestParam(value = "typeevent") final String typeevent)
 	{
+		final StringBuilder eventsSubmittedDates = new StringBuilder();
 		MessageDto msave = null;
 		List<Date> validDates = null;
 		try
 		{
 			final List<EventDto> events = new ArrayList<>();
+			final DateFormat simpleDateFormat = new SimpleDateFormat("MM-dd", Locale.ENGLISH);
 			DateRangeDto dateRange = null;
 			validDates = HelperUtil.parseStringsToDate(dates, EventType.valueOf(typeevent));
 			msave = calendarValidationService.validateInputData(pk, validDates, typeevent);
@@ -111,6 +112,14 @@ public class EventController
 				//fixing date with time
 				event = HelperUtil.getDateRangeFromEventType(event);
 				events.add(event);
+				if (validDates.size() > 1)
+				{
+					eventsSubmittedDates.append(simpleDateFormat.format(date) + ",");
+				}
+				else
+				{
+					eventsSubmittedDates.append(simpleDateFormat.format(date));
+				}
 			}
 			calendarEventService.saveEventsOnCalendar(events, employee);
 
@@ -126,7 +135,7 @@ public class EventController
 		}
 		if (msave == null)
 		{
-			msave = HelperUtil.createMessage("Event saved successfully for " + Arrays.toString(dates), Alerts.SUCCESS);
+			msave = HelperUtil.createMessage("Event saved successfully for " + eventsSubmittedDates.toString(), Alerts.SUCCESS);
 		}
 
 		model.addAttribute("message", msave);

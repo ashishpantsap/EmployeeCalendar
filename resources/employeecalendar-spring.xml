@@ -34,16 +34,7 @@
 		<property name="sapEventDao" ref="defaultCalendarEventDao" />
 	</bean>		
 	
-	<bean id="checkEventTypeConsistency" class="com.hybris.employeecalendar.interceptor.EventTypeConsistency">
-		<property name="sapEventDao" ref="defaultCalendarEventDao" />
-	</bean>
-	
-	<bean id="checkEventTypeConsistencyMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-	    <property name="interceptor" ref="checkEventTypeConsistency"/>
-	    <property name="typeCode" value="SapEvent"/>
- 	</bean>
- 	
- 	<util:map id="eventTypeShortName">
+	<util:map id="eventTypeShortName">
  		<entry key="QUEUE_MANAGER" value="QM" />
  		<entry key="OUT_OF_THE_OFFICE" value="OOO" />
  	</util:map>

@@ -93,7 +93,7 @@ public class DefaultCalendarValidationService implements CalendarValidationServi
 	private String checkConsistency(final SapEventModel QM, final SapEventModel eventOnDb, final String typeOfEvent)
 	{
 		String msave = null;
-		if (QM != null && QM.equals(EventType.QUEUE_MANAGER))
+		if (QM != null && eventOnDb.getType().equals(typeOfEvent))
 		{
 			msave = "There is already QM registered for this date";
 		}

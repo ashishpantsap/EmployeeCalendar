@@ -9,14 +9,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
-import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hybris.employeecalendar.data.DateRangeDto;
 import com.hybris.employeecalendar.data.EventDto;
-import com.hybris.employeecalendar.data.FeedCalendarDto;
 import com.hybris.employeecalendar.data.MessageDto;
-import com.hybris.employeecalendar.data.SAPEmployeeDto;
 import com.hybris.employeecalendar.data.enums.Alerts;
 import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
 import com.hybris.employeecalendar.model.SapEventModel;
 import com.hybris.employeecalendar.services.CalendarEventService;
+import com.hybris.employeecalendar.services.CalendarValidationService;
 import com.hybris.employeecalendar.services.SAPEmployeeService;
 import com.hybris.employeecalendar.util.HelperUtil;
 
@@ -51,24 +47,9 @@ public class EventController
 
 	private SAPEmployeeService sapEmployeeService;
 
+	private CalendarValidationService calendarValidationService;
+
 	private ModelService modelService;
-
-	private Map<String, String> eventTypeMapping;
-
-	private Map<String, String> eventTypeShortName;
-
-	@Resource(name = "eventTypeMapping")
-	public void setEventTypeMapping(final Map<String, String> eventTypeMapping)
-	{
-		this.eventTypeMapping = eventTypeMapping;
-	}
-
-	@Resource(name = "eventTypeShortName")
-	public void setEventTypeShortName(final Map<String, String> eventTypeShortName)
-	{
-		this.eventTypeShortName = eventTypeShortName;
-	}
-
 
 	@Autowired
 	public void setCalendarEventService(final CalendarEventService calendarEventService)
@@ -76,6 +57,11 @@ public class EventController
 		this.calendarEventService = calendarEventService;
 	}
 
+	@Autowired
+	public void setValidationService(final CalendarValidationService calendarValidationService)
+	{
+		this.calendarValidationService = calendarValidationService;
+	}
 
 	@Autowired
 	public void setSapEmployeeService(final SAPEmployeeService sapEmployeeService)
@@ -89,75 +75,43 @@ public class EventController
 		this.modelService = modelService;
 	}
 
-	@RequestMapping(value = "/submiteventpage", method = RequestMethod.GET)
-	public String submitEvent(final Model model)
-	{
-		final List<SAPEmployeeDto> sapEmployees = sapEmployeeService.getSapEmployees();
-		model.addAttribute("employees", sapEmployees);
-
-		final List<String> events = new ArrayList<String>();
-		for (final EventType event : EventType.values())
-		{
-			events.add(event.getCode());
-		}
-
-		model.addAttribute("events", events);
-		return "submiteventpage";
-	}
-
+	//Parse the dates, validate the inputs and save the events
 	@ResponseBody
 	@RequestMapping(value = "/sendevents", method = RequestMethod.POST, headers = "Accept=application/json")
-	public MessageDto sendEvents(final Model model, //
-			@RequestParam(value = "pk") final String pk, //
-			@RequestParam(value = "dates") final String[] dates, //
-			@RequestParam(value = "description", required = false) final String description, //
-			@RequestParam(value = "training-time", required = false) final String trainingTime, //
-			@RequestParam(value = "ooo-type", required = false) final String oooType, //
+	public MessageDto sendEvents(final Model model, @RequestParam(value = "pk") final String pk,
+			@RequestParam(value = "dates") final String[] dates,
+			@RequestParam(value = "description", required = false) final String description,
+			@RequestParam(value = "training-time", required = false) final String trainingTime,
+			@RequestParam(value = "ooo-type", required = false) final String oooType,
 			@RequestParam(value = "typeevent") final String typeevent)
 	{
-		//parse the dates and create a List of Dates
-		// call the service to generate a List of Events
-		// call the api service to save a List of Events with user
-		//exclude for afternoon_shift, others, OOO, QM the weekends
-		//exclude weekdays for on call
 		MessageDto msave = null;
 		List<Date> validDates = null;
 		try
 		{
+			final List<EventDto> events = new ArrayList<>();
+			DateRangeDto dateRange = null;
 			validDates = HelperUtil.parseStringsToDate(dates, EventType.valueOf(typeevent));
-
-			if (validDates == null)
+			msave = calendarValidationService.validateInputData(pk, validDates, typeevent);
+			final SapEmployeeModel employee = sapEmployeeService.getSapEmployeeByPK(pk);
+			if (msave != null)
 			{
 				return msave;
 			}
-
-			final List<EventDto> events = new ArrayList<>();
-			DateRangeDto dateRange = null;
-			final SapEmployeeModel employee = sapEmployeeService.getSapEmployeeByPK(pk);
-			if (employee == null)
-			{
-				return HelperUtil.createMessage("No Employee found", Alerts.DANGER);
-			}
-
 			for (final Date date : validDates)
 			{
 				dateRange = HelperUtil.getDateRangeOfTheDay(date, EventType.valueOf(typeevent));
-
 				EventDto event = new EventDto();
-
 				event.setFromDate(dateRange.getFromDate());
 				event.setToDate(dateRange.getToDate());
 				event.setDescription(description == null ? "" : description);
 				event.setType(typeevent);
 				event.setTrainingTime(trainingTime);
 				event.setOooType(oooType);
-
 				//fixing date with time
 				event = HelperUtil.getDateRangeFromEventType(event);
-
 				events.add(event);
 			}
-
 			calendarEventService.saveEventsOnCalendar(events, employee);
 
 		}
@@ -166,149 +120,18 @@ public class EventController
 			LOG.debug("error parsing date");
 			msave = HelperUtil.createMessage(e.getMessage(), Alerts.DANGER);
 		}
-		catch (final Exception mse)
+		catch (final Exception ex)
 		{
-			msave = HelperUtil.createMessage(mse.getMessage(), Alerts.DANGER);
+			msave = HelperUtil.createMessage(ex.getMessage(), Alerts.DANGER);
 		}
-
 		if (msave == null)
 		{
-			msave = HelperUtil.createMessage("Event saved successfully", Alerts.SUCCESS);
+			msave = HelperUtil.createMessage("Event saved successfully for " + Arrays.toString(dates), Alerts.SUCCESS);
 		}
 
 		model.addAttribute("message", msave);
 
 		return msave;
-	}
-
-
-	@ResponseBody
-	@RequestMapping(value = "/sendevent", method = RequestMethod.POST, headers = "Accept=application/json")
-	public MessageDto sendEvent(final Model model, //
-			@RequestParam(value = "pk") final String pk, //
-			@RequestParam(value = "fromDate") final String fromDate, //
-			@RequestParam(value = "toDate", required = false) final String toDate, //
-			@RequestParam(value = "description", required = false) final String description, //
-			@RequestParam(value = "training-time", required = false) final String trainingTime, //
-			@RequestParam(value = "typeevent") final String typeevent)
-	{
-		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-		Date datef = null;
-		Date datet = null;
-		try
-		{
-			datef = format.parse(fromDate);
-			datet = format.parse(toDate);
-		}
-		catch (final ParseException e)
-		{
-			LOG.debug("error parsing date");
-		}
-
-		if (datef == null || datef.after(datet))
-		{
-			final MessageDto messageDto = HelperUtil.createMessage("Error with the date submitted", Alerts.WARNING);
-			model.addAttribute("message", messageDto);
-			return messageDto;
-		}
-		if (pk == null || pk.equals(""))
-		{
-			final MessageDto messageDto = HelperUtil.createMessage("No inumber submitted", Alerts.DANGER);
-			model.addAttribute("message", messageDto);
-			return messageDto;
-		}
-
-		final SapEmployeeModel employee = sapEmployeeService.getSapEmployeeByPK(pk);
-
-		EventDto event = new EventDto();
-
-		event.setFromDate(datef);
-		event.setToDate(datet);
-		event.setDescription(description == null ? "" : description);
-		event.setType(typeevent);
-		event.setTrainingTime(trainingTime);
-		MessageDto msave = null;
-		try
-		{
-			event = HelperUtil.getDateRangeFromEventType(event);
-			calendarEventService.saveEventOnCalendar(event, employee);
-		}
-		catch (final Exception mse)
-		{
-			msave = HelperUtil.createMessage(mse.getMessage(), Alerts.DANGER);
-		}
-
-
-		if (msave == null)
-		{
-			msave = HelperUtil.createMessage("Event saved successfully", Alerts.SUCCESS);
-		}
-
-		model.addAttribute("message", msave);
-
-		return msave;
-	}
-
-
-	@ResponseBody
-	@RequestMapping(value = "/feedCalendar", method = RequestMethod.GET, headers = "Accept=application/json")
-	public List<FeedCalendarDto> feedCalendarAll( //
-			@RequestParam(value = "month") final String month, //
-			@RequestParam(value = "from") final String from, //
-			@RequestParam(value = "to") final String to)
-	{
-		final long millisecondsfrom = Long.parseLong(from);
-		final long millisecondsto = Long.parseLong(to);
-
-		Date dateFrom = null;
-		Date dateTo = null;
-		try
-		{
-			dateFrom = HelperUtil.convertLongMillisecondsToDate(millisecondsfrom);
-			dateTo = HelperUtil.convertLongMillisecondsToDate(millisecondsto);
-		}
-		catch (final ParseException e)
-		{
-			LOG.error(e.getMessage());
-			return Collections.EMPTY_LIST;
-		}
-		final List<EventDto> eventsDto = calendarEventService.getMonthlyScheduleOnCallAndQM(dateFrom, dateTo);
-		if (eventsDto.size() == 0)
-		{
-			return Collections.EMPTY_LIST;
-		}
-
-		final List<FeedCalendarDto> events = new ArrayList<FeedCalendarDto>();
-		int i = 0;
-		String test = "test";
-		for (final EventDto event : eventsDto)
-		{
-			final String employee = event.getEmployee().getName() + " ";
-			test = test + "" + i++;
-			final FeedCalendarDto feedCalendar = new FeedCalendarDto();
-			feedCalendar.setClassevent(eventTypeMapping.get(event.getType()) != null ? eventTypeMapping.get(event.getType())
-					: "event-success");
-			feedCalendar.setTitle(eventTypeShortName.get(event.getType()) != null ? eventTypeShortName.get(event.getType()) + "  "
-					+ employee : event.getType() + " " + employee);
-			feedCalendar.setUrl(event.getType());
-			feedCalendar.setStart(String.valueOf(event.getFromDate().getTime()));
-			feedCalendar.setEnd(String.valueOf(event.getToDate().getTime()));
-			feedCalendar.setId(test);
-
-			events.add(feedCalendar);
-		}
-
-		return events;
-
-	}
-
-	@RequestMapping(value = "/sapemployees", method = RequestMethod.GET)
-	@ResponseBody
-	public List<SAPEmployeeDto> sapEmployees()
-	{
-		final List<SAPEmployeeDto> sapEmployees = sapEmployeeService.getSapEmployees();
-
-		return sapEmployees;
 	}
 
 	@RequestMapping(value = "/sapevents", method = RequestMethod.GET)

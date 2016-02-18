@@ -28,7 +28,11 @@
 	
 	<bean id="defaultCalendarEventService" class="com.hybris.employeecalendar.services.impl.DefaultCalendarEventService"></bean>
 	
-	<bean id="defaultSapEmployeeService" class="com.hybris.employeecalendar.services.impl.DefaultSAPEmployeeService"></bean>		
+	<bean id="defaultSapEmployeeService" class="com.hybris.employeecalendar.services.impl.DefaultSAPEmployeeService"></bean>
+	
+	<bean id="defaultCalendarValidationService" class="com.hybris.employeecalendar.services.impl.DefaultCalendarValidationService">
+		<property name="sapEventDao" ref="defaultCalendarEventDao" />
+	</bean>		
 	
 	<bean id="checkEventTypeConsistency" class="com.hybris.employeecalendar.interceptor.EventTypeConsistency">
 		<property name="sapEventDao" ref="defaultCalendarEventDao" />

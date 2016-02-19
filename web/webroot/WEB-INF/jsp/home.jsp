@@ -65,7 +65,7 @@
 							<select class="form-control"  id="typeevents" name="typeevent"></select> 
 							<br /> 
 							<div id="hidedescription">
-								<label for="training-time">Training</label>
+								<label for="training-time">Time</label>
 								<select class="form-control"  id="training-time" name="training-time">
 									<c:forEach var="training" items="${trainings}">
 										<option value="${training}"> ${training}</option>
@@ -74,6 +74,15 @@
 								<br />
 								<label for="description">Description</label> 
 								<input id="description" type="text" name="description" class="form-control" /> <br />
+							</div>
+							<div id="oootype">
+								<label for="ooo-time">OOO time</label>
+								<select class="form-control"  id="ooo-time" name="ooo-type">
+									<c:forEach var="oootype" items="${oootypes}">
+										<option value="${oootype}"> ${oootype}</option>
+									</c:forEach>
+								</select>
+								<br />
 							</div>
 							<label for="sanboxContainer">Choose Dates</label> 
 							<div class=sandbox id="sandbox-container"></div>

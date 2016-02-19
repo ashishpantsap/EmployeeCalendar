@@ -78,6 +78,7 @@
 			var date=event.relatedTarget.dataset.addevent.split('-');
 			var modal = $(this);
 			var hidedesc=$('#hidedescription');
+			var oootype=$('#oootype');
 			var typeevents=$('#typeevents');
 			var inum=$('#inumber');
 			var year=date[0];
@@ -90,7 +91,7 @@
 			inum.find('option').remove();
 			typeevents.find('option').remove();
 			hidedesc.hide();
-			
+			oootype.hide();
 			$.when($.ajax({
 				url : 'sapemployees',
 				method : 'GET',
@@ -131,6 +132,15 @@
 					$('#description').focus();
 				} else {
 					hidedesc.hide();
+				}
+			});	
+			
+			typeevents.change(function() {
+				var ooo = $('#typeevents :selected').text() === 'OUT_OF_THE_OFFICE';
+				if (ooo) {
+					oootype.show();
+				} else {
+					oootype.hide();
 				}
 			});	
 			

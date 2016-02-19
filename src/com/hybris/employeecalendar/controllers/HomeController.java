@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hybris.employeecalendar.data.EventDto;
 import com.hybris.employeecalendar.data.FeedCalendarDto;
+import com.hybris.employeecalendar.enums.OOOType;
 import com.hybris.employeecalendar.enums.TrainingType;
 import com.hybris.employeecalendar.services.CalendarEventService;
 import com.hybris.employeecalendar.util.HelperUtil;
@@ -64,6 +65,15 @@ public class HomeController
 			listOfTrainings.add(training.getCode());
 		}
 		model.addAttribute("trainings", listOfTrainings);
+
+
+		final List<String> listOfOOOType = new ArrayList<>();
+		for (final OOOType ooo : OOOType.values())
+		{
+			listOfOOOType.add(ooo.getCode());
+		}
+
+		model.addAttribute("oootypes", listOfOOOType);
 		if (eventsMutated != null)
 		{
 			model.addAttribute("eventsMutated", eventsMutated);

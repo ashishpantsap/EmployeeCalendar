@@ -13,3 +13,4 @@ beans.xsd
 ruleset.xml
 */org.eclipse.*
 
+testsrc/

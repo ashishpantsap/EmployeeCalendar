@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hybris.employeecalendar.data.EventDto;
 import com.hybris.employeecalendar.data.FeedCalendarDto;
-import com.hybris.employeecalendar.data.MessageDto;
-import com.hybris.employeecalendar.data.enums.Alerts;
 import com.hybris.employeecalendar.enums.TrainingType;
 import com.hybris.employeecalendar.services.CalendarEventService;
 import com.hybris.employeecalendar.util.HelperUtil;
@@ -122,21 +120,17 @@ public class HomeController
 		return events;
 	}
 
-	@RequestMapping(value = "/home", method = RequestMethod.POST, headers = "Accept=application/json")
-	public String showHome(final Model model, //
-			@RequestParam(value = "message", required = false) final String message, //
-			@RequestParam(value = "alert", required = false) final String alert)
-	{
-		if (message != null && alert != null)
-		{
-			final MessageDto messageDto = HelperUtil.createMessage(message, Enum.valueOf(Alerts.class, alert.toUpperCase()));
-			model.addAttribute("messageDto", messageDto);
-		}
-		return home(model, null);
-	}
+	//	@RequestMapping(value = "/home", method = RequestMethod.POST, headers = "Accept=application/json")
+	//	public String showHome(final Model model, //
+	//			@RequestParam(value = "message", required = false) final String message, //
+	//			@RequestParam(value = "alert", required = false) final String alert)
+	//	{
+	//		if (message != null && alert != null)
+	//		{
+	//			final MessageDto messageDto = HelperUtil.createMessage(message, Enum.valueOf(Alerts.class, alert.toUpperCase()));
+	//			model.addAttribute("messageDto", messageDto);
+	//		}
+	//		return home(model, null);
+	//	}
 
-	/*
-	 * @RequestMapping(value = "/showhome", method = RequestMethod.GET) public String showHomeGET(final Model model) {
-	 * return home(model, null); }
-	 */
 }

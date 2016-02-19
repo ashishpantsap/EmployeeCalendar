@@ -1,22 +1,15 @@
 (function($) {
 			"use strict";			
 			
-			function createFormMessage(message, alert)
-			{
-				$('<form action="home" method="POST">' + 
-					    '<input type="hidden" name="message" value="' + message + '">' +
-					    '<input type="hidden" name="alert" value="' + alert + '">' +
-					    '</form>').submit();
-			}
 			
 			function createAlert(data){
 				$("#alertmessage").removeClass();
 				$("#alertmessage").addClass("alert alert-" + data.alert.toLowerCase() +" alert-dismissible");
 				$("#strongalert").text(data.alert);
 				$("#contentalert").text(data.description);
-				$("#alertmessage").fadeOut(200, function() { 
+				$("#alertmessage").fadeOut(3500, function() { 
 					$(this).remove(); 
-					window.location='/employeecalendar/home;
+					location.reload();
 				});
 			}
 			
@@ -31,8 +24,7 @@
 	                data: {'pk':data.pk }
 				}).done(function(data){
 					$('#displayModel').modal('hide');
-					createAlert(data);
-						//window.location='/employeecalendar/home?eventsMutated=Deleted';			
+					createAlert(data);			
 				}).fail(function(err){
 					console.log('ERROR',err);
 				});				
@@ -60,6 +52,10 @@
 				});
 				e.preventDefault();
 			});	
+			
+			$('#myModal').on('hidden.bs.modal', function (e) {
+				  location.reload();
+				})
 		}(jQuery));
 	
 	window.onload = function(){	
@@ -179,13 +175,4 @@
 			});
 		});
 		
-		
-		
-		
-		//refresh the page after closing the modal
-		/*
-		$('#displayModel').on('hidden.bs.modal', function (e) {
-			createFormMessage("test ", "SUCCESS");	
-		});
-		*/
 }

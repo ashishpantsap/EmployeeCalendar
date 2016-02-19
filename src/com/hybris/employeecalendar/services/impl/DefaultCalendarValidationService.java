@@ -68,9 +68,14 @@ public class DefaultCalendarValidationService implements CalendarValidationServi
 			{
 				sapEvents = sapEventDao.getSapEventByInumberAndDate(iNumber, date);
 				QM = sapEventDao.getTypeEventFromDate(date, EventType.QUEUE_MANAGER);
+				if (QM != null && EventType.QUEUE_MANAGER.getCode().equals(typeOfEvent))
+				{
+					message.append(simpleDateFormat.format(date) + ": " + "There is already QM registered for this date" + ",");
+					continue;
+				}
 				for (final SapEventModel eventOnDb : sapEvents)
 				{
-					final String validate = checkConsistency(QM, eventOnDb, typeOfEvent);
+					final String validate = checkConsistency(eventOnDb, typeOfEvent);
 					if (validate != null)
 					{
 						message.append(simpleDateFormat.format(date) + ": " + validate + ",");
@@ -90,14 +95,11 @@ public class DefaultCalendarValidationService implements CalendarValidationServi
 		return msave;
 	}
 
-	private String checkConsistency(final SapEventModel QM, final SapEventModel eventOnDb, final String typeOfEvent)
+	private String checkConsistency(final SapEventModel eventOnDb, final String typeOfEvent)
 	{
 		String msave = null;
-		if (QM != null && eventOnDb.getType().equals(typeOfEvent))
-		{
-			msave = "There is already QM registered for this date";
-		}
-		else if (eventOnDb.getType().equals(EventType.ON_CALL))
+
+		if (eventOnDb.getType().equals(EventType.ON_CALL))
 		{
 			msave = "No events can be added in this day. ON_CALL event already saved in the calendar";
 		}

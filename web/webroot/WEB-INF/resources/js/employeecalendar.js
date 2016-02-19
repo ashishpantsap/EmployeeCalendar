@@ -3,10 +3,21 @@
 			
 			function createFormMessage(message, alert)
 			{
-				$('<form action="showhome" method="POST">' + 
+				$('<form action="home" method="POST">' + 
 					    '<input type="hidden" name="message" value="' + message + '">' +
 					    '<input type="hidden" name="alert" value="' + alert + '">' +
 					    '</form>').submit();
+			}
+			
+			function createAlert(data){
+				$("#alertmessage").removeClass();
+				$("#alertmessage").addClass("alert alert-" + data.alert.toLowerCase() +" alert-dismissible");
+				$("#strongalert").text(data.alert);
+				$("#contentalert").text(data.description);
+				$("#alertmessage").fadeOut(200, function() { 
+					$(this).remove(); 
+					window.location='/employeecalendar/home;
+				});
 			}
 			
 			$('#displayModel').on('click','.delete',function(e){
@@ -20,7 +31,7 @@
 	                data: {'pk':data.pk }
 				}).done(function(data){
 					$('#displayModel').modal('hide');
-					createFormMessage(data.description, data.alert);
+					createAlert(data);
 						//window.location='/employeecalendar/home?eventsMutated=Deleted';			
 				}).fail(function(err){
 					console.log('ERROR',err);

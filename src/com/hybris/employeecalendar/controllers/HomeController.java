@@ -122,7 +122,7 @@ public class HomeController
 		return events;
 	}
 
-	@RequestMapping(value = "/showhome", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/home", method = RequestMethod.POST, headers = "Accept=application/json")
 	public String showHome(final Model model, //
 			@RequestParam(value = "message", required = false) final String message, //
 			@RequestParam(value = "alert", required = false) final String alert)
@@ -135,10 +135,8 @@ public class HomeController
 		return home(model, null);
 	}
 
-	@RequestMapping(value = "/showhome", method = RequestMethod.GET)
-	public String showHomeGET()
-	{
-		return "redirect:" + "home";
-	}
-
+	/*
+	 * @RequestMapping(value = "/showhome", method = RequestMethod.GET) public String showHomeGET(final Model model) {
+	 * return home(model, null); }
+	 */
 }

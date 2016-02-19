@@ -3,12 +3,13 @@
  */
 package com.hybris.employeecalendar.controllers;
 
-import de.hybris.platform.servicelayer.model.ModelService;
-
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,6 @@ public class EventController
 
 	private CalendarValidationService calendarValidationService;
 
-	private ModelService modelService;
-
 	@Autowired
 	public void setCalendarEventService(final CalendarEventService calendarEventService)
 	{
@@ -61,12 +60,6 @@ public class EventController
 	public void setSapEmployeeService(final SAPEmployeeService sapEmployeeService)
 	{
 		this.sapEmployeeService = sapEmployeeService;
-	}
-
-	@Autowired
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
 	}
 
 	//Parse the dates, validate the inputs and save the events

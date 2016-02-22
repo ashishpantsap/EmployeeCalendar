@@ -302,4 +302,10 @@ public class DefaultCalendarEventService implements CalendarEventService
 	{
 		calendarEventDao.deleteEventsInTheDay(date, PK);
 	}
+	@Override
+	public List<EventDto> getSapEventByInumberAndDate(final String iNumber, final String fromDate) throws ParseException
+	{
+		final List<SapEventModel> daysEvents = calendarEventDao.getSapEventByInumberAndDate(iNumber, fromDate);
+		return populateDtos(daysEvents);
+	}
 }

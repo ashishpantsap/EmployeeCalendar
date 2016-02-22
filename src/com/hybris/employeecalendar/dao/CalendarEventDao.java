@@ -24,6 +24,8 @@ public interface CalendarEventDao
 	public List<Date> getMonthlyEventByInumber(String iNumber);
 
 	public List<SapEventModel> getSapEventByInumberAndDate(final String iNumber, final Date date) throws ParseException;
+	
+	public List<SapEventModel> getSapEventByInumberAndDate(final String iNumber, final String date) throws ParseException;
 
 	public List<SapEventModel> getMonthlyScheduleFromDateToDate(Date from, Date to);
 

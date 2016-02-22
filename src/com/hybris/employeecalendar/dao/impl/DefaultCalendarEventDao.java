@@ -87,6 +87,25 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 		return result;
 	}
+	
+		@Override
+	public List<SapEventModel> getSapEventByInumberAndDate(final String iNumber, final String fromDate) throws ParseException
+	{
+		final String queryString = //
+		"SELECT {e:PK } " //
+				+ "FROM { SapEvent AS e JOIN SapEmployee AS p " + "ON {p:PK} = {e:employee} } "//
+				+ "WHERE {e:employee}=?inumber "//
+				+ "AND {e:FROMDATE} LIKE  ?fromDate ";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("inumber", iNumber);
+		query.addQueryParameter("fromDate", fromDate + '%');
+		//		query.addQueryParameter("toDate", dateRange.getToDate());
+		final List<SapEventModel> result = flexibleSearchService.<SapEventModel> search(query).getResult();
+
+		return result;
+	}
+
 
 	@Override
 	public List<SapEventModel> getMonthlyScheduleFromDateToDate(final Date from, final Date to)

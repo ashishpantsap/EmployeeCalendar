@@ -525,7 +525,8 @@ a.cal-event-week {
 }
 
 .tdhover tr:hover{	
-	background-color: #ffa31a;	
+
+	background-color: rgba(255, 100, 0, 0.1);
 }
 
 
@@ -542,6 +543,37 @@ a.cal-event-week {
 	color: #f00;
 }
 
-.sandbox{
-	width: 50%;
+#labelsparent{
+	diplay: flex;
 }
+
+#choose-dates-heading{
+	width: 40%;
+	flex: 1;
+}
+
+.events-heading{
+	flex: 1;
+	display: inline;
+}
+
+
+#sandbox-parent{
+	display: flex;
+}
+
+.sandbox{
+	flex: 1;
+	width: 40%;
+}
+
+#todays-events{
+	flex: 2;
+	display: inline;
+	margin-top: 20px;
+	margin-left: 10px;
+}
+
+
+
+

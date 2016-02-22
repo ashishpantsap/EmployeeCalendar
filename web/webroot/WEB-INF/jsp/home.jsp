@@ -75,6 +75,11 @@
 								<label for="description">Description</label> 
 								<input id="description" type="text" name="description" class="form-control" /> <br />
 							</div>
+							<br>
+							<div id="labelsparent">
+								<label id="choose-dates-heading" for="sanboxContainer">Choose Dates</label> 
+								<label id="events-heading"for="todays-events" class="events-heading alert alert-warning"><small>Your Events for Today: <i>(hover over date to display)</i></small></label>
+							</div>
 							<div id="oootype">
 								<label for="ooo-time">OOO time</label>
 								<select class="form-control"  id="ooo-time" name="ooo-type">
@@ -84,8 +89,15 @@
 								</select>
 								<br />
 							</div>
-							<label for="sanboxContainer">Choose Dates</label> 
-							<div class=sandbox id="sandbox-container"></div>
+							<div id="sandbox-parent">								
+								<div class=sandbox id="sandbox-container"></div>	
+								<div id="loadingDiv">Loading...</div>		
+								
+								<table id="todays-events">
+									<tbody>
+									</tbody>
+								</table>
+							</div>
 							<br />
 							<input id="dates" type="hidden" name="dates" class="form-control" /> <br />
 							

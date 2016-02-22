@@ -47,5 +47,7 @@ public interface CalendarEventService
 	public void deleteEventsInTheDay(Date date, String PK) throws ParseException;
 
 	public void deleteEventFromPk(String pk);
+	
+	public List<EventDto> getSapEventByInumberAndDate(final String iNumber, final String fromDate) throws ParseException;
 
 }

@@ -7,7 +7,7 @@
 				$("#alertmessage").addClass("alert alert-" + data.alert.toLowerCase() +" alert-dismissible");
 				$("#strongalert").text(data.alert);
 				$("#contentalert").text(data.description);
-				$("#alertmessage").fadeOut(3500, function() { 
+				$("#alertmessage").fadeOut(3000, function() { 
 					$(this).remove(); 
 					location.reload();
 				});
@@ -59,12 +59,20 @@
 		}(jQuery));
 	
 	window.onload = function(){	
+		var $loading = $('#loadingDiv').hide();
+			$(document).ajaxStart(function () {
+// 			    $loading.show(); UNCOMMENT TO ADD LOADING MESSAGE (Can change to an icon, spinner etc..)
+			  })
+			  .ajaxStop(function () {
+// 			    $loading.hide();
+			  });
 		var input = $("#sandbox-container");
 		input.datepicker({					
 	    	format: 'yyyy-mm-dd',
 			todayHighlight:true,
 			todayBtn:true,
-			multidate : true,				
+			multidate : true,
+			immediateUpdates : true	
 	    });
 		input.on("changeDate", function(e) {
 			console.log(e);
@@ -72,8 +80,11 @@
 			$('#dates').val(
 		        ($('#sandbox-container').datepicker('getFormattedDate')).split(',')
 		    );
-		});
-		
+		}).datepicker();
+		input.on("changeMonth", function(e) {
+// 				var date=$(this).datepicker('getFormattedDate').split('-');
+// 				ajaxRequest(date[0],date);
+			}).datepicker();
 		$('#myModal').on('show.bs.modal',function(event) {
 			var date=event.relatedTarget.dataset.addevent.split('-');
 			var modal = $(this);
@@ -143,7 +154,9 @@
 					oootype.hide();
 				}
 			});	
+			ajaxRequest(year, date);
 			
+			/*
 			$('.table-condensed tbody').children().hover(function(e) {
 				$(this).children().hover(function(e){
 					console.log($(this).text(),$(this).attr('class'));
@@ -151,7 +164,8 @@
 			},
 			function() {
 				
-			});						
+			});
+			*/						
 		});	
 		
 		$('#displayModel').on('show.bs.modal', function(event) {

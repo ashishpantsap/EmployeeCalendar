@@ -159,4 +159,17 @@ public class EventController
 
 		return events;
 	}
+@RequestMapping(value = "/employeeeventstoday", method = RequestMethod.POST, headers = "Accept=application/json")
+	@ResponseBody
+	public List<EventDto> employeeeventstoday(@RequestParam(value = "inumber") final String inumber,
+			@RequestParam(value = "date") final Date date) throws Exception
+	{
+		final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		final String stringDate = format.format(date);
+
+
+
+		return calendarEventService.getSapEventByInumberAndDate(inumber, stringDate);
+
+	}
 }

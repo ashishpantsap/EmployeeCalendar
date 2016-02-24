@@ -16,6 +16,7 @@ import com.hybris.employeecalendar.data.EventDto;
 import com.hybris.employeecalendar.data.SAPEmployeeDto;
 import com.hybris.employeecalendar.enums.EventType;
 import com.hybris.employeecalendar.enums.OOOType;
+import com.hybris.employeecalendar.enums.TrainingType;
 import com.hybris.employeecalendar.model.SapEmployeeModel;
 import com.hybris.employeecalendar.model.SapEventModel;
 import com.hybris.employeecalendar.services.CalendarEventService;
@@ -111,6 +112,8 @@ public class DefaultCalendarEventService implements CalendarEventService
 			eventM.setToDate(event.getToDate());
 			eventM.setType(EventType.valueOf(event.getType()));
 			eventM.setOooType(OOOType.valueOf(event.getOooType() != null ? event.getOooType() : OOOType.FULL_DAY.getCode()));
+			eventM.setTrainingType(
+					event.getTrainingType() != null ? TrainingType.valueOf(event.getTrainingType()) : TrainingType.ALL_DAY);
 			eventsModel.add(eventM);
 		}
 		calendarEventDao.saveEventsOnCalendar(eventsModel);
@@ -139,6 +142,8 @@ public class DefaultCalendarEventService implements CalendarEventService
 		sapEvent.setToDate(event.getToDate());
 		sapEvent.setDescription(event.getDescription());
 		sapEvent.setType(event.getType() != null ? EventType.valueOf(event.getType()) : EventType.OUT_OF_THE_OFFICE);
+		sapEvent.setTrainingType(
+				event.getTrainingType() != null ? TrainingType.valueOf(event.getTrainingType()) : TrainingType.ALL_DAY);
 
 		calendarEventDao.saveEventOnCalendar(sapEvent);
 	}
@@ -243,6 +248,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 			eventDto.setDescription(model.getDescription());
 			eventDto.setType(model.getType().getCode());
 			eventDto.setOooType(model.getOooType().getCode());
+			eventDto.setTrainingType(model.getTrainingType().getCode());
 
 			final SapEmployeeModel employee = model.getEmployee();
 			final SAPEmployeeDto employeeDto = new SAPEmployeeDto();
@@ -302,6 +308,7 @@ public class DefaultCalendarEventService implements CalendarEventService
 	{
 		calendarEventDao.deleteEventsInTheDay(date, PK);
 	}
+
 	@Override
 	public List<EventDto> getSapEventByInumberAndDate(final String iNumber, final String fromDate) throws ParseException
 	{

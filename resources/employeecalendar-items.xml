@@ -76,6 +76,11 @@
 					<persistence type="property" />
 					<defaultvalue>em().getEnumerationValue("OOOType", "FULL_DAY")</defaultvalue>
 				</attribute>
+				<attribute qualifier="trainingType" type="TrainingType">
+					<description>important for </description>
+					<persistence type="property" />
+					<defaultvalue>em().getEnumerationValue("TrainingType", "ALL_DAY")</defaultvalue>
+				</attribute>
 				<attribute qualifier="description" type="java.lang.String">
 					<description>description</description>
 					<persistence type="property" />

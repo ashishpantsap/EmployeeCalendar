@@ -95,7 +95,7 @@ public class EventController
 				event.setToDate(dateRange.getToDate());
 				event.setDescription(description == null ? "" : description);
 				event.setType(typeevent);
-				event.setTrainingTime(trainingTime);
+				event.setTrainingType(trainingTime);
 				event.setOooType(oooType);
 				//fixing date with time ADDED in the service redudant
 				//event = HelperUtil.getDateRangeFromEventType(event);
@@ -121,7 +121,11 @@ public class EventController
 		{
 			msave = HelperUtil.createMessage(ex.getMessage(), Alerts.DANGER);
 		}
-		if (msave == null)
+		if (msave == null && eventsSubmittedDates.length() == 0)
+		{
+			msave = HelperUtil.createMessage("Event cannot be created", Alerts.DANGER);
+		}
+		if (msave == null && eventsSubmittedDates.length() != 0)
 		{
 			msave = HelperUtil.createMessage("Event saved successfully for " + eventsSubmittedDates.toString(), Alerts.SUCCESS);
 		}
@@ -159,7 +163,8 @@ public class EventController
 
 		return events;
 	}
-@RequestMapping(value = "/employeeeventstoday", method = RequestMethod.POST, headers = "Accept=application/json")
+
+	@RequestMapping(value = "/employeeeventstoday", method = RequestMethod.POST, headers = "Accept=application/json")
 	@ResponseBody
 	public List<EventDto> employeeeventstoday(@RequestParam(value = "inumber") final String inumber,
 			@RequestParam(value = "date") final Date date) throws Exception

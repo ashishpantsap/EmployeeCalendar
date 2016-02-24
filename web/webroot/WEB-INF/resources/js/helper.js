@@ -54,7 +54,7 @@ function createTable2(target, date, list, table, tbody, row, cell, cell2, cell3,
 //		cell.appendChild(text);
 //		cell2 = row.insertCell(1);
 		cell2 = row.insertCell(0);//TEMP remove this line when refactored
-		text2 = document.createTextNode(key.type);
+		text2 = document.createTextNode(key.type);// + " " + key.oooType + " "  + key.description
 		cell2.appendChild(text2);
 //		cell3 = row.insertCell(2);
 //		cell3.style.cssFloat = 'right';

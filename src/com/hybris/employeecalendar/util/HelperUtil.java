@@ -149,19 +149,19 @@ public class HelperUtil
 		} //TRAINING TO BE DECIDED WITH NEW VALUE ENUMTYPE
 		else if (EventType.OTHERS.getCode().equalsIgnoreCase(event.getType()))
 		{
-			if (event.getTrainingTime() != null)
+			if (event.getTrainingType() != null)
 			{
-				if (TrainingType.MORNING.getCode().equals(event.getTrainingTime()))
+				if (TrainingType.MORNING.getCode().equals(event.getTrainingType()))
 				{
 					from = dateFromToString + " 09:00:00";
 					to = dateToString + " 12:00:00";
 				}
-				else if ((TrainingType.AFTERNOON.getCode().equals(event.getTrainingTime())))
+				else if ((TrainingType.AFTERNOON.getCode().equals(event.getTrainingType())))
 				{
 					from = dateFromToString + " 14:00:00";
 					to = dateToString + " 18:00:00";
 				}
-				else if ((TrainingType.ALL_DAY.getCode().equals(event.getTrainingTime())))
+				else if ((TrainingType.ALL_DAY.getCode().equals(event.getTrainingType())))
 				{
 					from = dateFromToString + " 09:00:00";
 					to = dateToString + " 18:00:00";

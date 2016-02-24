@@ -139,7 +139,7 @@ public class DefaultMailService implements MailService, InitializingBean
 				message.setContent(
 						"<html><body><h4 style=\"color:#0000FF;\">Dear" + " " + toAddressName
 								+ ",</h4><p style=\"color:#0000FF;\">This to remind you that you are the Queue Manager for today. Please do keep on eye on P1 tickets.<br><br>Below are the list of Out of Office and Employees on Training for whom you may help to look after their tickets in case of any urgent action is required.<br><br><p>"
-								+ "<b> Out of Office</b>:" + emponOO.toString() + "<br>" + "<b>Training  </b>   :" + emponTraining
+								+ "<b> Out of Office</b>:" + emponOO.toString() + "<br>" + "<b>Others  </b>   :" + emponTraining
 								+ " <br><br></p><p style=\"color:#0000FF;\">Request you to get the phone from previous day QM" + " "
 								+ previousDayQMEvent.getEmployee().getName() + " " + previousDayQMEvent.getEmployee().getSurname()
 								+ "<br><br>Please be advised that the current email reminder service is in beta phase and the above details are sent considering the employee calendar is up to Date.<br><br>Have a good day.<br><br>Thanks & Regards,<br>Admin Group<br></p></body></html>",

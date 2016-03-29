@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.employeecalendar.dao.CalendarEventDao;
@@ -33,6 +34,7 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 	private FlexibleSearchService flexibleSearchService;
 	private ModelService modelService;
 
+	private static final Logger LOG = Logger.getLogger(DefaultCalendarEventDao.class.getName());
 
 	@Autowired
 	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
@@ -87,8 +89,8 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 
 		return result;
 	}
-	
-		@Override
+
+	@Override
 	public List<SapEventModel> getSapEventByInumberAndDate(final String iNumber, final String fromDate) throws ParseException
 	{
 		final String queryString = //
@@ -299,17 +301,25 @@ public class DefaultCalendarEventDao implements CalendarEventDao
 		if (emptyNameAndEvent)
 		{
 			queryString = "SELECT {p:PK }" //
-					+ "FROM { SapEvent AS p JOIN SapEmployee AS e " + "ON {p:employee} = {e:PK} } "//
-					+ "WHERE {p:FROMDATE} LIKE ?newDate ";
+					+ "FROM { SapEvent AS p JOIN SapEmployee AS e " + "ON {p:employee} = {e:PK}  "//
+					+ " JOIN EventType AS et ON {et:PK} = {p:type} }"//
+					+ "WHERE {p:FROMDATE} LIKE ?newDate "//
+					+ "ORDER BY {et:code}, {e:name}";
 		}
 
 		else
 		{
 			queryString = "SELECT {p:PK }" //
-					+ "FROM { SapEvent AS p JOIN SapEmployee AS e " + "ON {p:employee} = {e:PK} } "//
-					+ "WHERE {p:FROMDATE} LIKE ?newDate AND {e.name} = ?name AND {e.surname} = ?surname";
+					+ "FROM { SapEvent AS p JOIN SapEmployee AS e " + "ON {p:employee} = {e:PK} "
+					+ " JOIN EventType AS et ON {et:PK} = {p:type} }"//
+					+ "WHERE {p:FROMDATE} LIKE ?newDate AND {e.name} = ?name AND {e.surname} = ?surname "//
+					+ "ORDER BY {et:code}, {e:name}";
 		}
 
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("query : " + queryString);
+		}
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("newDate", newDate + '%');

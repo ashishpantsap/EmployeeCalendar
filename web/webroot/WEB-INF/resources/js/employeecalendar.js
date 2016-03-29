@@ -186,7 +186,8 @@
 			
 			request.done(function(data){
 				var target, list, table, tbody, row, cell, text, text2, cell2, cell3, button;
-				list = _.sortBy(data, function(o) { return o.employee.name; });
+				//list = _.sortBy(data, function(o) { return o.employee.name; });
+				list = data;
 				table=$('.modaltable tdhover');
 				tbody=document.createElement('tbody');
 				target=$('#listevents');

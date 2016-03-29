@@ -19,10 +19,10 @@ function createTable(target, date, list, table, tbody, row, cell, cell2, cell3,
 		row = tbody.insertRow(tbody.rows.length);
 		cell = row.insertCell(0);
 		text = document.createTextNode(key.employee.name + ' '
-				+ key.employee.surname + ':');
+				+ key.employee.surname);
 		cell.appendChild(text);
 		cell2 = row.insertCell(1);
-		text2 = document.createTextNode(key.type);
+		text2 = document.createTextNode(key.type + "  :  " + key.description);
 		cell2.appendChild(text2);
 		cell3 = row.insertCell(2);
 		button = document.createElement('button');

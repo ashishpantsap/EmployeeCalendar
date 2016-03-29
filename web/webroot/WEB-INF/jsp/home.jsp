@@ -37,10 +37,10 @@
 		<div class="pull-right form-inline">
 			<div class="btn-group">
 				<button class="btn btn-primary" data-calendar-nav="prev">
-					Prev</button>
+					&lt;&lt;Prev</button>
 				<button class="btn" data-calendar-nav="today">Today</button>
 				<button class="btn btn-primary" data-calendar-nav="next">Next
-					>></button>
+					&gt;&gt;</button>
 			</div>
 			<div class="btn-group">
 				<button class="btn btn-warning" data-calendar-view="week">Week</button>

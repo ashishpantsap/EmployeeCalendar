@@ -61,10 +61,15 @@ public class DefaultMailService implements MailService, InitializingBean
 			final Calendar cal = Calendar.getInstance();
 			cal.setTime(new Date());
 			final boolean monday = cal.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY;
+			final boolean friday = cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY;
+			String qmorOncall = "QM";
 			SapEventModel previousEventForPhone = null;
+			SapEventModel nextDayQM = null;
 			if (monday)
 			{
-				cal.add(Calendar.DATE, -1);
+				cal.add(Calendar.DATE, +1);
+				nextDayQM = sapEventDao.getTypeEventFromDate(cal.getTime(), EventType.QUEUE_MANAGER);
+				cal.add(Calendar.DATE, -2);
 				previousEventForPhone = sapEventDao.getTypeEventFromDate(cal.getTime(), EventType.ON_CALL);
 				if (previousEventForPhone == null)
 				{
@@ -76,11 +81,36 @@ public class DefaultMailService implements MailService, InitializingBean
 					cal.add(Calendar.DATE, -1);
 					previousEventForPhone = sapEventDao.getTypeEventFromDate(cal.getTime(), EventType.QUEUE_MANAGER);
 				}
+
+			}
+			else if (friday)
+			{
+				cal.add(Calendar.DATE, -1);
+				previousEventForPhone = sapEventDao.getTypeEventFromDate(cal.getTime(), EventType.QUEUE_MANAGER);
+				cal.add(Calendar.DATE, +2);
+				nextDayQM = sapEventDao.getTypeEventFromDate(cal.getTime(), EventType.ON_CALL);
+				if (nextDayQM == null)
+				{
+					cal.add(Calendar.DATE, +1);
+					nextDayQM = sapEventDao.getTypeEventFromDate(cal.getTime(), EventType.ON_CALL);
+				}
+				if (nextDayQM != null)
+				{
+					qmorOncall = "ONCALL person";
+				}
+				if (nextDayQM == null)
+				{
+					cal.add(Calendar.DATE, +1);
+					nextDayQM = sapEventDao.getTypeEventFromDate(cal.getTime(), EventType.QUEUE_MANAGER);
+				}
+
 			}
 			else
 			{
 				cal.add(Calendar.DATE, -1);
 				previousEventForPhone = sapEventDao.getTypeEventFromDate(cal.getTime(), EventType.QUEUE_MANAGER);
+				cal.add(Calendar.DATE, +2);
+				nextDayQM = sapEventDao.getTypeEventFromDate(cal.getTime(), EventType.QUEUE_MANAGER);
 			}
 			if (sapQMEvent != null)
 			{
@@ -109,21 +139,21 @@ public class DefaultMailService implements MailService, InitializingBean
 					{
 						if (sapTrainingEvent.size() > 1)
 						{
-							emponTraining.append(" " + eventTraining.getEmployee().getName() + " "
-									+ eventTraining.getEmployee().getSurname() + ",");
+							emponTraining.append(
+									" " + eventTraining.getEmployee().getName() + " " + eventTraining.getEmployee().getSurname() + ",");
 						}
 						else
 						{
-							emponTraining.append(" " + eventTraining.getEmployee().getName() + " "
-									+ eventTraining.getEmployee().getSurname());
+							emponTraining
+									.append(" " + eventTraining.getEmployee().getName() + " " + eventTraining.getEmployee().getSurname());
 						}
 					}
 				}
-				sendEmail(toAddressName, toAddress, emponOO, emponTraining, previousEventForPhone);
+				sendEmail(toAddressName, toAddress, emponOO, emponTraining, previousEventForPhone, nextDayQM, qmorOncall);
 			}
 			else
 			{
-				sendEmail(null, null, null, null, null);
+				sendEmail(null, null, null, null, null, null, null);
 			}
 		}
 		catch (final Exception e1)
@@ -133,7 +163,8 @@ public class DefaultMailService implements MailService, InitializingBean
 	}
 
 	private void sendEmail(final String toAddressName, final String toAddress, final StringBuilder emponOO,
-			final StringBuilder emponTraining, final SapEventModel previousEventForPhone)
+			final StringBuilder emponTraining, final SapEventModel previousEventForPhone, final SapEventModel nextDayQM,
+			final String qmorOncall)
 	{
 		final Properties props = new Properties();
 		props.put("mail.smtp.starttls.enable", "true");
@@ -141,6 +172,7 @@ public class DefaultMailService implements MailService, InitializingBean
 		props.put("mail.smtp.port", smtpPort);
 		String empwithPhone = null;
 		String empOnActivities = null;
+		String nextDayHandOver = null;
 
 		final Session session = Session.getInstance(props);
 		try
@@ -162,6 +194,15 @@ public class DefaultMailService implements MailService, InitializingBean
 				{
 					empwithPhone = " </p><p>There is no data available regarding the previous day QM. Please check with your colleagues to get the phone. ";
 				}
+				if (nextDayQM != null)
+				{
+					nextDayHandOver = " </p><p> The next day " + qmorOncall + " is " + " " + "<b>" + nextDayQM.getEmployee().getName()
+							+ " " + nextDayQM.getEmployee().getSurname() + "</b>";
+				}
+				else
+				{
+					nextDayHandOver = " </p><p>There is no data available regarding the next day QM/ONCALL. ";
+				}
 				if (!emponTraining.toString().equals("") || !emponOO.toString().equals(""))
 				{
 					empOnActivities = "Below are the list of Out of Office and Employees on Other activities for whom you may help to look after their tickets in case of any urgent action is required.<br><br><p>"
@@ -172,27 +213,22 @@ public class DefaultMailService implements MailService, InitializingBean
 					empOnActivities = "There are no colleagues on Out of Office or on Other activities.<p>";
 				}
 
-				message
-						.setContent(
-								"<html><body><h4>Dear"
-										+ " "
-										+ toAddressName
-										+ ",</h4><p>This to remind you that you are the Queue Manager for today. Please do keep on eye on P1 tickets.<br><br>"
-										+ empOnActivities
-										+ empwithPhone
-										+ "<br><br>Please be advised that the above details are sent considering the employee calendar is up to date.<br><br>Have a good day.<br><br>Thanks & Regards,<br>Dublin Product Support Ireland<br></p></body></html>",
-								"text/html; charset=utf-8");
+				message.setContent(
+						"<html><body><h4>Dear" + " " + toAddressName
+								+ ",</h4><p>This to remind you that you are the Queue Manager for today. Please do keep on eye on P1 tickets.<br><br>"
+								+ empOnActivities + empwithPhone + nextDayHandOver
+								+ "<br><br>Please be advised that the above details are sent considering the employee calendar is up to date.<br><br>Have a good day.<br><br>Thanks & Regards,<br>Dublin Product Support Ireland<br></p></body></html>",
+						"text/html; charset=utf-8");
 			}
 			else
 			{
 				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(managersEmail));
 				message.setSubject("Reminder to Update QM");
-				message
-						.setContent(
-								"<html><body><h4>Dear Nitin Garg"
-										+ ",</h4><p>This to remind you that Queue Manager for today has not been updated. Please do update and let the person knows the same since the email reminder service is already been processed for today<br><br>"
-										+ "Have a good day.<br><br>Thanks & Regards,<br>Dublin Product Support Ireland<br></p></body></html>",
-								"text/html; charset=utf-8");
+				message.setContent(
+						"<html><body><h4>Dear Nitin Garg"
+								+ ",</h4><p>This to remind you that Queue Manager for today has not been updated. Please do update and let the person knows the same since the email reminder service is already been processed for today<br><br>"
+								+ "Have a good day.<br><br>Thanks & Regards,<br>Dublin Product Support Ireland<br></p></body></html>",
+						"text/html; charset=utf-8");
 			}
 			Transport.send(message);
 		}

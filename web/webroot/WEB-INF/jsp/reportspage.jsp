@@ -57,6 +57,7 @@
 			<th>Name</th>
 			<th>Surname</th>
 			<th>EventType</th>
+			<th>Event Sub-Type</th>
 		</thead>
 		<tbody id="tablebody">
 			
@@ -86,6 +87,7 @@
 				    '<td>'+ val.employee.name + '</td>' +
 				    '<td>'+ val. employee.surname + '</td>' +
 				    '<td>'+ val.type + '</td>' +
+				    '<td>'+ val.oooType + ' (' + val.description + ') ' + '</td>' +
 				'</tr>';
 			return html;
 		};

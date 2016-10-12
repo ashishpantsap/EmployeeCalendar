@@ -41,8 +41,6 @@ public class EmployeecalendarStandalone
 		new EmployeecalendarStandalone().run();
 	}
 
-	//test comment
-
 	public void run()
 	{
 		Registry.activateStandaloneMode();

@@ -20,15 +20,15 @@
 	    </enumtype>
 	    
 	    <enumtype code="TrainingType" autocreate="true" generate="true">
+	        <value code="ALL_DAY"/>
 	        <value code="MORNING"/>
 	        <value code="AFTERNOON"/>
-	        <value code="ALL_DAY"/>
 	    </enumtype>
 	    
 	    
 	    <enumtype code="OOOType" autocreate="true" generate="true">
-	        <value code="HALF_DAY"/>
 	        <value code="FULL_DAY"/>
+	        <value code="HALF_DAY"/>
 	    </enumtype>
 	</enumtypes>
 	
